@@ -2,9 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.MODE === "development" 
-  ? "http://localhost:5002" 
-  : "/"; // Make sure your production API URL is set correctly
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5002";
+
 
 const useAuth = () => {
   const [error, setError] = useState("");

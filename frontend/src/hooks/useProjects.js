@@ -1,11 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-// const API_URL = "http://localhost:5002/api/projects";
-// 
-const API_URL = import.meta.env.MODE === "development" 
-  ? "http://localhost:5002" 
-  : "/"; //
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5002";
 
 const useProjects = () => {
   const [projects, setProjects] = useState([]); // Store fetched projects
