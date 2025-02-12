@@ -13,7 +13,12 @@ const app = express();
 const port = process.env.PORT || 5002;
 const __dirname = path.resolve();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Make sure this is your frontend URL
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: '50mb' }));
 
 // MongoDB connection
