@@ -1,10 +1,16 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import useProjectById from '../hooks/useProjects';
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import useProjects from "../hooks/useProjects"; // Adjusted to use useProjects hook
 
 const ProjectDetail = () => {
   const { id } = useParams(); // Expecting a route like /projects/:id
-  const { project, loading, error } = useProjectById(id);
+  const { project, loading, error, fetchProjectById } = useProjects();
+
+  useEffect(() => {
+    if (id) {
+      fetchProjectById(id); // Fetch project when ID changes
+    }
+  }, [id, fetchProjectById]);
 
   if (loading) {
     return (
