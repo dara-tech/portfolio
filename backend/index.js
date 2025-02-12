@@ -38,6 +38,31 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+// Start the server
+const startServer = async () => {
+  try {
+    await connectDB(); // Connect to the database before starting the server
+
+    // Start the socket server
+    server.listen(PORT, () => {
+      console.log(`🌐 Server is running on port ${PORT} ✅`);
+    });
+
+    // Auto-reload mechanism (with an external service or heartbeat)
+    setInterval(() => {
+      https.get('https://daracheol.onrender.com', (res) => {
+        console.log('Auto-reload request sent. Status:', res.statusCode);
+      }).on('error', (err) => {
+        console.error('Error during auto-reload request:', err.message);
+      });
+    }, 60000); // 60000 ms = 1 minute
+
+  } catch (error) {
+    console.error('Failed to connect to the database', error);
+    process.exit(1); // Exit the process with failure
+  }
+};
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
