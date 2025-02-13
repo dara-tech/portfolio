@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerAdmin, loginAdmin, logoutAdmin } from '../controllers/adminController.js';
+import { registerAdmin, loginAdmin, logoutAdmin,updateAdmin } from '../controllers/adminController.js';
 
 const router = express.Router();
 
@@ -11,5 +11,6 @@ router.post('/admin/login', loginAdmin);
 
 // Admin Logout Route
 router.post('/admin/logout', logoutAdmin);
+router.put('/admin/update/:id', updateAdmin);
 
 export default router;

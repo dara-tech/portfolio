@@ -2,42 +2,40 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import authRoutes from './routes/adminRoutes.js'; // Ensure the file exists
-import projectRoutes from './routes/projectRoute.js'; // Ensure the file exists
+import http from "http";
+import path from "path";
+import authRoutes from './routes/adminRoutes.js'; 
+import projectRoutes from './routes/projectRoute.js';
+import { fileURLToPath } from "url";
+import https from "https";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 5002;
 
-// Fix __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Ensure this matches your frontend URL
-    credentials: true,
-  })
-);
+// Middleware
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json({ limit: '50mb' }));
 
-// MongoDB connection
+// MongoDB Connection
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("✅ MongoDB connected successfully");
+    console.log("MongoDB connected ✅");
   } catch (error) {
-    console.error("❌ MongoDB connection failed:", error);
+    console.error("MongoDB connection error:", error);
     process.exit(1);
   }
 };
 
-// Use auth and project routes
-app.use('/api/auth', authRoutes);
-app.use('/api/projects', projectRoutes); // Adjusted route path for better clarity
+
+// Routes
+app.use('/api', authRoutes);
+app.use('/api', projectRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
@@ -47,24 +45,29 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// Start the server
+// Start Server
+const server = http.createServer(app);
+
 const startServer = async () => {
   try {
-    await connectDB(); // Connect to the database before starting the server
-
-    app.listen(port, () => {
+    await connectDB();
+    server.listen(port, () => {
       console.log(`🌐 Server is running on port ${port} ✅`);
     });
 
-    // Auto-reload mechanism (prevent server sleeping on free hosting)
-    setInterval(() => {
-      fetch('https://daracheol.onrender.com')
-        .then((res) => console.log('🔄 Auto-reload request sent. Status:', res.status))
-        .catch((err) => console.error('❌ Auto-reload request failed:', err.message));
-    }, 60000); // Every 1 minute
+    // Auto-reload only in production
+    if (process.env.NODE_ENV === "production") {
+      setInterval(() => {
+        https.get("https://daracheol.onrender.com", (res) => {
+          console.log("Auto-reload request sent. Status:", res.statusCode);
+        }).on("error", (err) => {
+          console.error("Error during auto-reload request:", err.message);
+        });
+      }, 60000);
+    }
 
   } catch (error) {
-    console.error("❌ Server failed to start:", error);
+    console.error("Failed to start server", error);
     process.exit(1);
   }
 };

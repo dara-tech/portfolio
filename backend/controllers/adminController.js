@@ -1,29 +1,77 @@
+
 import Admin from '../models/Admin.js';
 import jwt from 'jsonwebtoken';
-
-// Admin Register Controller
+import cloudinary from '../lib/cloudinary.js';
+// Admin Register with Profile Picture Upload
 const registerAdmin = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, describe, password, profilePic } = req.body;
 
   try {
-    // Check if username already exists
-    const existingAdmin = await Admin.findOne({ username });
+    const existingAdmin = await Admin.findOne({ $or: [{ username }, { email }] });
     if (existingAdmin) {
-      return res.status(400).json({ message: 'Username is already taken' });
+      return res.status(400).json({ message: 'Username or email is already taken' });
     }
 
-    // Create a new admin (the password will be hashed via the model's pre-save hook)
-    const newAdmin = new Admin({ username, password });
+    let uploadedImageUrl = "";
+
+    if (profilePic) {
+      const uploadResponse = await cloudinary.v2.uploader.upload(profilePic, {
+        folder: "admin_profiles",
+      });
+      uploadedImageUrl = uploadResponse.secure_url;
+    }
+
+    const newAdmin = new Admin({ 
+      username, 
+      email, 
+      describe, 
+      password, 
+      profilePic: uploadedImageUrl 
+    });
+
     await newAdmin.save();
 
-    // Create and send JWT token
     const token = jwt.sign(
       { id: newAdmin._id, username: newAdmin.username },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    res.status(201).json({ token });
+    res.status(201).json({ message: 'Admin registered successfully', token, profilePic: uploadedImageUrl });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Update Admin Profile
+const updateAdmin = async (req, res) => {
+  const { username, email, describe, profilePic } = req.body;
+  const { id } = req.params;
+
+  try {
+    const admin = await Admin.findById(id);
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+
+    let uploadedImageUrl = admin.profilePic;
+
+    if (profilePic) {
+      const uploadResponse = await cloudinary.v2.uploader.upload(profilePic, {
+        folder: "admin_profiles",
+      });
+      uploadedImageUrl = uploadResponse.secure_url;
+    }
+
+    admin.username = username || admin.username;
+    admin.email = email || admin.email;
+    admin.describe = describe || admin.describe;
+    admin.profilePic = uploadedImageUrl;
+
+    await admin.save();
+
+    res.status(200).json({ message: 'Profile updated successfully', admin });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -51,7 +99,14 @@ const loginAdmin = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.json({ token });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 3600000, // 1 hour
+    });
+
+    res.json({ message: 'Login successful', token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -59,14 +114,9 @@ const loginAdmin = async (req, res) => {
 };
 
 // Admin Logout Controller
-const logoutAdmin = async (req, res) => {
-  // For JWT, logout is typically handled on the client by removing the token.
-  // If you're using cookies to store the token, you can clear the cookie here.
-  // Example: If token is stored in a cookie named "token", you can clear it:
-  // res.clearCookie('token');
-
-  // Otherwise, simply return a logout success message.
+const logoutAdmin = (req, res) => {
+  res.clearCookie('token');
   res.status(200).json({ message: 'Logout successful' });
 };
 
-export { registerAdmin, loginAdmin, logoutAdmin };
+export { registerAdmin, loginAdmin, logoutAdmin ,updateAdmin};
