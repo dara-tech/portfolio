@@ -1,7 +1,24 @@
-
 import Admin from '../models/Admin.js';
 import jwt from 'jsonwebtoken';
 import cloudinary from '../lib/cloudinary.js';
+
+// Get Admin Details by ID
+const getAdmin = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const admin = await Admin.findById(id).select("-password"); // Exclude password
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json(admin);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // Admin Register with Profile Picture Upload
 const registerAdmin = async (req, res) => {
   const { username, email, describe, password, profilePic } = req.body;
@@ -9,7 +26,7 @@ const registerAdmin = async (req, res) => {
   try {
     const existingAdmin = await Admin.findOne({ $or: [{ username }, { email }] });
     if (existingAdmin) {
-      return res.status(400).json({ message: 'Username or email is already taken' });
+      return res.status(400).json({ message: "Username or email is already taken" });
     }
 
     let uploadedImageUrl = "";
@@ -34,13 +51,13 @@ const registerAdmin = async (req, res) => {
     const token = jwt.sign(
       { id: newAdmin._id, username: newAdmin.username },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" }
     );
 
-    res.status(201).json({ message: 'Admin registered successfully', token, profilePic: uploadedImageUrl });
+    res.status(201).json({ message: "Admin registered successfully", token, profilePic: uploadedImageUrl });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -52,7 +69,7 @@ const updateAdmin = async (req, res) => {
   try {
     const admin = await Admin.findById(id);
     if (!admin) {
-      return res.status(404).json({ message: 'Admin not found' });
+      return res.status(404).json({ message: "Admin not found" });
     }
 
     let uploadedImageUrl = admin.profilePic;
@@ -71,10 +88,10 @@ const updateAdmin = async (req, res) => {
 
     await admin.save();
 
-    res.status(200).json({ message: 'Profile updated successfully', admin });
+    res.status(200).json({ message: "Profile updated successfully", admin });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -85,38 +102,38 @@ const loginAdmin = async (req, res) => {
   try {
     const admin = await Admin.findOne({ username });
     if (!admin) {
-      return res.status(400).json({ message: 'Admin not found' });
+      return res.status(400).json({ message: "Admin not found" });
     }
 
     const isMatch = await admin.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const token = jwt.sign(
       { id: admin._id, username: admin.username },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" }
     );
 
-    res.cookie('token', token, {
+    res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
       maxAge: 3600000, // 1 hour
     });
 
-    res.json({ message: 'Login successful', token });
+    res.json({ message: "Login successful", token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // Admin Logout Controller
 const logoutAdmin = (req, res) => {
-  res.clearCookie('token');
-  res.status(200).json({ message: 'Logout successful' });
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logout successful" });
 };
 
-export { registerAdmin, loginAdmin, logoutAdmin ,updateAdmin};
+export { registerAdmin, loginAdmin, logoutAdmin, updateAdmin, getAdmin };
