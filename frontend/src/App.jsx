@@ -8,12 +8,17 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminProjects from './pages/AdminProjects';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/lib/projectdRoute';
-import ProjectDetail from './components/ProjectDetail'
+import ProjectDetail from './components/ProjectDetail';
+import Profile from './pages/Profile'; // Assuming you have a Profile page
+import SettingPage from './pages/SettingPage';
+import { useThemeStore } from './store/useThemeStore';
 
 function App() {
+  const {theme} = useThemeStore();
   return (
+    <div data-theme={theme} >
     <Router>
-          <Navbar />
+      <Navbar />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
@@ -22,6 +27,8 @@ function App() {
 
         {/* Admin Auth routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/settings" element={<SettingPage />} />
+        {/* <Route path="/admin/profile" element={<Profile />} /> */}
         {/* <Route path="/admin/register" element={<AdminRegister />} /> */}
 
         {/* Protected admin routes */}
@@ -41,8 +48,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
+    </div>
   );
 }
 

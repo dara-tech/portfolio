@@ -1,17 +1,30 @@
 import express from 'express';
-import { registerAdmin, loginAdmin, logoutAdmin,updateAdmin,getAdmin } from '../controllers/adminController.js';
+import { loginAdmin, logoutAdmin, getAdmin, updateAdmin, registerAdmin } from '../controllers/adminController.js';
+import isAuthenticated from '../middleware/authMiddlware.js';
+
+import multer from 'multer';
+
 
 const router = express.Router();
 
-// Admin Register Route
-router.post('/admin/register', registerAdmin);
+// Configure multer for memory storage instead of disk
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  }
+});
 
-// Admin Login Route
 router.post('/admin/login', loginAdmin);
-
-// Admin Logout Route
+router.post('/admin/register', upload.fields([
+  { name: 'profilePic', maxCount: 1 },
+  { name: 'cv', maxCount: 1 }
+]), registerAdmin);
 router.post('/admin/logout', logoutAdmin);
-router.put('/admin/update/:id', updateAdmin);
-router.get("/admin/:id", getAdmin); // GET Admin by ID
+router.get('/admin/profile', getAdmin);
+router.put('/admin/update', upload.fields([
+  { name: 'profilePic', maxCount: 1 },
+  { name: 'cv', maxCount: 1 }
+]), isAuthenticated, updateAdmin);
 
 export default router;

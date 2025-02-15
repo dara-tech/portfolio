@@ -9,11 +9,11 @@ const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
 // Protected route: Only authenticated users can create a project
-router.post('/projects', authenticateToken, upload.single('image'), createProject);
+router.post('/projects', upload.single('image'), createProject);
 
 // Protected route: Only authenticated users can update or delete a project
-router.put('/projects/:id', authenticateToken, upload.single('image'), updateProject);
-router.delete('/projects/:id', authenticateToken, deleteProject);
+router.put('/projects/:id', upload.single('image'), updateProject);
+router.delete('/projects/:id',  deleteProject);
 
 // Public route: Anyone can view projects
 router.get('/projects', getProjects);

@@ -5,7 +5,7 @@ import ProjectList from '../components/ProjectList';
 const Projects = () => {
 
   return (
-    <div>
+    <div >
       <ProjectList/>
     </div>
   );

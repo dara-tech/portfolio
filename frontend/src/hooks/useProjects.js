@@ -11,20 +11,31 @@ const useProjects = () => {
 
   // Get token from local storage
   const getAuthHeaders = () => {
-    const token = localStorage.getItem("token"); // Or from Zustand if stored there
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Authentication required. Please log in.");
+    }
     return {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     };
   };
 
-  // 🔄 Fetch All Projects
+  // Get headers for public endpoints
+  const getPublicHeaders = () => ({
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  // Fetch all projects (public)
   const fetchProjects = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`${API_URL}/api/projects`, getAuthHeaders());
+      const response = await axios.get(`${API_URL}/api/projects`, getPublicHeaders());
       setProjects(response.data);
     } catch (err) {
       setError(err.response?.data?.message || "Error fetching projects");
@@ -33,103 +44,92 @@ const useProjects = () => {
     }
   }, []);
 
-  // 🆕 Create Project
-  const createProject = useCallback(async (projectData) => {
+  // Create project (admin only)
+  const createProject = useCallback(async (formData) => {
     setLoading(true);
     setError(null);
     try {
-      const formData = new FormData();
-      Object.keys(projectData).forEach((key) => {
-        if (key === "imageFile" && projectData[key]) {
-          formData.append("image", projectData[key]);
-        } else if (key !== "imagePreview") {
-          formData.append(key, projectData[key]);
-        }
-      });
-
-      const response = await axios.post(`${API_URL}/api/projects`, formData, {
-        ...getAuthHeaders(),
-        headers: {
-          ...getAuthHeaders().headers,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      fetchProjects(); // Refresh list after creation
-      return response.data;
+      const response = await axios.post(
+        `${API_URL}/api/projects`,
+        formData,
+        getAuthHeaders()
+      );
+      
+      // Update projects list with new project
+      setProjects((prev) => [response.data.project, ...prev]);
+      
+      return response.data.project;
     } catch (err) {
-      setError(err.response?.data?.message || "Error creating project");
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProjects]);
-
-  // ✏️ Update Project
-  const updateProject = useCallback(async (id, updatedData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const formData = new FormData();
-      Object.keys(updatedData).forEach((key) => {
-        if (key === "imageFile" && updatedData[key]) {
-          formData.append("image", updatedData[key]);
-        } else if (key !== "imagePreview") {
-          formData.append(key, updatedData[key]);
-        }
-      });
-
-      const response = await axios.put(`${API_URL}/api/projects/${id}`, formData, {
-        ...getAuthHeaders(),
-        headers: {
-          ...getAuthHeaders().headers,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      fetchProjects(); // Refresh list after update
-      return response.data;
-    } catch (err) {
-      setError(err.response?.data?.message || "Error updating project");
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProjects]);
-
-  // 🗑️ Delete Project
-  const deleteProject = useCallback(async (id) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await axios.delete(`${API_URL}/api/projects/${id}`, getAuthHeaders());
-      fetchProjects(); // Refresh list after deletion
-      return true;
-    } catch (err) {
-      setError(err.response?.data?.message || "Error deleting project");
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProjects]);
-
-  // 🔍 Fetch Single Project by ID
-  const fetchProjectById = useCallback(async (id) => {
-    if (!id || id === ":id") {
-      setError(new Error("Invalid project id"));
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(`${API_URL}/api/projects/${id}`, getAuthHeaders());
-      setProject(response.data);
-    } catch (err) {
-      setError(err.response?.data?.message || "Error fetching project");
+      const errorMessage = err.response?.data?.message || err.message || "Error creating project";
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Automatically fetch projects when component mounts
+  // Fetch single project by ID (public)
+  const fetchProjectById = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`${API_URL}/api/projects/${id}`, getPublicHeaders());
+      setProject(response.data);
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.message || "Error fetching project");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Update project (admin only)
+  const updateProject = useCallback(async (id, formData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.put(
+        `${API_URL}/api/projects/${id}`,
+        formData,
+        getAuthHeaders()
+      );
+      
+      // Update projects list with updated project
+      setProjects((prev) =>
+        prev.map((p) => (p._id === id ? response.data.project : p))
+      );
+      
+      return response.data.project;
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "Error updating project";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Delete project (admin only)
+  const deleteProject = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await axios.delete(`${API_URL}/api/projects/${id}`, getAuthHeaders());
+      
+      // Remove project from list
+      setProjects((prev) => prev.filter((p) => p._id !== id));
+      
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "Error deleting project";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load projects on mount
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
@@ -143,7 +143,7 @@ const useProjects = () => {
     fetchProjectById,
     createProject,
     updateProject,
-    deleteProject,
+    deleteProject
   };
 };
 

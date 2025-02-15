@@ -18,10 +18,10 @@ const projectSchema = new mongoose.Schema({
   image: {
     type: String, // This will store the Cloudinary URL if provided
   },
-  technologies: {
-    type: [String],
-    default: [],
-  },
+  technologies: [{
+    type: String,
+    trim: true
+  }],
   githubLink: {
     type: String,
     validate: {
@@ -42,10 +42,10 @@ const projectSchema = new mongoose.Schema({
       message: props => `${props.value} is not a valid URL!`
     },
   },
-  tags: {
-    type: [String],
-    default: [],
-  },
+  tags: [{
+    type: String,
+    trim: true
+  }],
 }, { timestamps: true });
 
 // Pre-save hook to create a slug from the title

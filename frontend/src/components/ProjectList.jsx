@@ -1,10 +1,57 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import useProjects from '../hooks/useProjects';
-import { Link } from 'react-router-dom';
-
+import ErrorBoundary from './ErrorBoundary';
+import ProjectCard from '../components/ProjectCard';
 
 const ProjectList = () => {
-  const { projects, loading, error } = useProjects();
+  const { projects = [], loading, error } = useProjects();
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeSort, setActiveSort] = useState('newest');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const categories = useMemo(() => {
+    if (!Array.isArray(projects)) return ['all'];
+    const cats = new Set(projects.map(p => p.category).filter(Boolean));
+    return ['all', ...Array.from(cats)];
+  }, [projects]);
+
+  const technologies = useMemo(() => {
+    if (!Array.isArray(projects)) return [];
+    const techs = new Set(projects.flatMap(p => p.technologies || []).filter(Boolean));
+    return Array.from(techs);
+  }, [projects]);
+
+  const filteredProjects = useMemo(() => {
+    if (!Array.isArray(projects)) return [];
+    
+    let filtered = [...projects];
+
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(p => p.category === activeFilter);
+    }
+
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(p => 
+        p.title?.toLowerCase().includes(query) ||
+        p.description?.toLowerCase().includes(query) ||
+        p.technologies?.some(tech => tech.toLowerCase().includes(query))
+      );
+    }
+
+    filtered.sort((a, b) => {
+      if (activeSort === 'newest') {
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      }
+      if (activeSort === 'oldest') {
+        return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+      }
+      return 0;
+    });
+
+    return filtered;
+  }, [projects, activeFilter, searchQuery, activeSort]);
 
   if (loading) {
     return (
@@ -25,45 +72,85 @@ const ProjectList = () => {
     );
   }
 
-  if (projects.length === 0) {
-    return (
-      <div className="alert alert-info max-w-2xl mx-auto mt-8">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span>No projects found.</span>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="flex text-3xl font-bold mb-8 ">Projects</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <div key={project._id} className="card bg-base-300 transition-shadow">
-            {project.image && (
-              <figure>
-                <img src={project.image} alt={project.title} className="h-48 w-full object-cover" />
-              </figure>
-            )}
-            <div className="card-body">
-              <h3 className="card-title">
-                {project.title}
-                <div className="badge badge-secondary">New</div>
-              </h3>
-              <p className="text-base-content/80">{project.description}</p>
-              <div className="card-actions justify-end mt-4">
-              <Link to={`/projects/${project._id}`} className="btn btn-ghost btn-sm">View</Link>
-
-                <button className="btn btn-ghost btn-sm">Share</button>
-              </div>
-            </div>
-          </div>
-        ))}
+    <div className="container mx-auto px-4 py-20 min-h-screen">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Projects</h1>
       </div>
+
+      <div className="mb-8 space-y-4">
+        <div className="flex flex-wrap gap-4 items-center">
+          <div className="flex-1">
+            <input
+              type="text"
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="input input-bordered w-full max-w-xs"
+            />
+          </div>
+          <select
+            value={activeFilter}
+            onChange={(e) => setActiveFilter(e.target.value)}
+            className="select select-bordered"
+          >
+            {categories.map(category => (
+              <option key={category} value={category}>
+                {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
+              </option>
+            ))}
+          </select>
+          <select
+            value={activeSort}
+            onChange={(e) => setActiveSort(e.target.value)}
+            className="select select-bordered"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
+
+        {technologies.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {technologies.map(tech => (
+              <span key={tech} className="badge badge-primary badge-outline">
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={filteredProjects.length}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {filteredProjects.length === 0 ? (
+            <div className="text-center py-12">
+              <h3 className="text-xl font-semibold mb-2">No projects found</h3>
+              <p className="text-gray-600">Try adjusting your search or filters</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProjects.map(project => (
+                <ProjectCard key={project._id} project={project} />
+              ))}
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };
 
-export default ProjectList;
+const ProjectListWithErrorBoundary = () => (
+  <ErrorBoundary>
+    <ProjectList />
+  </ErrorBoundary>
+);
+
+export default ProjectListWithErrorBoundary;
