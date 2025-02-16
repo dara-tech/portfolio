@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAdminProfile } from "../hooks/useAdminProfile";
-import { Facebook, Instagram, Twitter, Linkedin, Github, Download, Youtube } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, Github, Download, Code2 } from "lucide-react";
 
 const HeroCard = () => {
   const { formData: userData, loading } = useAdminProfile();
@@ -8,6 +8,7 @@ const HeroCard = () => {
   const [displayDescription, setDisplayDescription] = useState("");
   const [isTypingName, setIsTypingName] = useState(true);
   const [isTypingDescription, setIsTypingDescription] = useState(false);
+  const [activeSkillIndex, setActiveSkillIndex] = useState(0);
 
   useEffect(() => {
     if (!loading && userData?.username && userData?.describe) {
@@ -22,130 +23,175 @@ const HeroCard = () => {
 
       const animateText = async () => {
         await typingEffect(userData.username, setDisplayName, setIsTypingName);
-        await new Promise(resolve => setTimeout(resolve, 500)); // Pause between name and description
+        await new Promise(resolve => setTimeout(resolve, 500));
         await typingEffect(userData.describe, setDisplayDescription, setIsTypingDescription, 50);
       };
 
       animateText();
+
+      // Rotate through skills
+      const interval = setInterval(() => {
+        setActiveSkillIndex(prev => (prev + 1) % (userData?.skills?.length || 1));
+      }, 2000);
+
+      return () => clearInterval(interval);
     }
   }, [loading, userData?.username, userData?.describe]);
 
-  const SocialLink = ({ href, icon: Icon }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="w-10 h-10 flex items-center justify-center rounded-full bg-primary hover:bg-orange-200 transition-colors duration-300"
-    >
-      <Icon className="w-5 h-5 text-base-300" />
-    </a>
-  );
-
   const getSocialIcon = (platform) => {
-    switch (platform) {
+    switch (platform.toLowerCase()) {
       case 'github': return Github;
       case 'linkedin': return Linkedin;
       case 'twitter': return Twitter;
-      case 'youtube': return Youtube;
+      case 'facebook': return Facebook;
+      case 'instagram': return Instagram;
       default: return null;
     }
   };
 
+  const SocialLink = ({ href, platform }) => {
+    const Icon = getSocialIcon(platform);
+    if (!Icon) return null;
+    
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 hover:text-primary transition-colors duration-300"
+      >
+        <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+      </a>
+    );
+  };
+
   return (
-    <div className="w-full container mx-auto px-4 py-30">
-      <div className="grid lg:grid-cols-2 gap-8 items-center">
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl text-primary mb-2">Hi! I Am</h2>
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-primary via-info to-accent bg-clip-text text-transparent relative">
-              {loading ? "Loading..." : displayName}
-              {isTypingName && (
-                <span className="animate-pulse ml-1 inline-block w-1 h-12 bg-gradient-to-r from-primary to-accent" />
-              )}
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="">
-              <span className="text-4xl font-bold text-primary">
-                {loading ? "Loading..." : userData?.exp || "8"}
-              </span>
-              <div className="text-sm">
-                YEARS
-                <br />
-                EXPERIENCE
-              </div>
-            </div>
-          </div>
-
-          <p className="text-xl h-20">
-            {loading ? "Loading..." : displayDescription}
-            {isTypingDescription && (
-              <span className="animate-pulse ml-1 inline-block w-1 h-6 bg-gradient-to-r from-primary to-accent" />
-            )}
-          </p>
-
-          <div className="flex items-center gap-4">
-            {userData?.socialLinks?.map((link) => {
-              const Icon = getSocialIcon(link.platform);
-              return Icon && <SocialLink key={link._id} href={link.url} icon={Icon} />;
-            })}
-          </div>
-
-          {userData?.cv && (
-            <a
-              href={userData.cv}
-              download
-              className="mt-4 inline-flex items-center gap-2 px-6 py-3 text-lg font-semibold text-white bg-primary rounded-lg hover:bg-orange-200 transition-all duration-300"
-            >
-              <Download className="w-5 h-5" />
-              Download CV
-            </a>
-          )}
-        </div>
-
-        <div className="relative">
-          <div className="relative">
-            <div className="rounded-full overflow-hidden border-8 border-primary bg-gradient-to-r from-primary via-info to-accent shadow-xl">
+    <div className="w-full min-h-screen flex items-center py-8 md:py-0">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+          {/* Mobile Profile Image */}
+          <div className="block lg:hidden mx-auto w-48 sm:w-56 md:w-64 my-15">
+            <div className="aspect-square relative z-10 overflow-hidden rounded-full border-4 border-primary/20">
               {loading ? (
-                <div className="w-full h-full bg-slate-200 animate-pulse" />
+                <div className="w-full h-full bg-base-200 animate-pulse" />
               ) : userData?.profilePic ? (
                 <img
                   src={userData.profilePic}
                   alt={userData.username}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "/api/placeholder/500/500";
                   }}
                 />
               ) : (
-                <img src="/api/placeholder/500/500" alt="placeholder" className="w-full h-full object-cover" />
+                <img 
+                  src="/api/placeholder/500/500" 
+                  alt="placeholder" 
+                  className="w-full h-full object-cover" 
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Content Section */}
+          <div className="space-y-6 text-center lg:text-left">
+            <div>
+              <h2 className="text-base sm:text-lg text-primary/80 mb-2 font-mono">&lt;hello world/&gt;</h2>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-light">
+                I'm{" "}
+                <span className="font-bold relative">
+                  {loading ? "Loading..." : displayName}
+                  {isTypingName && (
+                    <span className="absolute bottom-0 right-0 w-0.5 h-full bg-primary animate-blink" />
+                  )}
+                </span>
+              </h1>
+            </div>
+
+            <div className="relative h-20 sm:h-24 overflow-hidden">
+              <p className="text-lg sm:text-xl md:text-2xl text-base-content/80 absolute transition-all duration-300">
+                {loading ? "Loading..." : displayDescription}
+                {isTypingDescription && (
+                  <span className="inline-block w-0.5 h-4 bg-primary animate-blink ml-1" />
+                )}
+              </p>
+            </div>
+
+            <div className="relative h-12 overflow-hidden">
+              {userData?.skills && (
+                <div 
+                  className="transition-all duration-500 absolute w-full"
+                  style={{ transform: `translateY(-${activeSkillIndex * 3}rem)` }}
+                >
+                  {userData.skills.map((skill, index) => (
+                    <div 
+                      key={skill}
+                      className={`h-12 flex items-center justify-center lg:justify-start text-xl sm:text-2xl font-light transition-opacity duration-300 ${
+                        index === activeSkillIndex ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    >
+                      {skill}
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
-            <div className="absolute -right-4 bottom-16 bg-white rounded-xl shadow-lg p-4">
-              <div className="text-2xl font-bold text-slate-700">Full Stack</div>
-              <div className="text-xl text-primary flex items-center gap-1">
-                <h2>Developer</h2>
-                <span className="bg-black p-1 rounded-full">
-                  <Github size={20} />
-                </span>
+            <div className="flex items-center gap-4 sm:gap-6 pt-4">
+              <div className="h-px flex-1 bg-base-content/10" />
+              <div className="flex justify-center gap-1 sm:gap-2">
+                {userData?.socialLinks?.map((link) => (
+                  <SocialLink key={link._id} href={link.url} platform={link.platform} />
+                ))}
               </div>
+              <div className="h-px flex-1 bg-base-content/10" />
             </div>
 
-            <svg
-              className="absolute -left-16 top-1/4 w-24 h-24 text-slate-300"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M 2 12 C 2 6.5 6.5 2 12 2 C 17.5 2 22 6.5 22 12" />
-              <polyline points="22 12 22 18 16 18" />
-            </svg>
+            {userData?.cv && (
+              <div className="flex justify-center lg:justify-start">
+                <a
+                  href={userData.cv}
+                  download
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 rounded-full"
+                >
+                  <Download className="w-4 h-4" />
+                  Download Resume
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Profile Image */}
+          <div className="hidden lg:block relative">
+            <div className="aspect-square relative z-10 overflow-hidden rounded-lg shadow-xl">
+              {loading ? (
+                <div className="w-full h-full bg-base-200 animate-pulse" />
+              ) : userData?.profilePic ? (
+                <img
+                  src={userData.profilePic}
+                  alt={userData.username}
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/api/placeholder/500/500";
+                  }}
+                />
+              ) : (
+                <img 
+                  src="/api/placeholder/500/500" 
+                  alt="placeholder" 
+                  className="w-full h-full object-cover" 
+                />
+              )}
+            </div>
+
+            {/* <div className="absolute -left-4 bottom-8 py-3 px-6 bg-base-100 border border-base-content/10 shadow-lg backdrop-blur-sm rounded-lg">
+              <div className="flex items-center gap-3">
+                <Code2 className="w-5 h-5 text-primary" />
+                <span className="font-mono text-base-content/60">available for work</span>
+              </div>
+            </div> */}
           </div>
         </div>
       </div>

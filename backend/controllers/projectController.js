@@ -98,3 +98,19 @@ export const deleteProject = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+export const incrementViewCount = async (req, res) => {
+  try {
+      const project = await Project.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } }, { new: true });
+      res.status(200).json({ success: true, data: project });
+  } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const getViewCount = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    res.status(200).json({ success: true, data: project.views });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

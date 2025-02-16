@@ -129,6 +129,26 @@ const useProjects = () => {
     }
   }, []);
 
+  // Send view to backend and fetch updated view
+  const sendView = useCallback(async (postId, viewData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Send view data to the backend
+      await axios.post(`${API_URL}/api/projects/${postId}/views`, viewData, getPublicHeaders());
+      
+      // Fetch the updated post data after sending the view
+      const response = await axios.get(`${API_URL}/api/projects/${postId}`, getPublicHeaders());
+      return response.data;
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "Error sending view";
+      setError(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // Load projects on mount
   useEffect(() => {
     fetchProjects();
@@ -141,6 +161,7 @@ const useProjects = () => {
     error,
     fetchProjects,
     fetchProjectById,
+    sendView,
     createProject,
     updateProject,
     deleteProject

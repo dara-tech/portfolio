@@ -46,7 +46,12 @@ const projectSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
+  views: {
+    type: Number,
+    default: 0
+},
 }, { timestamps: true });
+  
 
 // Pre-save hook to create a slug from the title
 projectSchema.pre('save', function(next) {

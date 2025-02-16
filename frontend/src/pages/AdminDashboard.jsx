@@ -1,36 +1,92 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useProjects from '../hooks/useProjects';
+import { useAdminProfile } from '../hooks/useAdminProfile';
 
 const AdminDashboard = () => {
+  const { projects, loading: projectsLoading } = useProjects();
+  const { formData: userData, loading: userLoading } = useAdminProfile();
+  const [stats, setStats] = useState({
+    totalViews: 0,
+    monthlyViews: 0,
+    monthlyGrowth: 0
+  });
+
+  useEffect(() => {
+    if (projects) {
+      const totalViews = projects.reduce((sum, project) => sum + (project.views || 0), 0);
+      
+      // Calculate views from last 30 days
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const monthlyViews = projects.reduce((sum, project) => {
+        const recentViews = project.viewHistory?.filter(view => 
+          new Date(view.timestamp) > thirtyDaysAgo
+        ).length || 0;
+        return sum + recentViews;
+      }, 0);
+
+      // Calculate growth percentage
+      const previousMonthViews = projects.reduce((sum, project) => {
+        const previousViews = project.viewHistory?.filter(view => {
+          const viewDate = new Date(view.timestamp);
+          return viewDate > new Date(thirtyDaysAgo - 30) && viewDate < thirtyDaysAgo;
+        }).length || 0;
+        return sum + previousViews;
+      }, 0);
+
+      const growth = previousMonthViews === 0 ? 100 : 
+        ((monthlyViews - previousMonthViews) / previousMonthViews * 100).toFixed(1);
+
+      setStats({
+        totalViews,
+        monthlyViews,
+        monthlyGrowth: growth
+      });
+    }
+  }, [projects]);
+
+  if (projectsLoading || userLoading) {
+    return <div className="flex justify-center items-center h-screen">
+      <div className="loading loading-spinner loading-lg"></div>
+    </div>;
+  }
+
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="container mx-auto px-4 py-8 max-w-4xl min-h-screen my-10">
       <div className="flex flex-col gap-6">
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">
-            <h2 className="card-title text-3xl font-bold mb-4">Welcome to Admin Dashboard</h2>
+            <h2 className="card-title text-3xl font-bold mb-4">
+              Welcome back, {userData?.username || 'Admin'}!
+            </h2>
             <div className="stats shadow">
               <div className="stat">
                 <div className="stat-title">Total Projects</div>
-                <div className="stat-value">89</div>
-                <div className="stat-desc">21% more than last month</div>
+                <div className="stat-value">{projects?.length || 0}</div>
+                <div className="stat-desc">Your portfolio items</div>
               </div>
               
               <div className="stat">
-                <div className="stat-title">Page Views</div>
-                <div className="stat-value">2,200</div>
-                <div className="stat-desc">↗︎ 400 (22%)</div>
+                <div className="stat-title">Total Views</div>
+                <div className="stat-value">{stats.totalViews}</div>
+                <div className="stat-desc">Lifetime project views</div>
               </div>
               
               <div className="stat">
-                <div className="stat-title">New Users</div>
-                <div className="stat-value">150</div>
-                <div className="stat-desc">↘︎ 90 (14%)</div>
+                <div className="stat-title">Monthly Views</div>
+                <div className="stat-value">{stats.monthlyViews}</div>
+                <div className="stat-desc">
+                  {stats.monthlyGrowth > 0 ? '↗︎' : '↘︎'} {Math.abs(stats.monthlyGrowth)}% from last month
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="card bg-primary text-primary-content">
+          <Link to="/admin/projects" className="card bg-primary text-primary-content hover:bg-primary-focus transition-colors">
             <div className="card-body">
               <h2 className="card-title">Manage Projects</h2>
               <p>Create, edit, and delete your portfolio projects</p>
@@ -38,24 +94,24 @@ const AdminDashboard = () => {
                 <button className="btn">Open</button>
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="card bg-secondary text-secondary-content">
+          <Link to="/admin/profile" className="card bg-secondary text-secondary-content hover:bg-secondary-focus transition-colors">
             <div className="card-body">
-              <h2 className="card-title">Analytics</h2>
-              <p>View detailed statistics and user engagement</p>
+              <h2 className="card-title">Profile Settings</h2>
+              <p>Update your personal information and CV</p>
               <div className="card-actions justify-end">
-                <button className="btn">View</button>
+                <button className="btn">Edit</button>
               </div>
             </div>
-          </div>
+          </Link>
 
           <div className="card bg-accent text-accent-content">
             <div className="card-body">
-              <h2 className="card-title">Settings</h2>
-              <p>Configure your dashboard preferences</p>
+              <h2 className="card-title">Analytics</h2>
+              <p>View detailed project engagement metrics</p>
               <div className="card-actions justify-end">
-                <button className="btn">Configure</button>
+                <button className="btn">View</button>
               </div>
             </div>
           </div>

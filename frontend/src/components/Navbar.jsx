@@ -49,7 +49,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: Home },
     { path: '/projects', label: 'Projects', icon: FolderKanban },
     ...(token ? [
-      // { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { path: '/admin/projects', label: 'Manage Projects', icon: PanelTopClose },
       { path: '/admin/profile', label: 'Profile', icon: UserCircle },
     ] : [])
