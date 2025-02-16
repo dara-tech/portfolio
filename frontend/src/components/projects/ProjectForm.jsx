@@ -151,13 +151,13 @@ const ProjectForm = ({ formData, onSubmit, onChange, onImageChange, onTechnology
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text">Live Link</span>
+          <span className="label-text">Live Demo Link</span>
         </label>
         <div className="input-group">
           <input
             type="url"
-            name="liveLink"
-            value={formData.liveLink}
+            name="liveDemoLink"
+            value={formData.liveDemoLink}
             onChange={onChange}
             className="input input-bordered focus:border-primary w-full focus:outline-none"
             placeholder="https://example.com"

@@ -1,13 +1,6 @@
 import cloudinary from '../lib/cloudinary.js';
 import Project from '../models/Project.js';
 
-const normalizeToArray = (field) => {
-  if (!field) return [];
-  if (Array.isArray(field)) return field;
-  if (typeof field === 'string') return field.split(',').map(item => item.trim());
-  return [];
-};
-
 export const createProject = async (req, res) => {
   try {
     const { title, description, technologies, tags, githubLink, liveDemoLink } = req.body;
@@ -22,8 +15,8 @@ export const createProject = async (req, res) => {
       title,
       description,
       image: imageUrl,
-      technologies: normalizeToArray(technologies),
-      tags: normalizeToArray(tags),
+      technologies: technologies ? JSON.parse(technologies) : undefined,
+      tags: tags ? JSON.parse(tags) : undefined,
       githubLink,
       liveDemoLink,
     });
@@ -75,8 +68,8 @@ export const updateProject = async (req, res) => {
     if (description) project.description = description;
     if (githubLink) project.githubLink = githubLink;
     if (liveDemoLink) project.liveDemoLink = liveDemoLink;
-    if (technologies !== undefined) project.technologies = normalizeToArray(technologies);
-    if (tags !== undefined) project.tags = normalizeToArray(tags);
+    if (technologies) project.technologies = JSON.parse(technologies);
+    if (tags) project.tags = JSON.parse(tags);
 
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);

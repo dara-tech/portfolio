@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Plus, Loader2 } from 'lucide-react';
@@ -17,7 +16,7 @@ const AdminProjects = () => {
     technologies: [],
     image: null,
     githubLink: '',
-    liveLink: '',
+    liveDemoLink: '',
   });
   
   const { 
@@ -44,7 +43,7 @@ const AdminProjects = () => {
         technologies: [],
         image: null,
         githubLink: '',
-        liveLink: '',
+        liveDemoLink: '',
       });
     }
     setSelectedProject(project);
