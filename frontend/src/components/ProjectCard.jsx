@@ -7,7 +7,7 @@ const ProjectCard = ({ project }) => {
 
   return (
     <motion.div
-      className="card bg-base-100 shadow-xl overflow-hidden"
+      className=" card bg-base-200"
       whileHover={{ scale: 1.05 }}
       transition={{ duration: 0.3 }}
     >

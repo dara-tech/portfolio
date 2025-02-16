@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useAdminProfile } from "../hooks/useAdminProfile";
-import { Facebook, Instagram, Twitter, Linkedin, Github, Download } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, Github, Download, Youtube } from "lucide-react";
 
 const HeroCard = () => {
   const { formData: userData, loading } = useAdminProfile();
-  const [displayText, setDisplayText] = useState("");
-  const [isTyping, setIsTyping] = useState(true);
+  const [displayName, setDisplayName] = useState("");
+  const [displayDescription, setDisplayDescription] = useState("");
+  const [isTypingName, setIsTypingName] = useState(true);
+  const [isTypingDescription, setIsTypingDescription] = useState(false);
 
   useEffect(() => {
-    if (!loading && userData?.username) {
-      const text = userData.username;
-      let currentIndex = 0;
-      setIsTyping(true);
-
-      const typingInterval = setInterval(() => {
-        if (currentIndex <= text.length) {
-          setDisplayText(text.slice(0, currentIndex));
-          currentIndex++;
-        } else {
-          setIsTyping(false);
-          clearInterval(typingInterval);
+    if (!loading && userData?.username && userData?.describe) {
+      const typingEffect = async (text, setDisplay, setIsTyping, delay = 100) => {
+        setIsTyping(true);
+        for (let i = 0; i <= text.length; i++) {
+          setDisplay(text.slice(0, i));
+          await new Promise(resolve => setTimeout(resolve, delay));
         }
-      }, 100);
+        setIsTyping(false);
+      };
 
-      return () => clearInterval(typingInterval);
+      const animateText = async () => {
+        await typingEffect(userData.username, setDisplayName, setIsTypingName);
+        await new Promise(resolve => setTimeout(resolve, 500)); // Pause between name and description
+        await typingEffect(userData.describe, setDisplayDescription, setIsTypingDescription, 50);
+      };
+
+      animateText();
     }
-  }, [loading, userData?.username]);
+  }, [loading, userData?.username, userData?.describe]);
 
   const SocialLink = ({ href, icon: Icon }) => (
     <a
@@ -38,15 +41,25 @@ const HeroCard = () => {
     </a>
   );
 
+  const getSocialIcon = (platform) => {
+    switch (platform) {
+      case 'github': return Github;
+      case 'linkedin': return Linkedin;
+      case 'twitter': return Twitter;
+      case 'youtube': return Youtube;
+      default: return null;
+    }
+  };
+
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 py-30">
+    <div className="w-full container mx-auto px-4 py-30">
       <div className="grid lg:grid-cols-2 gap-8 items-center">
         <div className="space-y-6">
           <div>
             <h2 className="text-2xl text-primary mb-2">Hi! I Am</h2>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-info to-accent bg-clip-text text-transparent relative">
-              {loading ? "Loading..." : displayText}
-              {isTyping && (
+            <h1 className="text-6xl font-bold bg-gradient-to-r from-primary via-info to-accent bg-clip-text text-transparent relative">
+              {loading ? "Loading..." : displayName}
+              {isTypingName && (
                 <span className="animate-pulse ml-1 inline-block w-1 h-12 bg-gradient-to-r from-primary to-accent" />
               )}
             </h1>
@@ -65,16 +78,20 @@ const HeroCard = () => {
             </div>
           </div>
 
-          <p className="text-xl">{loading ? "Loading..." : userData?.describe || "John Doe"}</p>
+          <p className="text-xl h-20">
+            {loading ? "Loading..." : displayDescription}
+            {isTypingDescription && (
+              <span className="animate-pulse ml-1 inline-block w-1 h-6 bg-gradient-to-r from-primary to-accent" />
+            )}
+          </p>
 
           <div className="flex items-center gap-4">
-            <SocialLink href="#" icon={Facebook} />
-            <SocialLink href="#" icon={Instagram} />
-            <SocialLink href="#" icon={Twitter} />
-            <SocialLink href="#" icon={Linkedin} />
+            {userData?.socialLinks?.map((link) => {
+              const Icon = getSocialIcon(link.platform);
+              return Icon && <SocialLink key={link._id} href={link.url} icon={Icon} />;
+            })}
           </div>
 
-          {/* Download CV Button */}
           {userData?.cv && (
             <a
               href={userData.cv}
@@ -89,7 +106,7 @@ const HeroCard = () => {
 
         <div className="relative">
           <div className="relative">
-            <div className=" rounded-full overflow-hidden border-8 border-primary bg-gradient-to-r from-primary via-info to-accent shadow-xl">
+            <div className="rounded-full overflow-hidden border-8 border-primary bg-gradient-to-r from-primary via-info to-accent shadow-xl">
               {loading ? (
                 <div className="w-full h-full bg-slate-200 animate-pulse" />
               ) : userData?.profilePic ? (

@@ -51,7 +51,7 @@ const ContactForm = () => {
   }
 
   return (
-    <div className="container w-full max-w-6xl mx-auto p-4 ">
+    <div className=" container mx-auto lg:px-4 pb-10 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="hidden md:flex justify-center items-center">
           <div className="relative w-full h-full pb-[100%] rounded-lg overflow-hidden shadow-2xl">

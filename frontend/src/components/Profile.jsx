@@ -78,7 +78,7 @@ const AdminProfile = () => {
     <div className="h-min-screen bg-base-100 py-10 ">
       <div className="max-w-4xl mx-auto card bg-base-100 py-8">
         <div className="">
-          <h2 className="card-title text-3xl font-bold text-center mb-8">Admin Profile</h2>
+          <h2 className="card-title text-3xl text-primary font-bold text-center mb-8">Admin Profile</h2>
           
           {error && (
             <div className="alert alert-error mb-6">

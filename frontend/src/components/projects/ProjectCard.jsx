@@ -24,7 +24,7 @@ const ProjectCard = ({ project, onEdit, onDelete }) => {
       </figure>
       <div className="card-body">
         <h3 className="card-title text-2xl">{project.title}</h3>
-        <div className="text-gray-600 dark:text-gray-300 line-clamp-3" 
+        <div className="text-base-500 line-clamp-3" 
           dangerouslySetInnerHTML={{ __html: project.description }}>
         </div>
         
