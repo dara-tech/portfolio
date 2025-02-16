@@ -5,7 +5,7 @@ import ProjectList from '../components/ProjectList';
 const Projects = () => {
 
   return (
-    <div >
+    <div  className='min-h-screen'>
       <ProjectList/>
     </div>
   );

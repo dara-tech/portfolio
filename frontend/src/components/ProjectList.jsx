@@ -73,7 +73,7 @@ const ProjectList = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-20 min-h-screen">
+    <div className="container w-full max-w-6xl mx-auto p-4 ">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Projects</h1>
       </div>

@@ -75,9 +75,9 @@ const AdminProfile = () => {
   }
 
   return (
-    <div className="h-min-screen bg-base-100 py-10 px-4">
+    <div className="h-min-screen bg-base-100 py-10 ">
       <div className="max-w-4xl mx-auto card bg-base-100 py-8">
-        <div className="card-body">
+        <div className="">
           <h2 className="card-title text-3xl font-bold text-center mb-8">Admin Profile</h2>
           
           {error && (

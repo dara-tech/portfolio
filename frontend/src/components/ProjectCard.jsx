@@ -1,10 +1,9 @@
-
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';     
 
 const ProjectCard = ({ project }) => {
-  const { title, description, image, technologies, githubLink, liveDemoLink, slug } = project;
+  const { _id, title, description, image, technologies, githubLink, liveDemoLink, slug } = project;
 
   return (
     <motion.div
@@ -34,7 +33,7 @@ const ProjectCard = ({ project }) => {
               <FaExternalLinkAlt className="mr-2" /> Live Demo
             </a>
           )}
-          <Link to={`/projects/${slug}`} className="btn btn-sm btn-secondary">
+          <Link to={`/projects/${_id}`} className="btn btn-sm btn-primary">
             Details
           </Link>
         </div>

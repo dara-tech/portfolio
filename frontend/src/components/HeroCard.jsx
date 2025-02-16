@@ -89,7 +89,7 @@ const HeroCard = () => {
 
         <div className="relative">
           <div className="relative">
-            <div className="w-[500px] h-[500px] rounded-full overflow-hidden border-8 border-primary bg-gradient-to-r from-primary via-info to-accent shadow-xl">
+            <div className=" rounded-full overflow-hidden border-8 border-primary bg-gradient-to-r from-primary via-info to-accent shadow-xl">
               {loading ? (
                 <div className="w-full h-full bg-slate-200 animate-pulse" />
               ) : userData?.profilePic ? (

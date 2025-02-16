@@ -7,7 +7,7 @@ import SkillsSection from '../components/SkillsSection';
 
 const Home = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       {/* Hero Section */}
       <div><HeroCard /></div>
 

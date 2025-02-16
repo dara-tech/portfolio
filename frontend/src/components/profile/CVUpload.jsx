@@ -95,7 +95,7 @@ const CVUpload = ({ cvFile, handleCvChange, currentCV, setFormData, formData }) 
 
       {/* Drag & Drop Zone */}
       <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
+        className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors
           ${isDragging ? 'border-primary bg-primary/5' : 'border-base-300 hover:border-primary'}
         `}
         onDragEnter={handleDragEnter}
@@ -143,7 +143,7 @@ const CVUpload = ({ cvFile, handleCvChange, currentCV, setFormData, formData }) 
                         </p>
                       )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 ">
                       {currentCV && (
                         <>
                           <button
@@ -173,7 +173,7 @@ const CVUpload = ({ cvFile, handleCvChange, currentCV, setFormData, formData }) 
                         }}
                         className="btn btn-ghost btn-sm text-error"
                       >
-                        Remove
+                        X
                       </button>
                     </div>
                   </div>
