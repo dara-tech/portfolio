@@ -16,11 +16,8 @@ import { useThemeStore } from './store/useThemeStore';
 
 function App() {
   const {theme} = useThemeStore();
-  return ( 
+  return (
       <div data-theme={theme}>
-
-         
- 
         <Router>
           <Navbar />
 
@@ -63,9 +60,8 @@ function App() {
               }
             />
           </Routes>
-        </Router>   
+        </Router>
       </div>
-   
   );
 }
 
