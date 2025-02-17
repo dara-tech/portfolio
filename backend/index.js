@@ -34,6 +34,7 @@ const connectDB = async () => {
   }
 };
 
+
 // Routes
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
@@ -42,44 +43,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
-    // Enhanced Open Graph tags with dynamic content
-    const defaultOG = {
-      title: 'Portfolio | Darache Ol',
-      description: 'Full-stack developer portfolio showcasing innovative web projects and technical expertise',
-      image: `${req.protocol}://${req.get('host')}/og-image.jpg`,
-      type: 'website',
-      siteName: 'Darache Ol Portfolio',
-      locale: 'en_US',
-      twitterCard: 'summary_large_image',
-      twitterCreator: '@daracheol',
-      themeColor: '#4a90e2'
-    };
-
-    // Set comprehensive meta tags
-    res.set({
-      'og:title': defaultOG.title,
-      'og:description': defaultOG.description,
-      'og:image': defaultOG.image,
-      'og:url': `${req.protocol}://${req.get('host')}${req.originalUrl}`,
-      'og:type': defaultOG.type,
-      'og:site_name': defaultOG.siteName,
-      'og:locale': defaultOG.locale,
-      
-      // Twitter Card tags
-      'twitter:card': defaultOG.twitterCard,
-      'twitter:site': defaultOG.twitterCreator,
-      'twitter:creator': defaultOG.twitterCreator,
-      'twitter:title': defaultOG.title,
-      'twitter:description': defaultOG.description,
-      'twitter:image': defaultOG.image,
-      
-      // Additional meta tags
-      'theme-color': defaultOG.themeColor,
-      'msapplication-TileColor': defaultOG.themeColor,
-      'apple-mobile-web-app-title': defaultOG.title,
-      'application-name': defaultOG.siteName
-    });
-    
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
 }
