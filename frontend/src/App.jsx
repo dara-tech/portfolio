@@ -1,5 +1,4 @@
 import React from 'react';
-import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
@@ -18,7 +17,6 @@ function App() {
   const {theme} = useThemeStore();
   return (
     <div data-theme={theme} >
-    <HelmetProvider>
       <Router>
         <Navbar />
         <Routes>
@@ -60,7 +58,6 @@ function App() {
           />
         </Routes>
       </Router>
-    </HelmetProvider>
     </div>
   );
 }
