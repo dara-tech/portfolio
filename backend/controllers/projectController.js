@@ -127,7 +127,7 @@ export const getProjectOG = async (req, res) => {
               title: project.title,
               type: 'website',
               image: project.image || 'default-image.jpg', // Fallback image
-              url: `https://example.com/projects/${project._id}`,
+              url: `https://daracheol.onrender.com/projects/${project._id}`,
               description: project.description,
           }
       });
