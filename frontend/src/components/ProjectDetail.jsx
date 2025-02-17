@@ -1,9 +1,9 @@
       import React, { useEffect, useState, useMemo } from 'react';
       import { useParams, Link } from 'react-router-dom';
       import { motion } from 'framer-motion';
-      import { Helmet } from 'react-helmet';
       import useProjects from '../hooks/useProjects';
       import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+
 
       const ProjectDetail = () => {
         const { id } = useParams();
@@ -53,13 +53,14 @@
 
         return (
           <>
-            <Helmet>
-              <title>{project.title} | Portfolio Project</title>
+          
+              <title>{project.title}</title>
               <meta name="description" content={project.description?.replace(/<[^>]*>/g, '').substring(0, 155)} />
               <meta property="og:title" content={`${project.title} | Portfolio Project`} />
               <meta property="og:description" content={project.description?.replace(/<[^>]*>/g, '').substring(0, 155)} />
               {project.image && <meta property="og:image" content={project.image} />}
-            </Helmet>
+              <meta name="keywords" content={project.technologies?.join(', ')} />
+      
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="container mx-auto px-4 py-8 max-w-4xl min-h-screen">
               <Link to="/projects" className="btn btn-ghost btn-sm mb-8">&larr; Back to Projects</Link>
               <motion.h1 {...fadeInUp} className="text-5xl font-bold mb-6 text-primary">{project.title}</motion.h1>
