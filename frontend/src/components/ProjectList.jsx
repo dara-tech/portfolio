@@ -37,10 +37,10 @@ const ProjectList = () => {
   }, []);
 
   if (loading) return <div className="flex justify-center items-center min-h-[400px]"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
-  if (error) return <div className="alert alert-error max-w-2xl mx-auto mt-8"><X className="w-6 h-6" /><span>Error loading projects: {error.message}</span></div>;
+  if (error) return <div className="alert alert-error max-w-2xl mx-auto mt-8 "><X className="w-6 h-6" /><span>Error loading projects: {error.message}</span></div>;
 
   return (
-    <div className=" container mx-auto px-4 py-8 my-15">
+    <div className=" container mx-auto px-4 py-24 ">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Projects</h1>
         <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="btn btn-primary">
@@ -55,7 +55,7 @@ const ProjectList = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="mb-8 space-y-4 bg-base-200 p-4 rounded-lg shadow-md overflow-hidden"
+            className="mb-8 space-y-4 bg-base-200 p-4 rounded-lg shadow-md overflow-hidden "
           >
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 min-w-[200px]">
