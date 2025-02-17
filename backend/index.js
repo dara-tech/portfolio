@@ -39,6 +39,11 @@ const connectDB = async () => {
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
 
+// Example route to render a view
+app.get('/view', (req, res) => {
+  res.render('index'); // Render the index.ejs file
+});
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 

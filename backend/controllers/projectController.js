@@ -114,3 +114,24 @@ export const getViewCount = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+export const getProjectOG = async (req, res) => {
+  try {
+      const project = await Project.findById(req.params.id);
+      if (!project) {
+          return res.status(404).send('Project not found');
+      }
+
+      // Render a view with OG tags
+      res.render('project', {
+          content: {
+              title: project.title,
+              type: 'website',
+              image: project.image || 'default-image.jpg', // Fallback image
+              url: `https://example.com/projects/${project._id}`,
+              description: project.description,
+          }
+      });
+  } catch (error) {
+      res.status(500).send('Server error');
+  }
+};

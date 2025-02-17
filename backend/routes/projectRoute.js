@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { createProject, getProjects, updateProject, deleteProject, getProjectById, incrementViewCount, getViewCount } from '../controllers/projectController.js';
+import { createProject, getProjects, updateProject, deleteProject, getProjectById, incrementViewCount, getViewCount, getProjectOG } from '../controllers/projectController.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -22,5 +22,6 @@ router.get('/projects/:id', getProjectById);
 // Public route: Anyone can view projects
 router.post('/projects/:id/views', incrementViewCount);
 router.get('/projects/:id/views', getViewCount);
+router.get('/projects/:id', getProjectOG);
 
 export default router;
