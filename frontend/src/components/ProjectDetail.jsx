@@ -1,7 +1,7 @@
       import React, { useEffect, useState, useMemo } from 'react';
       import { useParams, Link } from 'react-router-dom';
       import { motion } from 'framer-motion';
-      import { Helmet } from 'react-helmet';
+      import { Helmet } from 'react-helmet-async';
       import useProjects from '../hooks/useProjects';
       import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
