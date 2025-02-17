@@ -3,7 +3,7 @@
       import { motion } from 'framer-motion';
       import useProjects from '../hooks/useProjects';
       import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
-
+      import { Helmet } from 'react-helmet';
 
       const ProjectDetail = () => {
         const { id } = useParams();
@@ -53,13 +53,20 @@
 
         return (
           <>
-          
+       
               <title>{project.title}</title>
               <meta name="description" content={project.description?.replace(/<[^>]*>/g, '').substring(0, 155)} />
               <meta property="og:title" content={`${project.title} | Portfolio Project`} />
               <meta property="og:description" content={project.description?.replace(/<[^>]*>/g, '').substring(0, 155)} />
               {project.image && <meta property="og:image" content={project.image} />}
+              <meta property="og:url" content={`https://daracheol.onrender.com/projects/${project._id}`} />
+              <meta property="og:type" content="website" />
               <meta name="keywords" content={project.technologies?.join(', ')} />
+              <meta name="twitter:card" content="summary_large_image" />
+              <meta name="twitter:title" content={project.title} />
+              <meta name="twitter:description" content={project.description?.replace(/<[^>]*>/g, '').substring(0, 155)} />
+              <meta name="twitter:image" content={project.image} />
+           
       
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="container mx-auto px-4 py-8 max-w-4xl min-h-screen">
               <Link to="/projects" className="btn btn-ghost btn-sm mb-8">&larr; Back to Projects</Link>
