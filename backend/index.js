@@ -69,7 +69,7 @@ const startServer = async () => {
         }).on("error", (err) => {
           console.error("Error during auto-reload request:", err.message);
         });
-      }, 40000);
+      }, 60000); // 1 minutes in milliseconds
     }
 
   } catch (error) {
