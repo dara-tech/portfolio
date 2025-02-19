@@ -4,11 +4,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import http from "http";
 import path from "path";
-import authRoutes from './routes/adminRoutes.js'; 
-import projectRoutes from './routes/projectRoute.js';
 import { fileURLToPath } from "url";
 import https from "https";
 import cookieParser from "cookie-parser";
+import { memoryUsage } from "process";
 
 dotenv.config();
 
@@ -29,7 +28,7 @@ app.use(cookieParser());
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("MongoDB connected ✅");
+    console.log("MongoDB connected ");
   } catch (error) {
     console.error("MongoDB connection error:", error);
     process.exit(1);
@@ -58,18 +57,22 @@ const startServer = async () => {
   try {
     await connectDB();
     server.listen(port, () => {
-      console.log(`🌐 Server is running on port ${port} ✅`);
+      console.log(` Server is running on port ${port} `);
     });
 
     // Auto-reload only in production
     if (process.env.NODE_ENV === "production") {
       setInterval(() => {
+        if (memoryUsage().rss > 536870912) { // 512MB
+          console.log("Memory usage is high, restarting server...");
+          process.exit(1);
+        }
         https.get("https://darachoel-hm0a.onrender.com/", (res) => {
           console.log("Auto-reload request sent. Status:", res.statusCode);
         }).on("error", (err) => {
           console.error("Error during auto-reload request:", err.message);
         });
-      }, 60000);
+      }, 600000); // 10 minutes
     }
 
   } catch (error) {
