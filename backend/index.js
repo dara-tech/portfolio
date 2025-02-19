@@ -8,6 +8,9 @@ import { fileURLToPath } from "url";
 import https from "https";
 import cookieParser from "cookie-parser";
 import { memoryUsage } from "process";
+import authRoutes from './routes/adminRoutes'
+import projectRoutes from './routes/projectRoute'
+
 
 dotenv.config();
 
@@ -37,8 +40,8 @@ const connectDB = async () => {
 
 
 // Routes
-app.use('/api', authRoutes);
-app.use('/api', projectRoutes);
+app.use('/api/admin', authRoutes);
+app.use('/api/project', projectRoutes);
 
 
 
