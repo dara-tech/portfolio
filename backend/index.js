@@ -8,8 +8,8 @@ import { fileURLToPath } from "url";
 import https from "https";
 import cookieParser from "cookie-parser";
 import { memoryUsage } from "process";
-import authRoutes from './routes/adminRoutes'
-import projectRoutes from './routes/projectRoute'
+import authRoutes from './routes/adminRoutes.js'
+import projectRoutes from './routes/projectRoute.js'
 
 
 dotenv.config();
