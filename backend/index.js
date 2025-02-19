@@ -6,13 +6,13 @@ import http from "http";
 import path from "path";
 import authRoutes from './routes/adminRoutes.js'; 
 import projectRoutes from './routes/projectRoute.js';
-// import { fileURLToPath } from "url";
+import { fileURLToPath } from "url";
 import https from "https";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
 
-// const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
@@ -65,7 +65,7 @@ const startServer = async () => {
     // Auto-reload only in production
     if (process.env.NODE_ENV === "production") {
       setInterval(() => {
-        https.get("https://daracheol.onrender.com", (res) => {
+        https.get("https://portfolio-l5nx.onrender.com", (res) => {
           console.log("Auto-reload request sent. Status:", res.statusCode);
         }).on("error", (err) => {
           console.error("Error during auto-reload request:", err.message);
