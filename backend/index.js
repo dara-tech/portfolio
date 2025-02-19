@@ -6,13 +6,13 @@ import http from "http";
 import path from "path";
 import authRoutes from './routes/adminRoutes.js'; 
 import projectRoutes from './routes/projectRoute.js';
-import { fileURLToPath } from "url";
+// import { fileURLToPath } from "url";
 import https from "https";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
+// const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
