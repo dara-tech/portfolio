@@ -64,7 +64,7 @@ const startServer = async () => {
     // Auto-reload only in production
     if (process.env.NODE_ENV === "production") {
       setInterval(() => {
-        https.get("https://darachoel-hm0a.onrender.com/", (res) => {
+        https.get("https://darachoel-hm0a.onrender.com", (res) => {
           console.log("Auto-reload request sent. Status:", res.statusCode);
         }).on("error", (err) => {
           console.error("Error during auto-reload request:", err.message);
