@@ -18,14 +18,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 5002;
 
-// Middleware
 app.use(cors({ origin: [
-  "http://localhost:5173", // Development frontend
+  "http://localhost:5173",
   "http://localhost:5002", "https://darachoel-hm0a.onrender.com/"], credentials: true }));
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
-// MongoDB Connection
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -36,22 +34,15 @@ const connectDB = async () => {
   }
 };
 
-
-// Routes
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
 
-
-
-// Serve frontend (always, not just in production)
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
-
-// Start Server
 const server = http.createServer(app);
 
 const startServer = async () => {
@@ -61,15 +52,14 @@ const startServer = async () => {
       console.log(`🌐 Server is running on port ${port} ✅`);
     });
 
-    // Auto-reload only in production
     if (process.env.NODE_ENV === "production") {
       setInterval(() => {
         https.get("https://darachoel-hm0a.onrender.com", (res) => {
-          console.log("Auto-reload request sent. Status:", res.statusCode);
+          console.log(`Auto-reload request sent at ${new Date().toISOString()}. Status: ${res.statusCode}`);
         }).on("error", (err) => {
-          console.error("Error during auto-reload request:", err.message);
+          console.error(`Error during auto-reload request at ${new Date().toISOString()}:`, err.message);
         });
-      }, 60000); // 1 minutes in milliseconds
+      }, 60000);
     }
 
   } catch (error) {
