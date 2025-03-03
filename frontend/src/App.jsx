@@ -10,9 +10,13 @@ import AdminProjects from './pages/AdminProjects';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/lib/projectdRoute';
 import ProjectDetail from './components/ProjectDetail';
-import Profile from './pages/Profile'; // Assuming you have a Profile page
+import Profile from './pages/Profile';
 import SettingPage from './pages/SettingPage';
 import { useThemeStore } from './store/useThemeStore';
+import Roadmap from './pages/RoadMap';
+import RoadmapDetail from './pages/RoadMapDetail';
+import RoadMapManage from './pages/RoadMapManage';
+import RoadMapCreate from './pages/RoadMapCreate';
 
 function App() {
   const {theme} = useThemeStore();
@@ -27,6 +31,8 @@ function App() {
             
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/roadmap" element={<Roadmap />} />
+            <Route path="/roadmap/:id" element={<RoadmapDetail />} />
 
             {/* Admin Auth routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -56,6 +62,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/roadmap"
+              element={
+                <ProtectedRoute>
+                  <RoadMapManage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/roadmap/create-roadmap"
+              element={
+                <ProtectedRoute>
+                  <RoadMapCreate />
                 </ProtectedRoute>
               }
             />

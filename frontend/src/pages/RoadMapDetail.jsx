@@ -1,0 +1,34 @@
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import RoadMapDetail from '../components/RoadMapDetail';
+import { Loader2 } from 'lucide-react';
+import { useRoadMap } from '../hooks/useRoadMap';
+
+const RoadMapDetailPage = () => {
+  const { id } = useParams();
+  const { roadMap, loading, error } = useRoadMap(id);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500 font-semibold text-lg">{error}</div>;
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      {roadMap ? (
+        <RoadMapDetail roadMap={roadMap} />
+      ) : (
+        <div className="text-center text-gray-600 text-lg">Roadmap not found</div>
+      )}
+    </div>
+  );
+};
+
+export default RoadMapDetailPage;

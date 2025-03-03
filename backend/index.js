@@ -6,6 +6,7 @@ import http from "http";
 import path from "path";
 import authRoutes from './routes/adminRoutes.js'; 
 import projectRoutes from './routes/projectRoute.js';
+import roadmapRoutes from './routes/roadMaps.js';
 import { fileURLToPath } from "url";
 import https from "https";
 import cookieParser from "cookie-parser";
@@ -36,6 +37,7 @@ const connectDB = async () => {
 
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
+app.use('/api', roadmapRoutes);
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
@@ -53,13 +55,18 @@ const startServer = async () => {
     });
 
     if (process.env.NODE_ENV === "production") {
-      setInterval(() => {
+      const autoReload = () => {
         https.get("https://darachoel-hm0a.onrender.com", (res) => {
           console.log(`Auto-reload request sent at ${new Date().toISOString()}. Status: ${res.statusCode}`);
         }).on("error", (err) => {
           console.error(`Error during auto-reload request at ${new Date().toISOString()}:`, err.message);
-        });
-      }, 60000);
+        }).on("timeout", () => {
+          console.warn(`Auto-reload request timed out at ${new Date().toISOString()}`);
+        }).setTimeout(30000); // 30 seconds timeout
+      };
+
+      setInterval(autoReload, 840000); // 14 minutes
+      autoReload(); // Initial call
     }
 
   } catch (error) {

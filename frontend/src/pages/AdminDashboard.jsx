@@ -16,7 +16,6 @@ const AdminDashboard = () => {
     if (projects) {
       const totalViews = projects.reduce((sum, project) => sum + (project.views || 0), 0);
       
-      // Calculate views from last 30 days
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       
@@ -27,7 +26,6 @@ const AdminDashboard = () => {
         return sum + recentViews;
       }, 0);
 
-      // Calculate growth percentage
       const previousMonthViews = projects.reduce((sum, project) => {
         const previousViews = project.viewHistory?.filter(view => {
           const viewDate = new Date(view.timestamp);
@@ -106,7 +104,7 @@ const AdminDashboard = () => {
             </div>
           </Link>
 
-          <div className="card bg-accent text-accent-content">
+          <Link to="/admin/analytics" className="card bg-accent text-accent-content hover:bg-accent-focus transition-colors">
             <div className="card-body">
               <h2 className="card-title">Analytics</h2>
               <p>View detailed project engagement metrics</p>
@@ -114,7 +112,17 @@ const AdminDashboard = () => {
                 <button className="btn">View</button>
               </div>
             </div>
-          </div>
+          </Link>
+
+          <Link to="/admin/roadmap" className="card bg-info text-info-content hover:bg-info-focus transition-colors">
+            <div className="card-body">
+              <h2 className="card-title">Roadmap</h2>
+              <p>Manage your learning roadmap</p>
+              <div className="card-actions justify-end">
+                <button className="btn">Manage</button>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

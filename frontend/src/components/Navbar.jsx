@@ -11,7 +11,8 @@ import {
   Menu,
   Home,
   FolderKanban,
-  PanelTopClose
+  PanelTopClose,
+  Map
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -48,9 +49,11 @@ const Navbar = () => {
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/projects', label: 'Projects', icon: FolderKanban },
+    { path: '/roadmap', label: 'Roadmap', icon: Map },
     ...(token ? [
       { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { path: '/admin/projects', label: 'Manage Projects', icon: PanelTopClose },
+      { path: '/admin/roadmap', label: 'Manage Roadmap', icon: Map },
       { path: '/admin/profile', label: 'Profile', icon: UserCircle },
     ] : [])
   ];
@@ -66,7 +69,6 @@ const Navbar = () => {
     >
       <div className="relative">
         <Terminal className="w-6 h-6 text-primary transform transition-transform group-hover:rotate-12" />
-        {/* <Code2 className="w-4 h-4 absolute -bottom-1 -right-1 text-secondary transform transition-transform group-hover:-rotate-12" /> */}
       </div>
       <div className="flex items-baseline">
         <span className="text-xl">Portfolio</span>
