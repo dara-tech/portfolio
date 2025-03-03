@@ -60,7 +60,7 @@ const RoadMapManage = () => {
   };
 
   const handleSaveRoadmap = (newRoadmap) => {
-    console.log('Roadmap saved:', newRoadmap);
+
     // Handle the saved roadmap, e.g., save it to state or make an API call
   };
 

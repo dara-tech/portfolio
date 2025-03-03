@@ -10,7 +10,7 @@ const isAuthenticated = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded Token:", decoded); // Debugging log
+   // Debugging log
 
     // Change decoded.id to decoded.userId
     req.admin = await Admin.findById(decoded.userId).select("-password");
