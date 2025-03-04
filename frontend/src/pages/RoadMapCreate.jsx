@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Save, X } from 'lucide-react';
+import { Plus, Save, X, Loader } from 'lucide-react';
 import { useCreateRoadMap } from '../hooks/useRoadMap';
 import StepForm from '../components/roadmap/RoadForm';
 import { useNavigate } from 'react-router-dom';
+import { generateRoadMap } from '../components/Ai/ModelRoadMap';
 
 const RoadMapCreate = ({ onSave, onCancel }) => {
   const [roadmap, setRoadmap] = useState({
@@ -12,11 +13,13 @@ const RoadMapCreate = ({ onSave, onCancel }) => {
     category: '',
     difficulty: '',
     estimatedTime: '',
-    steps: [{ name: '', description: '', resources: [] }]
+    steps: [{ name: '', description: '', resources: [], estimatedTime: '' }]
   });
   const [activeStep, setActiveStep] = useState(0);
   const { createRoadMap, loading, error } = useCreateRoadMap();
   const navigate = useNavigate();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,33 +39,37 @@ const RoadMapCreate = ({ onSave, onCancel }) => {
       ...prev,
       steps: prev.steps.filter((_, i) => i !== index)
     }));
-    if (activeStep >= index) {
-      setActiveStep(Math.max(0, activeStep - 1));
-    }
+    setActiveStep(prev => (prev >= index ? Math.max(0, prev - 1) : prev));
   };
 
   const handleAddStep = () => {
-    setRoadmap(prev => {
-      const newSteps = [...prev.steps, { name: '', description: '', resources: [] }];
-      return { ...prev, steps: newSteps };
-    });
+    setRoadmap(prev => ({
+      ...prev,
+      steps: [...prev.steps, { 
+        name: '', 
+        description: '', 
+        resources: [],
+        estimatedTime: '' // Add this field
+      }]
+    }));
     setActiveStep(prev => prev + 1);
   };
 
   const handleAddResource = (stepIndex) => {
-    setRoadmap(prev => {
-      const updatedSteps = prev.steps.map((step, i) =>
+    setRoadmap(prev => ({
+      ...prev,
+      steps: prev.steps.map((step, i) =>
         i === stepIndex
-          ? { ...step, resources: [...step.resources, { title: '', link: '' }] }
+          ? { ...step, resources: [...step.resources, { title: '', url: '' }] }
           : step
-      );
-      return { ...prev, steps: updatedSteps };
-    });
+      )
+    }));
   };
 
   const handleResourceChange = (stepIndex, resourceIndex, field, value) => {
-    setRoadmap(prev => {
-      const updatedSteps = prev.steps.map((step, i) =>
+    setRoadmap(prev => ({
+      ...prev,
+      steps: prev.steps.map((step, i) =>
         i === stepIndex
           ? {
               ...step,
@@ -71,23 +78,22 @@ const RoadMapCreate = ({ onSave, onCancel }) => {
               ),
             }
           : step
-      );
-      return { ...prev, steps: updatedSteps };
-    });
+      )
+    }));
   };
 
   const handleRemoveResource = (stepIndex, resourceIndex) => {
-    setRoadmap(prev => {
-      const updatedSteps = prev.steps.map((step, i) =>
+    setRoadmap(prev => ({
+      ...prev,
+      steps: prev.steps.map((step, i) =>
         i === stepIndex
           ? {
               ...step,
               resources: step.resources.filter((_, j) => j !== resourceIndex),
             }
           : step
-      );
-      return { ...prev, steps: updatedSteps };
-    });
+      )
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -100,6 +106,61 @@ const RoadMapCreate = ({ onSave, onCancel }) => {
       console.error('Failed to create roadmap:', err);
     }
   };
+
+  const handleGenerateRoadmap = async () => {
+    if (!roadmap.title) {
+      alert("Please enter a title before generating a roadmap.");
+      return;
+    }
+  
+    setIsGenerating(true);
+    setGenerationError(null);
+    try {
+      const generatedRoadmap = await generateRoadMap(roadmap.title, roadmap.description);
+      console.log("Generated Roadmap:", generatedRoadmap);
+  
+      if (!generatedRoadmap || typeof generatedRoadmap !== "object") {
+        throw new Error("Invalid roadmap format from AI.");
+      }
+  
+      if (!Array.isArray(generatedRoadmap.steps)) {
+        throw new Error("Generated roadmap steps are not in an array format.");
+      }
+  
+      // Validate and transform the response
+      const transformedSteps = generatedRoadmap.steps.map(step => {
+        // Ensure resources is always an array
+        const resources = Array.isArray(step.resources) ? step.resources : [];
+        
+        return {
+          name: step.name || "Untitled Step",
+          description: step.description || "No description provided",
+          estimatedTime: step.estimatedTime || "Not specified",
+          resources: resources.map(res => ({
+            title: res.title || "Untitled Resource",
+            url: res.url && res.url.startsWith('http') ? res.url : "#",
+          })),
+        };
+      });
+  
+      setRoadmap(prev => ({
+        ...prev,
+        title: generatedRoadmap.title || prev.title,
+        description: generatedRoadmap.description || prev.description,
+        category: generatedRoadmap.category || prev.category || "",
+        difficulty: generatedRoadmap.difficulty || prev.difficulty || "",
+        estimatedTime: generatedRoadmap.estimatedTime || prev.estimatedTime || "",
+        steps: transformedSteps,
+      }));
+  
+    } catch (err) {
+      console.error("Failed to generate roadmap:", err);
+      setGenerationError(err.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+  
 
   return (
     <motion.form
@@ -125,60 +186,53 @@ const RoadMapCreate = ({ onSave, onCancel }) => {
             required
           />
         </div>
-
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">Category</span>
-          </label>
-          <select
-            name="category"
-            value={roadmap.category}
-            onChange={handleInputChange}
-            className="select select-bordered w-full focus:outline-none"
-            required
+        <div className="form-control flex items-end">
+          <button
+            type="button"
+            onClick={handleGenerateRoadmap}
+            disabled={isGenerating}
+            className="btn btn-secondary focus:outline-none w-full"
           >
-            <option value="">Select a category</option>
-            <option value="Frontend">Frontend</option>
-            <option value="Backend">Backend</option>
-            <option value="FullStack">FullStack</option>
-            <option value="DevOps">DevOps</option>
-            <option value="Mobile">Mobile</option>
-            <option value="Other">Other</option>
-          </select>
+            {isGenerating ? <Loader className="animate-spin mr-2" /> : null}
+            {isGenerating ? 'Generating...' : 'Generate with AI'}
+          </button>
         </div>
-
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">Difficulty</span>
-          </label>
-          <select
-            name="difficulty"
-            value={roadmap.difficulty}
-            onChange={handleInputChange}
-            className="select select-bordered w-full focus:outline-none"
-            required
-          >
-            <option value="">Select difficulty</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-        </div>
-
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">Estimated Time</span>
-          </label>
-          <input
-            type="text"
-            name="estimatedTime"
-            value={roadmap.estimatedTime}
-            onChange={handleInputChange}
-            className="input input-bordered w-full focus:outline-none"
-            placeholder="e.g., 2 weeks, 3 months"
-            required
-          />
-        </div>
+        {['category', 'difficulty', 'estimatedTime'].map((field) => (
+          <div key={field} className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">{field.charAt(0).toUpperCase() + field.slice(1)}</span>
+            </label>
+            {field === 'category' || field === 'difficulty' ? (
+              <select
+                name={field}
+                value={roadmap[field]}
+                onChange={handleInputChange}
+                className="select select-bordered w-full focus:outline-none"
+                required
+              >
+                <option value="">Select {field}</option>
+                {field === 'category' 
+                  ? ['Frontend', 'Backend', 'FullStack', 'DevOps', 'Mobile', 'Other'].map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))
+                  : ['Beginner', 'Intermediate', 'Advanced'].map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))
+                }
+              </select>
+            ) : (
+              <input
+                type="text"
+                name={field}
+                value={roadmap[field]}
+                onChange={handleInputChange}
+                className="input input-bordered w-full focus:outline-none"
+                placeholder={field === 'estimatedTime' ? "e.g., 2 weeks, 3 months" : ""}
+                required
+              />
+            )}
+          </div>
+        ))}
       </div>
 
       <div className="form-control mt-4">
@@ -195,7 +249,7 @@ const RoadMapCreate = ({ onSave, onCancel }) => {
       </div>
 
       <div className="mt-6">
-        <h3 className="text-2xl font-semibold mb-4 ">Steps</h3>
+        <h3 className="text-2xl font-semibold mb-4">Steps</h3>
         {roadmap.steps.map((step, index) => (
           <StepForm
             key={index}
@@ -220,6 +274,7 @@ const RoadMapCreate = ({ onSave, onCancel }) => {
       </div>
 
       {error && <div className="alert alert-error mt-4">{error}</div>}
+      {generationError && <div className="alert alert-error mt-4">{generationError}</div>}
 
       <div className="card-actions justify-end mt-6">
         <button

@@ -17,7 +17,7 @@ import Roadmap from './pages/RoadMap';
 import RoadmapDetail from './pages/RoadMapDetail';
 import RoadMapManage from './pages/RoadMapManage';
 import RoadMapCreate from './pages/RoadMapCreate';
-
+import Chat from './components/chat/Chat';
 
 function App() {
   const {theme} = useThemeStore();
@@ -29,11 +29,11 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
-            
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/roadmap" element={<Roadmap />} />
             <Route path="/roadmap/:id" element={<RoadmapDetail />} />
+            <Route path="/chat" element={<Chat />} />
 
             {/* Admin Auth routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -83,8 +83,6 @@ function App() {
               }
             />
           </Routes>
-
-        
         </Router>
       </div>
   );

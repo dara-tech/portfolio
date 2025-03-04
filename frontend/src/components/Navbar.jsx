@@ -12,7 +12,8 @@ import {
   Home,
   FolderKanban,
   PanelTopClose,
-  Map
+  Map,
+  MessageSquare
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -58,6 +59,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: Home },
     { path: '/projects', label: 'Projects', icon: FolderKanban },
     { path: '/roadmap', label: 'Roadmap', icon: Map },
+    { path: '/chat', label: 'Chat', icon: MessageSquare },
   ];
 
   const adminNavItems = [
