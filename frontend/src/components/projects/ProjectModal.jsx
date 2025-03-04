@@ -30,7 +30,7 @@ const ProjectModal = ({ isOpen, onClose, title, children }) => {
             className=" bg-base-200 rounded-lg shadow-2xl w-full  max-w-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-base-300 flex justify-between items-center p-6 border-b dark:border-gray-700">
+            <div className="bg-base-300 flex justify-between items-center p-4 border-b dark:border-gray-700">
               <h2 className="text-2xl font-bold text-primary">{title}</h2>
               <button
                 onClick={onClose}

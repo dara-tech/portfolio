@@ -1,8 +1,10 @@
       import React, { useEffect, useState, useMemo } from 'react';
       import { useParams, Link } from 'react-router-dom';
       import { motion } from 'framer-motion';
-      import useProjects from '../hooks/useProjects';
-      import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';      const ProjectDetail = () => {
+      import useProjects from '../../hooks/useProjects';
+      import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';    
+      
+      const ProjectDetail = () => {
         const { id } = useParams();
         const { project, loading, error, fetchProjectById, sendView } = useProjects();
         const [imageLoaded, setImageLoaded] = useState(false);

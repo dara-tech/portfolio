@@ -1,24 +1,31 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ContactForm from '../components/ContactForm';
-import ProjectList from '../components/ProjectList';
+import ProjectList from '../components/projects/ProjectList';
 import HeroCard from '../components/HeroCard';
 import SkillsSection from '../components/SkillsSection';
 
+import { MessageCircle } from 'lucide-react';
+
+
 const Home = () => {
+
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen overflow-y-auto mb-4 py-4">
+    
+
       {/* Hero Section */}
-      <div><HeroCard /></div>
+      <HeroCard />
 
       {/* Skills Section */}
       <SkillsSection />
 
       {/* Featured Projects Preview */}
-      <ProjectList/>
+      <ProjectList />
 
       {/* Contact Section */}
       <ContactForm />
+
     </div>
   );
 };

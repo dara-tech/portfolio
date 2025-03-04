@@ -9,7 +9,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminProjects from './pages/AdminProjects';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/lib/projectdRoute';
-import ProjectDetail from './components/ProjectDetail';
+import ProjectDetail from './components/projects/ProjectDetail';
 import Profile from './pages/Profile';
 import SettingPage from './pages/SettingPage';
 import { useThemeStore } from './store/useThemeStore';
@@ -17,6 +17,7 @@ import Roadmap from './pages/RoadMap';
 import RoadmapDetail from './pages/RoadMapDetail';
 import RoadMapManage from './pages/RoadMapManage';
 import RoadMapCreate from './pages/RoadMapCreate';
+
 
 function App() {
   const {theme} = useThemeStore();
@@ -82,6 +83,8 @@ function App() {
               }
             />
           </Routes>
+
+        
         </Router>
       </div>
   );

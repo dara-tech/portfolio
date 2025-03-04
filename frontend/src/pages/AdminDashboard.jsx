@@ -52,7 +52,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-20 max-w-4xl min-h-screen ">
+    <div className="container mx-auto py-20 px-4 min-h-screen ">
       <div className="flex flex-col gap-6">
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">

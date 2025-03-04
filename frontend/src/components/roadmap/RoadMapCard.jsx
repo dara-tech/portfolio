@@ -7,7 +7,7 @@ const RoadMapCard = ({ roadMap }) => (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
-    className="card bg-base-100 shadow-xl h-full flex flex-col"
+    className="card bg-base-100 shadow-xl h-full flex flex-col border border-primary/10"
   >
     <div className="card-body flex-grow">
       <h3 className="card-title">{roadMap.title}</h3>

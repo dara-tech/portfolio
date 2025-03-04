@@ -97,14 +97,14 @@ const RoadMapManage = () => {
           <input
             type="text"
             placeholder="Search roadmaps..."
-            className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full pl-10 pr-4 py-2 border border-primary rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="relative w-full md:w-1/4">
           <select
-            className="w-full pl-4 pr-10 py-2 border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-4 pr-10 py-2 border border-primary rounded-md appearance-none focus:outline-none focus:ring-1 focus:ring-primary"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >

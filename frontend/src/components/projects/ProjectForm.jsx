@@ -26,6 +26,8 @@ const ProjectForm = ({ formData, onSubmit, onChange, onImageChange, onTechnology
 
   return (
     <form onSubmit={onSubmit}>
+
+      <div className="flex flex-col gap-2">
       <div className="form-control">
         <label className="label">
           <span className="label-text">Title</span>
@@ -170,6 +172,8 @@ const ProjectForm = ({ formData, onSubmit, onChange, onImageChange, onTechnology
           {formData.id ? 'Update' : 'Create'}
         </button>
       </div>
+      </div>
+     
     </form>
   );
 };

@@ -1,58 +1,41 @@
-// ProjectCard.js
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Edit, Trash2 } from 'lucide-react';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';     
 
-const ProjectCard = ({ project, onEdit, onDelete }) => {
+const ProjectCard = ({ project }) => {
+  const { _id, title, description, image, technologies, githubLink, liveDemoLink, slug } = project;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="card bg-base-200"
+      className=" card bg-base-200 "
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.3 }}
     >
-      <figure className="px-4 pt-4">
-        <img 
-          src={project.image || '/placeholder-project.jpg'} 
-          alt={project.title}
-          className="rounded-xl h-56 w-full object-cover"
-          onError={(e) => {
-            e.target.src = '/placeholder-project.jpg';
-            e.target.onerror = null;
-          }}
-        />
+      <figure className="h-48 overflow-hidden">
+        <img src={image} alt={title} className="w-full h-full object-cover" />
       </figure>
       <div className="card-body">
-        <h3 className="card-title text-2xl">{project.title}</h3>
-        <div className="text-base-500 line-clamp-3" 
-          dangerouslySetInnerHTML={{ __html: project.description }}>
+        <h2 className="card-title">{title}</h2>
+        <p className="text-sm">{description.substring(0, 100)}...</p>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {technologies.slice(0, 3).map((tech, index) => (
+            <span key={index} className="badge badge-primary">{tech}</span>
+          ))}
         </div>
-        
-        {project.technologies && project.technologies.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-3">
-            {project.technologies.map((tech, index) => (
-              <span key={index} className="badge badge-primary badge-outline">
-                {tech}
-              </span>
-            ))}
-          </div>
-        )}
-        
         <div className="card-actions justify-end mt-4">
-          <button 
-            onClick={() => onEdit(project)} 
-            className="btn btn-sm btn-outline btn-primary"
-          >
-            <Edit className="w-4 h-4 mr-2" />
-            Edit
-          </button>
-          <button 
-            onClick={() => onDelete(project._id)} 
-            className="btn btn-sm btn-outline btn-error"
-          >
-            <Trash2 className="w-4 h-4 mr-2" />
-            Delete
-          </button>
+          {githubLink && (
+            <a href={githubLink} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline">
+              <FaGithub className="mr-2" /> GitHub
+            </a>
+          )}
+          {liveDemoLink && (
+            <a href={liveDemoLink} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-primary">
+              <FaExternalLinkAlt className="mr-2" /> Live Demo
+            </a>
+          )}
+          <Link to={`/projects/${_id}`} className="btn btn-sm btn-primary">
+            Details
+          </Link>
         </div>
       </div>
     </motion.div>

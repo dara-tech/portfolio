@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import useProjects from '../hooks/useProjects';
-import ErrorBoundary from './ErrorBoundary';
-import ProjectCard from '../components/ProjectCard';
+import useProjects from '../../hooks/useProjects';
+import ErrorBoundary from '../ErrorBoundary';
+import ProjectCard from '../projects/ProjectCard';
 import { Search, Filter, X, ChevronDown, Sliders } from 'lucide-react';
 
 const ProjectList = () => {

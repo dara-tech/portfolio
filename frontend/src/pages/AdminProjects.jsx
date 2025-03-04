@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Plus, Loader2 } from 'lucide-react';
 import useProjects from '../hooks/useProjects';
-import ProjectCard from '../components/projects/ProjectCard';
+import ProjectCard from '../components/projects/ProjectCardAdmin';
 import ProjectForm from '../components/projects/ProjectForm';
 import ProjectModal from '../components/projects/ProjectModal';
 

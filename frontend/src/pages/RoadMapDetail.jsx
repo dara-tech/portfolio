@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import RoadMapDetail from '../components/RoadMapDetail';
+import RoadMapDetail from '../components/roadmap/RoadMapDetail';
 import { Loader2 } from 'lucide-react';
 import { useRoadMap } from '../hooks/useRoadMap';
 
@@ -28,7 +28,7 @@ const RoadMapDetailPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-2">
       {roadMap ? (
         <RoadMapDetail roadMap={roadMap} />
       ) : (
