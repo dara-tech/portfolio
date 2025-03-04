@@ -2,14 +2,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import http from "http";
-import path from "path";
-import authRoutes from './routes/adminRoutes.js'; 
+import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
+import https from 'https';
+
+import authRoutes from './routes/adminRoutes.js';
 import projectRoutes from './routes/projectRoute.js';
 import roadmapRoutes from './routes/roadMaps.js';
-import { fileURLToPath } from "url";
-import https from "https";
-import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -17,20 +18,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5002;
 
-app.use(cors({ origin: [
-  "http://localhost:5173",
-  "http://localhost:5002", "https://darachoel-hm0a.onrender.com/"], credentials: true }));
+app.use(cors({ 
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5002",
+    "https://darachoel-hm0a.onrender.com"
+  ], 
+  credentials: true 
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("MongoDB connected ✅");
+    console.log("✅ MongoDB connected successfully!");
   } catch (error) {
-    console.error("MongoDB connection error:", error);
+    console.error("❌ MongoDB connection error:", error);
     process.exit(1);
   }
 };
@@ -47,30 +53,29 @@ app.get("*", (req, res) => {
 
 const server = http.createServer(app);
 
+const AUTO_RELOAD_INTERVAL = 800000;
+
+const autoReload = () => {
+  https.get("https://darachoel-hm0a.onrender.com", (res) => {
+    console.log(`[${new Date().toISOString()}] 🔄 Auto-reload request sent. Status: ${res.statusCode}`);
+  }).on("error", (err) => {
+    console.error(`[${new Date().toISOString()}] ❌ Auto-reload failed: ${err.message}`);
+  }).on("timeout", () => {
+    console.warn(`[${new Date().toISOString()}] ⚠️ Auto-reload request timed out.`);
+  }).setTimeout(10000);
+};
+
 const startServer = async () => {
   try {
     await connectDB();
-    server.listen(port, () => {
-      console.log(`🌐 Server is running on port ${port} ✅`);
+    server.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
     });
 
-    if (process.env.NODE_ENV === "production") {
-      const autoReload = () => {
-        https.get("https://darachoel-hm0a.onrender.com", (res) => {
-          console.log(`Auto-reload request sent at ${new Date().toISOString()}. Status: ${res.statusCode}`);
-        }).on("error", (err) => {
-          console.error(`Error during auto-reload request at ${new Date().toISOString()}:`, err.message);
-        }).on("timeout", () => {
-          console.warn(`Auto-reload request timed out at ${new Date().toISOString()}`);
-        }).setTimeout(30000); // 30 seconds timeout
-      };
-
-      setInterval(autoReload, 840000); // 14 minutes
-      autoReload(); // Initial call
-    }
-
+    autoReload();
+    setInterval(autoReload, AUTO_RELOAD_INTERVAL);
   } catch (error) {
-    console.error("Failed to start server", error);
+    console.error("❌ Failed to start server", error);
     process.exit(1);
   }
 };
