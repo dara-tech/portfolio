@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Minus, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Plus, Minus, ChevronDown, ChevronUp, X, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const StepForm = ({
@@ -57,7 +57,17 @@ const StepForm = ({
             rows="3"
             required
           />
-          <div >
+          <div className="flex items-center space-x-2">
+            <Clock size={20} className="text-gray-500" />
+            <input
+              type="number"
+              value={step.estimatedTime || ''}
+              onChange={(e) => handleStepChange(index, 'estimatedTime', e.target.value)}
+              placeholder="Estimated Time (hours)"
+              className="w-full p-2 border rounded focus:outline-none"
+            />
+          </div>
+          <div>
             <h5 className="font-semibold mb-2">Resources</h5>
             {step.resources.map((resource, resourceIndex) => (
               <div key={resourceIndex} className="flex items-center space-x-2 mb-2">

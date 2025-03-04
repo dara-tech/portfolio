@@ -20,6 +20,8 @@ const Navbar = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userImage, setUserImage] = useState('');
+
   
   const token = localStorage.getItem('token');
   const { formData: userData, loading } = useAdminProfile();
@@ -46,16 +48,25 @@ const Navbar = () => {
     return location.pathname === path;
   };
 
+  useEffect(() => {
+    if (userData) {
+      const profilePicture = userData?.profilePic; // Make sure this matches the field name from the backend
+      setUserImage(profilePicture);
+    }
+  }, [userData]);
+  
+
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/projects', label: 'Projects', icon: FolderKanban },
     { path: '/roadmap', label: 'Roadmap', icon: Map },
-    ...(token ? [
-      { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { path: '/admin/projects', label: 'Manage Projects', icon: PanelTopClose },
-      { path: '/admin/roadmap', label: 'Manage Roadmap', icon: Map },
-      { path: '/admin/profile', label: 'Profile', icon: UserCircle },
-    ] : [])
+  ];
+
+  const adminNavItems = [
+    { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/admin/projects', label: 'Manage Projects', icon: PanelTopClose },
+    { path: '/admin/roadmap', label: 'Manage Roadmap', icon: Map },
+    { path: '/admin/profile', label: 'Profile', icon: UserCircle, userImage: userData?.profilePic || '/default-avatar.png' },
   ];
 
   const toggleMobileMenu = () => {
@@ -78,165 +89,116 @@ const Navbar = () => {
   );
 
   return (
-    <div className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-base-200/95 backdrop-blur-md shadow-lg' : 'bg-base-200'
-    }`}>
-      <div className="navbar container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="navbar-start">
-          <div className="lg:hidden dropdown">
-            <button 
-              onClick={toggleMobileMenu}
-              className={`btn btn-ghost btn-sm rounded-lg hover:bg-primary/10 ${
-                mobileMenuOpen ? 'bg-primary/20' : ''
-              }`}
-              aria-label="Toggle menu"
-            >
-              <Menu className={`h-5 w-5 transition-transform duration-200 ${
-                mobileMenuOpen ? 'rotate-90' : ''
-              }`} />
-            </button>
+    <>
+      <div className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-base-200/95 backdrop-blur-md shadow-lg' : 'bg-base-200'
+      }`}>
+        <div className="navbar container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="navbar-start">
+            <Logo className="ml-2 lg:ml-0" />
           </div>
-          <Logo className="ml-2 lg:ml-0" />
-        </div>
 
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    className={`rounded-lg px-4 hover:bg-primary/20 transition-colors duration-200 ${
-                      isActive(item.path) ? 'bg-primary text-primary-content hover:bg-primary' : ''
-                    }`}
-                  >
-                    <Icon className="w-4 h-4 mr-2" />
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        <div className="navbar-end">
-          {token ? (
-            <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost btn-circle avatar ring ring-primary ring-offset-base-100 ring-offset-2">
-                {loading ? (
-                  <div className="loading loading-spinner loading-sm"></div>
-                ) : userData?.profilePic ? (
-                  <div className="w-10 rounded-full">
-                    <img 
-                      src={userData.profilePic} 
-                      alt="profile"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = 'default-avatar.png';
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="bg-primary text-primary-content rounded-full w-10 h-10 flex items-center justify-center">
-                    <span>{userData?.username?.[0]?.toUpperCase() || '?'}</span>
-                  </div>
-                )}
-              </label>
-              <div tabIndex={0} className="dropdown-content mt-3 z-[1] shadow-2xl bg-base-200 rounded-box w-64">
-                <div className="p-4 border-b border-base-300">
-                  <p className="font-bold">{userData?.username || 'User'}</p>
-                  <p className="text-sm opacity-70">{userData?.email || 'email@example.com'}</p>
-                </div>
-                <ul className="menu menu-sm gap-1 p-3 w-full">
-                  <li>
-                    <Link to="/admin/dashboard" className="flex items-center gap-3 p-3 hover:bg-base-300 rounded-lg transition-colors">
-                      <LayoutDashboard className="w-4 h-4" />
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/admin/profile" className="flex items-center gap-3 p-3 hover:bg-base-300 rounded-lg transition-colors">
-                      <UserCircle className="w-4 h-4" />
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/admin/settings" className="flex items-center gap-3 p-3 hover:bg-base-300 rounded-lg transition-colors">
-                      <Settings className="w-4 h-4" />
-                      Settings
-                    </Link>
-                  </li>
-                  <div className="divider my-1"></div>
-                  <li>
-                    <button 
-                      onClick={handleLogout} 
-                      className="flex items-center gap-3 p-3 text-error hover:bg-error/10 rounded-lg transition-colors"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          ) : (
-            <Link 
-              to="/admin/login" 
-              className="btn btn-primary btn-sm"
-            >
-              Login
-            </Link>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Menu Panel */}
-      <div className={`lg:hidden ${mobileMenuOpen ? 'block' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-black/20" onClick={toggleMobileMenu}>
-          <div 
-            className={`absolute top-[64px] left-0 right-0 bg-base-200 shadow-lg transform transition-all duration-300 ease-in-out ${
-              mobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-            }`}
-            onClick={e => e.stopPropagation()}
-          >
-            <ul className="menu menu-sm p-4 w-full">
+          <div className="navbar-center hidden lg:flex">
+            <ul className="menu menu-horizontal px-1 gap-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <li key={item.path}>
-                    <Link 
+                    <Link
                       to={item.path}
-                      className={`flex items-center gap-2 p-3 rounded-lg transition-all duration-200 ${
-                        isActive(item.path) 
-                          ? 'bg-primary text-primary-content hover:bg-primary/90' 
-                          : 'hover:bg-primary/10'
+                      className={`rounded-lg px-4 hover:bg-primary/20 transition-colors duration-200 ${
+                        isActive(item.path) ? 'bg-primary text-primary-content hover:bg-primary' : ''
                       }`}
-                      onClick={toggleMobileMenu}
                     >
-                      <Icon className="w-4 h-4" />
+                      <Icon className="w-4 h-4 mr-2" />
                       {item.label}
                     </Link>
                   </li>
                 );
               })}
-              {token && (
-                <li>
-                  <button 
-                    onClick={handleLogout} 
-                    className="flex items-center gap-2 p-3 mt-2 text-error hover:bg-error/10 rounded-lg transition-all duration-200"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Logout
-                  </button>
-                </li>
-              )}
             </ul>
+          </div>
+
+          <div className="navbar-end">
+            {!token && (
+              <Link 
+                to="/admin/login" 
+                className="btn btn-primary btn-sm"
+              >
+                <UserCircle className="w-4 h-4 mr-2" />
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
-    </div>
+
+      <div className="fixed bottom-0 left-0 right-0 bg-base-200 shadow-lg z-50">
+        <ul className="flex justify-around py-2">
+          {token ? (
+            <>
+              {adminNavItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.path}>
+                  <Link
+                    to={item.path}
+                    className={`flex flex-col items-center p-2 rounded-lg transition-colors duration-200 ${
+                      isActive(item.path) ? 'text-primary' : 'text-base-content'
+                    }`}
+                  >
+                   {item.userImage ? (
+  <img src={userImage} alt="User" className="w-7 h-7 rounded-full  " />
+) : (
+  <Icon className="w-6 h-6 mb-1" />
+)}
+                    <span className="text-xs">{item.label}</span>
+                  </Link>
+                </li>
+                );
+              })}
+              <li>
+                <button 
+                  onClick={handleLogout}
+                  className="flex flex-col items-center p-2 rounded-lg transition-colors duration-200 text-error"
+                >
+                  <LogOut className="w-6 h-6 mb-1" />
+                  <span className="text-xs">Logout</span>
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.path}>
+                    <Link
+                      to={item.path}
+                      className={`flex flex-col items-center p-2 rounded-lg transition-colors duration-200 ${
+                        isActive(item.path) ? 'text-primary' : 'text-base-content'
+                      }`}
+                    >
+                      <Icon className="w-6 h-6 mb-1" />
+                      <span className="text-xs">{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+              <li>
+                <Link
+                  to="/admin/login"
+                  className="flex flex-col items-center p-2 rounded-lg transition-colors duration-200 text-primary"
+                >
+                  <UserCircle className="w-6 h-6 mb-1" />
+                  <span className="text-xs">Login</span>
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
+    </>
   );
 };
 

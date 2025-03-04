@@ -46,9 +46,10 @@ const RoadMapDetail = ({ roadMap }) => {
               <p className="text-base-content mb-6">{step.description}</p>
               <div className="flex items-center text-base-content mb-6">
                 <Clock className="w-5 h-5 mr-2" />
-                <span>Estimated time: {step.estimatedTime || 'Not specified'}</span>
+                <span>Estimated time: {step.estimatedTime ?? "Not specified"}</span>
+       
               </div>
-              {step.resources && step.resources.length > 0 && (
+              {step?.resources && step?.resources?.length > 0 && (
                 <div>
                   <h3 className="font-semibold text-primary mb-4 flex items-center">
                     <BookOpen className="w-5 h-5 mr-2" />

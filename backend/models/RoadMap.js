@@ -16,16 +16,38 @@ const roadMapSchema = new mongoose.Schema({
   steps: [{
     name: {
       type: String,
-      trim: true
+      required: [true, 'Step name is required'],
+      trim: true,
+      maxlength: [100, 'Step name cannot exceed 100 characters']
     },
     description: {
       type: String,
-      trim: true
+      required: [true, 'Step description is required'],
+      trim: true,
+      maxlength: [500, 'Step description cannot exceed 500 characters']
     },
     resources: [{
-      title: String,
-      url: String
-    }]
+      title: {
+        type: String,
+        required: [true, 'Resource title is required'],
+        trim: true
+      },
+      url: {
+        type: String,
+        required: [true, 'Resource URL is required'],
+        trim: true,
+        validate: {
+          validator: function(v) {
+            return /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(v);
+          },
+          message: props => `${props.value} is not a valid URL!`
+        }
+      }
+    }],
+    estimatedTime: {
+      type: String,
+      trim: true
+    }
   }],
   category: {
     type: String,

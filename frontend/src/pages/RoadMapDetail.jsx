@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import RoadMapDetail from '../components/RoadMapDetail';
 import { Loader2 } from 'lucide-react';
@@ -7,6 +7,13 @@ import { useRoadMap } from '../hooks/useRoadMap';
 const RoadMapDetailPage = () => {
   const { id } = useParams();
   const { roadMap, loading, error } = useRoadMap(id);
+
+  useEffect(() => {
+    console.log('RoadMap ID:', id);
+    console.log('Loading:', loading);
+    console.log('Error:', error);
+    console.log('RoadMap:', roadMap);
+  }, [id, loading, error, roadMap]);
 
   if (loading) {
     return (

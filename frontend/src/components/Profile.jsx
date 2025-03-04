@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAdminProfile } from "../hooks/useAdminProfile";
 import ProfilePicture from './profile/ProfilePicture';
 import ProfileForm from './profile/ProfileForm';
+import { Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AdminProfile = () => {
   const {
@@ -78,7 +80,12 @@ const AdminProfile = () => {
     <div className="h-min-screen bg-base-100 py-10 ">
       <div className="max-w-4xl mx-auto card bg-base-100 py-8">
         <div className="">
-          <h2 className="card-title text-3xl text-primary font-bold text-center mb-8">Admin Profile</h2>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="card-title text-3xl text-primary font-bold">Admin Profile</h2>
+            <Link to="/admin/settings" className="ml-2 text-primary btn btn-sm btn-circle  ">
+              <Settings size={20} />
+            </Link>
+          </div>
           
           {error && (
             <div className="alert alert-error mb-6">
@@ -140,34 +147,6 @@ const AdminProfile = () => {
           </form>
         </div>
       </div>
-
-      <style jsx>{`
-        .animate-fade-in {
-          animation: fadeIn 0.2s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .arrow-down {
-          position: absolute;
-          bottom: -8px;
-          right: 20px;
-          width: 0;
-          height: 0;
-          border-left: 8px solid transparent;
-          border-right: 8px solid transparent;
-          border-top: 8px solid hsl(var(--b2));
-        }
-      `}</style>
     </div>
   );
 };

@@ -158,7 +158,7 @@ const RoadmapEdit = ({ roadmap, onSave, onCancel }) => {
               </div>
             </div>
             {expandedStep === stepIndex && (
-              <div className="card-body">
+              <div className="card-body p-4">
                 <input
                   type="text"
                   value={step.name}
