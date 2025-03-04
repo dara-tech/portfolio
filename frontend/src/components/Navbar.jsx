@@ -22,7 +22,6 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userImage, setUserImage] = useState('');
 
-  
   const token = localStorage.getItem('token');
   const { formData: userData, loading } = useAdminProfile();
 
@@ -50,11 +49,10 @@ const Navbar = () => {
 
   useEffect(() => {
     if (userData) {
-      const profilePicture = userData?.profilePic; // Make sure this matches the field name from the backend
+      const profilePicture = userData?.profilePic;
       setUserImage(profilePicture);
     }
   }, [userData]);
-  
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
@@ -120,7 +118,15 @@ const Navbar = () => {
           </div>
 
           <div className="navbar-end">
-            {!token && (
+            {token ? (
+              <button 
+                onClick={handleLogout}
+                className="btn btn-ghost btn-sm"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </button>
+            ) : (
               <Link 
                 to="/admin/login" 
                 className="btn btn-primary btn-sm"
@@ -157,15 +163,6 @@ const Navbar = () => {
                 </li>
                 );
               })}
-              <li>
-                <button 
-                  onClick={handleLogout}
-                  className="flex flex-col items-center p-2 rounded-lg transition-colors duration-200 text-error"
-                >
-                  <LogOut className="w-6 h-6 mb-1" />
-                  <span className="text-xs">Logout</span>
-                </button>
-              </li>
             </>
           ) : (
             <>
