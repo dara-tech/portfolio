@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Loader, Trash2, RefreshCw, Bot } from 'lucide-react';
 import { chatWithAI } from '../Ai/ChatModel';
+import DOMPurify from 'dompurify';
+import { marked } from 'marked';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -8,11 +10,23 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [streamedText, setStreamedText] = useState('');
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, streamedText]);
+
+  const animateTextStream = async (text) => {
+    setIsTyping(true);
+    for (let i = 0; i <= text.length; i++) {
+      setStreamedText(text.slice(0, i));
+      await new Promise(resolve => setTimeout(resolve, 20));
+    }
+    setIsTyping(false);
+    setStreamedText('');
+    setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,23 +37,22 @@ const Chat = () => {
     setInput('');
     setIsLoading(true);
     setError(null);
-    setIsTyping(true);
 
     try {
       const aiResponse = await chatWithAI([...messages, userMessage]);
-      setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+      animateTextStream(aiResponse);
     } catch (error) {
       console.error('Chat Error:', error);
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
-      setIsTyping(false);
     }
   };
 
   const clearChat = () => {
     setMessages([]);
     setError(null);
+    setStreamedText('');
   };
 
   const retryLastMessage = async () => {
@@ -49,18 +62,23 @@ const Chat = () => {
 
     setIsLoading(true);
     setError(null);
-    setIsTyping(true);
 
     try {
       const aiResponse = await chatWithAI([...messages.slice(0, -1), lastUserMessage]);
-      setMessages(prev => [...prev.slice(0, -1), { role: 'assistant', content: aiResponse }]);
+      setMessages(prev => prev.slice(0, -1));
+      animateTextStream(aiResponse);
     } catch (error) {
       console.error('Retry Error:', error);
       setError('Failed to retry. Please try again.');
     } finally {
       setIsLoading(false);
-      setIsTyping(false);
     }
+  };
+
+  const renderMessageContent = (content) => {
+    const rawMarkup = marked(content);
+    const sanitizedMarkup = DOMPurify.sanitize(rawMarkup);
+    return { __html: sanitizedMarkup };
   };
 
   return (
@@ -85,7 +103,7 @@ const Chat = () => {
               </div>
             )}
             <div className={`chat-bubble ${message.role === 'user' ? 'chat-bubble-primary' : 'chat-bubble-secondary'}`}>
-              {message.content}
+              <div dangerouslySetInnerHTML={renderMessageContent(message.content)} />
             </div>
           </div>
         ))}
@@ -97,6 +115,7 @@ const Chat = () => {
               </div>
             </div>
             <div className="chat-bubble chat-bubble-secondary">
+              <div dangerouslySetInnerHTML={renderMessageContent(streamedText)} />
               <span className="loading loading-dots loading-sm"></span>
             </div>
           </div>
