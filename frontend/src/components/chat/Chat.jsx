@@ -127,8 +127,8 @@ const Chat = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="p-4 bg-base-200">
-        <div className="join w-full mb-20">
+      <form onSubmit={handleSubmit} className="p-4 bg-base-200 flex justify-center">
+        <div className="flex join w-full lg:w-3xl mb-20">
           <input
             type="text"
             value={input}

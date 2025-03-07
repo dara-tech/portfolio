@@ -4,7 +4,7 @@ const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export async function generateRoadMap(title, description) {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" }); // Changed to gemini-pro as it's more suitable
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-pro-exp-02-05" }); // Changed to gemini-pro as it's more suitable
 
   const prompt = `Create a detailed roadmap for learning "${title}". The roadmap should include:
   1. A series of steps (at least 5)

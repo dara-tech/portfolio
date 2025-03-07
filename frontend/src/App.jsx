@@ -18,73 +18,37 @@ import RoadmapDetail from './pages/RoadMapDetail';
 import RoadMapManage from './pages/RoadMapManage';
 import RoadMapCreate from './pages/RoadMapCreate';
 import Chat from './components/chat/Chat';
+import Writer from './pages/WriterPage';
 
 function App() {
   const {theme} = useThemeStore();
   return (
-      <div data-theme={theme}>
-        <Router>
-          <Navbar />
+    <div data-theme={theme}>
+      <Router>
+        <Navbar />
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/roadmap" element={<Roadmap />} />
+          <Route path="/roadmap/:id" element={<RoadmapDetail />} />
+          <Route path="/chat" element={<Chat />} />
 
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<ProjectDetail />} />
-            <Route path="/roadmap" element={<Roadmap />} />
-            <Route path="/roadmap/:id" element={<RoadmapDetail />} />
-            <Route path="/chat" element={<Chat />} />
+          {/* Admin Auth routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/settings" element={<SettingPage />} />
 
-            {/* Admin Auth routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/settings" element={<SettingPage />} />
-            {/* <Route path="/admin/profile" element={<Profile />} /> */}
-            {/* <Route path="/admin/register" element={<AdminRegister />} /> */}
-
-            {/* Protected admin routes */}
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/projects"
-              element={
-                <ProtectedRoute>
-                  <AdminProjects />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/roadmap"
-              element={
-                <ProtectedRoute>
-                  <RoadMapManage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/roadmap/create-roadmap"
-              element={
-                <ProtectedRoute>
-                  <RoadMapCreate />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </Router>
-      </div>
+          {/* Protected admin routes */}
+          <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/projects" element={<ProtectedRoute><AdminProjects /></ProtectedRoute>} />
+          <Route path="/admin/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/admin/roadmap" element={<ProtectedRoute><RoadMapManage /></ProtectedRoute>} />
+          <Route path="/admin/roadmap/create-roadmap" element={<ProtectedRoute><RoadMapCreate /></ProtectedRoute>} />
+          <Route path="/admin/write" element={<ProtectedRoute><Writer /></ProtectedRoute>} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 

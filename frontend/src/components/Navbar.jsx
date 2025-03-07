@@ -13,7 +13,8 @@ import {
   FolderKanban,
   PanelTopClose,
   Map,
-  MessageSquare
+  MessageSquare,
+  PenSquare
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -67,6 +68,7 @@ const Navbar = () => {
     { path: '/admin/projects', label: 'Manage Projects', icon: PanelTopClose },
     { path: '/admin/roadmap', label: 'Manage Roadmap', icon: Map },
     { path: '/admin/profile', label: 'Profile', icon: UserCircle, userImage: userData?.profilePic || '/default-avatar.png' },
+    { path: '/admin/write', label: 'Write', icon: PenSquare },
   ];
 
   const toggleMobileMenu = () => {
