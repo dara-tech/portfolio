@@ -44,6 +44,7 @@ const connectDB = async () => {
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', roadmapRoutes);
+app.use(express.json({ limit: '10mb' }));
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
