@@ -14,7 +14,8 @@ import {
   PanelTopClose,
   Map,
   MessageSquare,
-  PenSquare
+  PenSquare,
+  Video
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -61,6 +62,7 @@ const Navbar = () => {
     { path: '/projects', label: 'Projects', icon: FolderKanban },
     { path: '/roadmap', label: 'Roadmap', icon: Map },
     { path: '/chat', label: 'Chat', icon: MessageSquare },
+    { path: '/videos', label: 'Videos', icon: Video },
   ];
 
   const adminNavItems = [
@@ -68,6 +70,7 @@ const Navbar = () => {
     { path: '/admin/projects', label: 'Projects', icon: PanelTopClose },
     { path: '/admin/roadmap', label: ' Roadmap', icon: Map },
     { path: '/admin/write', label: 'Write', icon: PenSquare },   
+    { path: '/admin/videos', label: 'Videos', icon: Video },   
     { path: '/admin/profile', label: 'Profile', icon: UserCircle, userImage: userData?.profilePic || '/default-avatar.png' },
   ];
 
@@ -108,11 +111,11 @@ const Navbar = () => {
                   <li key={item.path}>
                     <Link
                       to={item.path}
-                      className={`rounded-lg px-4 hover:bg-primary/20 transition-colors duration-200 ${
-                        isActive(item.path) ? 'bg-primary text-primary-content hover:bg-primary' : ''
+                      className={`rounded-lg px-4 hover:bg-primary/20 transition-all duration-300 ${
+                        isActive(item.path) ? 'bg-primary text-primary-content hover:bg-primary scale-105 shadow-lg' : ''
                       }`}
                     >
-                      <Icon className="w-4 h-4 mr-2" />
+                      <Icon className={`w-4 h-4 mr-2 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
                       {item.label}
                     </Link>
                   </li>
@@ -125,7 +128,7 @@ const Navbar = () => {
             {token ? (
               <button 
                 onClick={handleLogout}
-                className="btn btn-ghost btn-sm"
+                className="btn btn-ghost btn-sm hover:scale-105 transition-all duration-300"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -133,7 +136,7 @@ const Navbar = () => {
             ) : (
               <Link 
                 to="/admin/login" 
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm hover:scale-105 transition-all duration-300"
               >
                 <UserCircle className="w-4 h-4 mr-2" />
                 Login
@@ -153,16 +156,16 @@ const Navbar = () => {
                   <li key={item.path}>
                   <Link
                     to={item.path}
-                    className={`flex flex-col items-center p-2 rounded-lg transition-colors duration-200 ${
-                      isActive(item.path) ? 'text-primary' : 'text-base-content'
+                    className={`flex flex-col items-center p-2 w-20 rounded-lg transition-all duration-300 ${
+                      isActive(item.path) ? 'text-primary bg-primary/10' : 'text-base-content hover:scale-105'
                     }`}
                   >
                    {item.userImage ? (
-  <img src={userImage} alt="User" className="w-7 h-7 rounded-full  " />
-) : (
-  <Icon className="w-6 h-6 mb-1" />
-)}
-                    <span className="text-xs">{item.label}</span>
+                      <img src={userImage} alt="User" className={`w-7 h-7 rounded-full transition-transform duration-300 ${isActive(item.path) ? 'ring-2 ring-primary ring-offset-2' : ''}`} />
+                    ) : (
+                      <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
+                    )}
+                    <span className="text-xs font-medium">{item.label}</span>
                   </Link>
                 </li>
                 );
@@ -176,12 +179,12 @@ const Navbar = () => {
                   <li key={item.path}>
                     <Link
                       to={item.path}
-                      className={`flex flex-col items-center p-2 rounded-lg transition-colors duration-200 ${
-                        isActive(item.path) ? 'text-primary' : 'text-base-content'
+                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                        isActive(item.path) ? 'text-primary scale-110 bg-primary/10' : 'text-base-content hover:scale-105'
                       }`}
                     >
-                      <Icon className="w-6 h-6 mb-1" />
-                      <span className="text-xs">{item.label}</span>
+                      <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
+                      <span className="text-xs font-medium">{item.label}</span>
                     </Link>
                   </li>
                 );
@@ -189,10 +192,10 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/admin/login"
-                  className="flex flex-col items-center p-2 rounded-lg transition-colors duration-200 text-primary"
+                  className="flex flex-col items-center p-2 rounded-lg transition-all duration-300 text-primary hover:scale-105"
                 >
                   <UserCircle className="w-6 h-6 mb-1" />
-                  <span className="text-xs">Login</span>
+                  <span className="text-xs font-medium">Login</span>
                 </Link>
               </li>
             </>

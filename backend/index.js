@@ -11,7 +11,7 @@ import https from 'https';
 import authRoutes from './routes/adminRoutes.js';
 import projectRoutes from './routes/projectRoute.js';
 import roadmapRoutes from './routes/roadMaps.js';
-
+import videoRoutes from './routes/videoRoute.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -44,6 +44,7 @@ const connectDB = async () => {
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', roadmapRoutes);
+app.use('/api', videoRoutes);
 app.use(express.json({ limit: '10mb' }));
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));

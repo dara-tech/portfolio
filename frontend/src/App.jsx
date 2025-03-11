@@ -19,7 +19,10 @@ import RoadMapManage from './pages/RoadMapManage';
 import RoadMapCreate from './pages/RoadMapCreate';
 import Chat from './components/chat/Chat';
 import Writer from './pages/WriterPage';
-
+import VideoManage from './components/video/VideoManage';
+import VideoForm from './components/video/VideoForm';
+import VideoPage from './pages/VideoPage';
+import VideoDetailPage from './pages/VideoDetailPage';
 function App() {
   const {theme} = useThemeStore();
   return (
@@ -34,12 +37,16 @@ function App() {
           <Route path="/roadmap" element={<Roadmap />} />
           <Route path="/roadmap/:id" element={<RoadmapDetail />} />
           <Route path="/chat" element={<Chat />} />
-
+          <Route path="/videos" element={<VideoPage />} />
+          <Route path="/videos/:id" element={<VideoDetailPage />} />
           {/* Admin Auth routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/settings" element={<SettingPage />} />
 
           {/* Protected admin routes */}
+          <Route path="/admin/videos" element={<ProtectedRoute><VideoManage /></ProtectedRoute>} />
+          <Route path="/admin/videos/new" element={<ProtectedRoute><VideoForm /></ProtectedRoute>} />
+          <Route path="/admin/videos/edit/:id" element={<ProtectedRoute><VideoForm /></ProtectedRoute>} />
           <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/projects" element={<ProtectedRoute><AdminProjects /></ProtectedRoute>} />
           <Route path="/admin/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
