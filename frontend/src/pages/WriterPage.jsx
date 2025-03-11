@@ -22,15 +22,15 @@ const WriterPage = () => {
 
   return (
     <WriterLayout content={content} onEditorChange={setContent}>
-      <motion.div className="py-10">
-        <form onSubmit={handleSubmit}>
+      <motion.div className="">
+        {/* <form onSubmit={handleSubmit}>
           <div className="flex gap-2">
             <button type="submit" className="btn btn-primary flex items-center gap-2">
               {isLoading ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
               {isLoading ? 'Submitting...' : 'Submit'}
             </button>
           </div>
-        </form>
+        </form> */}
       </motion.div>
     </WriterLayout>
   );

@@ -65,10 +65,10 @@ const Navbar = () => {
 
   const adminNavItems = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/admin/projects', label: 'Manage Projects', icon: PanelTopClose },
-    { path: '/admin/roadmap', label: 'Manage Roadmap', icon: Map },
+    { path: '/admin/projects', label: 'Projects', icon: PanelTopClose },
+    { path: '/admin/roadmap', label: ' Roadmap', icon: Map },
+    { path: '/admin/write', label: 'Write', icon: PenSquare },   
     { path: '/admin/profile', label: 'Profile', icon: UserCircle, userImage: userData?.profilePic || '/default-avatar.png' },
-    { path: '/admin/write', label: 'Write', icon: PenSquare },
   ];
 
   const toggleMobileMenu = () => {
