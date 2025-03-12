@@ -50,7 +50,6 @@ const adminSchema = new mongoose.Schema({
   cv: { 
     type: String,
     default:''
-    
   },
   about: { 
     type: String,

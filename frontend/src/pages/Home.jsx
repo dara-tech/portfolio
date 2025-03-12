@@ -28,7 +28,7 @@ const Home = () => {
       <div className="-my-40">
         <VideoPage />
       </div>
-      <div className="-py-60">
+      <div className="my-20">
       {/* Contact Section */}
       <ContactForm />
       </div>
