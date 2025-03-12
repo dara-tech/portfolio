@@ -122,7 +122,7 @@ const Editor = ({ initialValue, onChange }) => {
           <select
             value={tone}
             onChange={(e) => setTone(e.target.value)}
-            className="select select-sm w-40"
+            className="select select-sm w-40 focus:outline-none"
           >
             <option value="default">Default</option>
             <option value="formal">Formal</option>
@@ -136,7 +136,7 @@ const Editor = ({ initialValue, onChange }) => {
           <select
             value={correctionType}
             onChange={(e) => setCorrectionType(e.target.value)}
-            className="select select-sm w-40"
+            className="select select-sm w-40 focus:outline-none"
           >
             <option value="grammar">Grammar Correction</option>
             <option value="word">Word Correction</option>

@@ -6,6 +6,7 @@ import Projects from './pages/Projects';
 import AdminLogin from './pages/AdminLogin';
 import AdminRegister from './pages/AdminRegister';
 import AdminDashboard from './pages/AdminDashboard';
+import AnalyticsPage from './pages/AnalyticsPage';
 import AdminProjects from './pages/AdminProjects';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/lib/projectdRoute';
@@ -48,6 +49,7 @@ function App() {
           <Route path="/admin/videos/new" element={<ProtectedRoute><VideoForm /></ProtectedRoute>} />
           <Route path="/admin/videos/edit/:id" element={<ProtectedRoute><VideoForm /></ProtectedRoute>} />
           <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
           <Route path="/admin/projects" element={<ProtectedRoute><AdminProjects /></ProtectedRoute>} />
           <Route path="/admin/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/admin/roadmap" element={<ProtectedRoute><RoadMapManage /></ProtectedRoute>} />

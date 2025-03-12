@@ -123,3 +123,4 @@ export const useDeleteRoadMap = () => {
 
   return { deleteRoadMap, loading, error };
 };
+export default useRoadMap;

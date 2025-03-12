@@ -1,7 +1,9 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Loader, Video, Link, FileText, Image, Clock, Eye } from 'lucide-react';
+import { Loader, Video, Link, FileText, Image, Clock, Eye, Wand2 } from 'lucide-react';
 import useVideo from '../../hooks/useVideo';
+import { generateVideoSuggestion } from '../Ai/VideoGenerator';
+import SuggestedVideoSelector from './SuggestedVideoSelector';
 
 const VideoForm = () => {
   const { id } = useParams();
@@ -23,6 +25,7 @@ const VideoForm = () => {
   const [submitError, setSubmitError] = React.useState('');
   const [youtubeId, setYoutubeId] = React.useState('');
   const [isShort, setIsShort] = React.useState(false);
+  const [aiLoading, setAiLoading] = React.useState(false);
 
   React.useEffect(() => {
     const fetchVideo = async () => {
@@ -107,8 +110,11 @@ const VideoForm = () => {
       newErrors.description = 'Description must be less than 5000 characters';
     }
 
-    if (formData.duration && !/^\d{1,2}:\d{2}$/.test(formData.duration)) {
-      newErrors.duration = 'Duration must be in format MM:SS';
+    if (formData.duration) {
+      const durationRegex = /^(\d{1,2}):([0-5]?\d):([0-5]\d)$/; // Updated regex to allow HH:MM:SS format
+      if (!durationRegex.test(formData.duration)) {
+        newErrors.duration = 'Duration must be in format HH:MM:SS (e.g. 04:26:52)';
+      }
     }
 
     setErrors(newErrors);
@@ -158,6 +164,33 @@ const VideoForm = () => {
     }
   };
 
+  const handleAiSuggestion = async () => {
+    if (!formData.title) {
+      setSubmitError('Please enter a title first to get AI suggestions');
+      return;
+    }
+
+    setAiLoading(true);
+    try {
+      const result = await generateVideoSuggestion(formData.title);
+      if (result.success) {
+        setFormData(prev => ({
+          ...prev,
+          description: result.data.description || prev.description,
+          url: result.data.youtubeId ? `https://www.youtube.com/watch?v=${result.data.youtubeId}` : prev.url,
+          thumbnail: result.data.thumbnail || prev.thumbnail,
+          duration: result.data.duration ? result.data.duration : prev.duration // Keep the full duration
+        }));
+      } else {
+        setSubmitError(result.error);
+      }
+    } catch (err) {
+      setSubmitError('Failed to get AI suggestions. Please try again.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6 py-24">
       {submitError && (
@@ -170,6 +203,17 @@ const VideoForm = () => {
           </div>
         </div>
       )}
+
+      <SuggestedVideoSelector onVideoSelect={(video) => {
+        setFormData({
+          title: video.title,
+          description: video.description,
+          url: `https://www.youtube.com/watch?v=${video.youtubeId}`,
+          thumbnail: video.thumbnail,
+          duration: video.duration,
+          views: video.views
+        });
+      }} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <form onSubmit={handleSubmit} className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-300">
@@ -305,7 +349,7 @@ const VideoForm = () => {
                   value={formData.duration}
                   onChange={handleInputChange}
                   className={`input input-bordered w-full pl-10 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 ${errors.duration ? 'input-error' : ''}`}
-                  placeholder="e.g. 10:30"
+                  placeholder="e.g. 04:26:52"
                 />
                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               </div>
@@ -321,23 +365,44 @@ const VideoForm = () => {
               )}
             </div>
 
-            <button 
-              type="submit" 
-              className="btn btn-primary w-full mt-6 gap-2 hover:opacity-90 transition-all duration-200 hover:shadow-lg disabled:opacity-50"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader className="animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Video className="w-5 h-5" />
-                  {id ? 'Update Video' : 'Create Video'}
-                </>
-              )}
-            </button>
+            <div className="flex gap-4">
+              <button 
+                type="submit" 
+                className="btn btn-primary flex-1 mt-6 gap-2 hover:opacity-90 transition-all duration-200 hover:shadow-lg disabled:opacity-50"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader className="animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Video className="w-5 h-5" />
+                    {id ? 'Update Video' : 'Create Video'}
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-secondary mt-6 gap-2 hover:opacity-90 transition-all duration-200 hover:shadow-lg disabled:opacity-50"
+                onClick={handleAiSuggestion}
+                disabled={aiLoading || !formData.title}
+              >
+                {aiLoading ? (
+                  <>
+                    <Loader className="animate-spin" />
+                    Getting suggestions...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="w-5 h-5" />
+                    Get AI Suggestions
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
 

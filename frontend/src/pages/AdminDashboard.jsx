@@ -2,57 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useProjects from '../hooks/useProjects';
 import { useAdminProfile } from '../hooks/useAdminProfile';
+import { useRoadMapByID } from '../hooks/useRoadMap';
+import useVideo from '../hooks/useVideo';
 
 const AdminDashboard = () => {
   const { projects, loading: projectsLoading } = useProjects();
-  const { formData: userData, loading: userLoading } = useAdminProfile();
+  const { profile: userData, loading: userLoading } = useAdminProfile();
+  const { roadMaps, loading: roadmapsLoading } = useRoadMapByID();
+  const { videos, getAllVideos, loading: videosLoading } = useVideo();
   const [stats, setStats] = useState({
     totalViews: 0,
-    monthlyViews: 0,
-    monthlyGrowth: 0
+    totalVideoViews: 0
   });
 
+  // Fetch videos on mount
   useEffect(() => {
-    if (projects) {
-      const totalViews = projects.reduce((sum, project) => sum + (project.views || 0), 0);
-      
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      
-      const monthlyViews = projects.reduce((sum, project) => {
-        const recentViews = project.viewHistory?.filter(view => 
-          new Date(view.timestamp) > thirtyDaysAgo
-        ).length || 0;
-        return sum + recentViews;
-      }, 0);
+    getAllVideos();
+  }, [getAllVideos]);
 
-      const previousMonthViews = projects.reduce((sum, project) => {
-        const previousViews = project.viewHistory?.filter(view => {
-          const viewDate = new Date(view.timestamp);
-          return viewDate > new Date(thirtyDaysAgo - 30) && viewDate < thirtyDaysAgo;
-        }).length || 0;
-        return sum + previousViews;
-      }, 0);
+  // Calculate stats when projects or videos change
+  useEffect(() => {
+    if (!projects) return;
 
-      const growth = previousMonthViews === 0 ? 100 : 
-        ((monthlyViews - previousMonthViews) / previousMonthViews * 100).toFixed(1);
+    const totalViews = projects.reduce((sum, project) => sum + (project.views || 0), 0);
+    
+    // Calculate total video views only if videos is an array
+    const totalVideoViews = Array.isArray(videos?.data) 
+      ? videos.data.reduce((sum, video) => sum + (video.views || 0), 0)
+      : 0;
 
-      setStats({
-        totalViews,
-        monthlyViews,
-        monthlyGrowth: growth
-      });
-    }
-  }, [projects]);
+    setStats({
+      totalViews,
+      totalVideoViews
+    });
+  }, [projects, videos]);
 
-  if (projectsLoading || userLoading) {
+  if (projectsLoading || userLoading || roadmapsLoading || videosLoading) {
     return <div className="flex justify-center items-center h-screen">
       <div className="loading loading-spinner loading-lg"></div>
     </div>;
   }
 
   return (
-    <div className="container mx-auto py-20 px-4 min-h-screen ">
+    <div className="container mx-auto py-20 px-4 min-h-screen">
       <div className="flex flex-col gap-6">
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">
@@ -71,13 +63,17 @@ const AdminDashboard = () => {
                 <div className="stat-value">{stats.totalViews}</div>
                 <div className="stat-desc">Lifetime project views</div>
               </div>
-              
+
               <div className="stat">
-                <div className="stat-title">Monthly Views</div>
-                <div className="stat-value">{stats.monthlyViews}</div>
-                <div className="stat-desc">
-                  {stats.monthlyGrowth > 0 ? '↗︎' : '↘︎'} {Math.abs(stats.monthlyGrowth)}% from last month
-                </div>
+                <div className="stat-title">Total Roadmaps</div>
+                <div className="stat-value">{roadMaps?.length || 0}</div>
+                <div className="stat-desc">Learning paths created</div>
+              </div>
+
+              <div className="stat">
+                <div className="stat-title">Total Videos</div>
+                <div className="stat-value">{videos?.data?.length || 0}</div>
+                <div className="stat-desc">{stats.totalVideoViews} total views</div>
               </div>
             </div>
           </div>
@@ -106,8 +102,8 @@ const AdminDashboard = () => {
 
           <Link to="/admin/analytics" className="card bg-accent text-accent-content hover:bg-accent-focus transition-colors">
             <div className="card-body">
-              <h2 className="card-title">Analytics</h2>
-              <p>View detailed project engagement metrics</p>
+              <h2 className="card-title">Analytics Dashboard</h2>
+              <p>View detailed analytics and engagement metrics</p>
               <div className="card-actions justify-end">
                 <button className="btn">View</button>
               </div>
@@ -116,8 +112,18 @@ const AdminDashboard = () => {
 
           <Link to="/admin/roadmap" className="card bg-info text-info-content hover:bg-info-focus transition-colors">
             <div className="card-body">
-              <h2 className="card-title">Roadmap</h2>
-              <p>Manage your learning roadmap</p>
+              <h2 className="card-title">Learning Roadmap ({roadMaps?.length || 0})</h2>
+              <p>Create and manage learning paths</p>
+              <div className="card-actions justify-end">
+                <button className="btn">Manage</button>
+              </div>
+            </div>
+          </Link>
+
+          <Link to="/admin/videos" className="card bg-warning text-warning-content hover:bg-warning-focus transition-colors">
+            <div className="card-body">
+              <h2 className="card-title">Video Tutorials ({videos?.data?.length || 0})</h2>
+              <p>Manage your video content</p>
               <div className="card-actions justify-end">
                 <button className="btn">Manage</button>
               </div>

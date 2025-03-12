@@ -16,11 +16,11 @@ const VideoCard = ({ video }) => {
     }
   };
 
-  // Format duration to minutes:seconds
-  const formatDuration = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  // Format duration to hh:mm:ss
+  const formatDuration = (duration) => {
+    if (!duration) return '00:00:00'; // Handle zero duration
+    const [hours, minutes, seconds] = duration.split(':');
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
   };
 
   return (
@@ -44,7 +44,7 @@ const VideoCard = ({ video }) => {
           {/* Duration badge */}
           <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            {formatDuration(video.duration || 0)}
+            {formatDuration(video.duration || '00:00:00')}
           </div>
         </div>
 

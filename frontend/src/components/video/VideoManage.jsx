@@ -112,7 +112,7 @@ const VideoManage = () => {
         <h1 className="text-3xl font-bold tracking-tight">Manage Videos</h1>
         <Link 
           to="/admin/videos/new" 
-          className="btn btn-primary btn-lg shadow-lg hover:shadow-xl transition-all duration-300"
+          className="btn btn-primary btn-sm shadow-lg hover:shadow-xl transition-all duration-300"
         >
           Add New Video
         </Link>
@@ -207,17 +207,17 @@ const VideoManage = () => {
                   )}
                 </td>
                 <td className="py-4">
-                  <div className="flex flex-col gap-3 items-center">
+                  <div className="flex flex-col gap-3 items-center justify-center">
                     <Link
                       to={`/admin/videos/edit/${video._id}`}
-                      className="btn btn-ghost btn-sm hover:bg-primary/10 tooltip tooltip-left"
+                      className="btn btn-ghost btn-sm hover:bg-primary/10 "
                       data-tip="Edit video"
                     >
                       <Edit className="h-4 w-4" />
                     </Link>
                     <button
                       onClick={() => handleDelete(video._id)}
-                      className="btn btn-ghost btn-sm hover:bg-error/10 text-error tooltip tooltip-left"
+                      className="btn btn-ghost btn-sm hover:bg-error/10 text-error"
                       data-tip="Delete video"
                     >
                       <Trash2 className="h-4 w-4" />

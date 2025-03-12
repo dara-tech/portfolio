@@ -23,7 +23,7 @@ const Navbar = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userImage, setUserImage] = useState('');
+  const [userImage, setUserImage] = useState(null);
 
   const token = localStorage.getItem('token');
   const { formData: userData, loading } = useAdminProfile();
@@ -53,7 +53,7 @@ const Navbar = () => {
   useEffect(() => {
     if (userData) {
       const profilePicture = userData?.profilePic;
-      setUserImage(profilePicture);
+      setUserImage(profilePicture || null);
     }
   }, [userData]);
 
@@ -161,7 +161,7 @@ const Navbar = () => {
                     }`}
                   >
                    {item.userImage ? (
-                      <img src={userImage} alt="User" className={`w-7 h-7 rounded-full transition-transform duration-300 ${isActive(item.path) ? 'ring-2 ring-primary ring-offset-2' : ''}`} />
+                      userImage && <img src={userImage} alt="User" className={`w-7 h-7 rounded-full transition-transform duration-300 ${isActive(item.path) ? 'ring-2 ring-primary ring-offset-2' : ''}`} />
                     ) : (
                       <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
                     )}
