@@ -24,7 +24,7 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "http://localhost:5002",
-    "https://darachoel-hm0a.onrender.com"
+    "https://daracheol.onrender.com"
   ], 
   credentials: true 
 }));
@@ -58,7 +58,7 @@ const server = http.createServer(app);
 const AUTO_RELOAD_INTERVAL = 800000;
 
 const autoReload = () => {
-  https.get("https://darachoel-hm0a.onrender.com", (res) => {
+  https.get("https://daracheol.onrender.com", (res) => {
     console.log(`[${new Date().toISOString()}] 🔄 Auto-reload request sent. Status: ${res.statusCode}`);
   }).on("error", (err) => {
     console.error(`[${new Date().toISOString()}] ❌ Auto-reload failed: ${err.message}`);

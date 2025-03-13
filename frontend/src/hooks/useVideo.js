@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-const API_URL = import.meta.env.MODE === "development" ? "http://localhost:5002" : "https://darachoel-hm0a.onrender.com";
+const API_URL = import.meta.env.MODE === "development" ? "http://localhost:5002" : "https://daracheol.onrender.com";
 
 const useVideo = () => {
   const [videos, setVideos] = useState([]);
