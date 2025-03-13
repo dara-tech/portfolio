@@ -112,7 +112,7 @@ const VideoManage = () => {
         <h1 className="text-3xl font-bold tracking-tight">Manage Videos</h1>
         <Link 
           to="/admin/videos/new" 
-          className="btn btn-primary btn-sm shadow-lg hover:shadow-xl transition-all duration-300"
+          className="btn btn-primary btn-sm  transition-all duration-300"
         >
           Add New Video
         </Link>
@@ -159,7 +159,7 @@ const VideoManage = () => {
       </div>
 
       {/* Videos table */}
-      <div className="overflow-x-auto bg-base-100 rounded-xl shadow-xl">
+      <div className="overflow-x-auto bg-base-100 ">
         <table className="table w-full">
           <thead>
             <tr className="bg-base-200">

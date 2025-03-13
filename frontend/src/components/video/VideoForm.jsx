@@ -17,6 +17,7 @@ const VideoForm = () => {
     thumbnail: '',
     duration: '',
     views: 0,
+    category: 'Other',
     createdAt: null,
     updatedAt: null
   });
@@ -26,6 +27,19 @@ const VideoForm = () => {
   const [youtubeId, setYoutubeId] = React.useState('');
   const [isShort, setIsShort] = React.useState(false);
   const [aiLoading, setAiLoading] = React.useState(false);
+
+  const categories = [
+    "Programming",
+    "Web Development",
+    "Data Science", 
+    "Machine Learning",
+    "DevOps",
+    "Mobile Development",
+    "Game Development",
+    "Computer Science",
+    "Software Engineering",
+    "Other"
+  ];
 
   React.useEffect(() => {
     const fetchVideo = async () => {
@@ -40,6 +54,7 @@ const VideoForm = () => {
             thumbnail: video.thumbnail || '',
             duration: video.duration || '',
             views: video.views || 0,
+            category: video.category || 'Other',
             createdAt: video.createdAt || null,
             updatedAt: video.updatedAt || null
           });
@@ -117,6 +132,10 @@ const VideoForm = () => {
       }
     }
 
+    if (!formData.category) {
+      newErrors.category = 'Category is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -149,8 +168,8 @@ const VideoForm = () => {
         description: formData.description.trim(),
         url: formData.url.trim(),
         thumbnail: formData.thumbnail,
-        duration: formData.duration,
-        views: formData.views
+        views: formData.views,
+        category: formData.category
       };
 
       if (id) {
@@ -179,7 +198,8 @@ const VideoForm = () => {
           description: result.data.description || prev.description,
           url: result.data.youtubeId ? `https://www.youtube.com/watch?v=${result.data.youtubeId}` : prev.url,
           thumbnail: result.data.thumbnail || prev.thumbnail,
-          duration: result.data.duration ? result.data.duration : prev.duration // Keep the full duration
+          duration: result.data.duration ? result.data.duration : prev.duration,
+          category: result.data.category || prev.category
         }));
       } else {
         setSubmitError(result.error);
@@ -211,7 +231,8 @@ const VideoForm = () => {
           url: `https://www.youtube.com/watch?v=${video.youtubeId}`,
           thumbnail: video.thumbnail,
           duration: video.duration,
-          views: video.views
+          views: video.views,
+          category: video.category
         });
       }} />
 
@@ -365,6 +386,36 @@ const VideoForm = () => {
               )}
             </div>
 
+            <div className="form-control relative">
+              <label className="label">
+                <span className="label-text flex items-center gap-2 text-base font-medium">
+                  Category
+                  <span className="text-error">*</span>
+                </span>
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className={`select select-bordered w-full focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 ${errors.category ? 'select-error' : ''}`}
+                required
+              >
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+              {errors.category && (
+                <label className="label">
+                  <span className="label-text-alt text-error flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.category}
+                  </span>
+                </label>
+              )}
+            </div>
+
             <div className="flex gap-4">
               <button 
                 type="submit" 
@@ -447,6 +498,7 @@ const VideoForm = () => {
                   {isShort && (
                     <div className="badge badge-secondary p-3">Short</div>
                   )}
+                  <div className="badge badge-primary p-3">{formData.category}</div>
                 </div>
               </div>
             </div>

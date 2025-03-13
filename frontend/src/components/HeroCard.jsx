@@ -70,7 +70,7 @@ const HeroCard = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
           {/* Mobile Profile Image */}
-          <div className="block lg:hidden mx-auto w-48 sm:w-56 md:w-64 my-15">
+          <div className="block lg:hidden mx-auto w-48 sm:w-56 md:w-64  py-10">
             <div className="aspect-square relative z-10 overflow-hidden rounded-full border-4 border-primary/20">
               {loading ? (
                 <div className="w-full h-full bg-base-200 animate-pulse" />
@@ -95,7 +95,7 @@ const HeroCard = () => {
           </div>
 
           {/* Content Section */}
-          <div className="space-y-6 text-center lg:text-left">
+          <div className="space-y-4 text-center lg:text-left">
             <div>
               <h2 className="text-base sm:text-lg text-primary/80 mb-2 font-mono">&lt;hello world/&gt;</h2>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-light">
@@ -160,6 +160,40 @@ const HeroCard = () => {
                 </a>
               </div>
             )}
+
+            {/* Show about section - Dream Cloud Style */}
+            <div className="pt-8 relative">
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-lg font-semibold flex items-center">
+                  <span className="mr-2">💭</span> About Me
+                </h2>
+                <div className="h-px flex-1 bg-base-content/10"></div>
+              </div>
+              
+              <div className="relative">
+                {/* Cloud shape with multiple bubbles */}
+                <div className="absolute -top-6 right-8 lg:right-16 w-8 h-8 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm"></div>
+                <div className="absolute -top-8 right-12 lg:right-24 w-6 h-6 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm"></div>
+                <div className="absolute -top-10 right-16 lg:right-32 w-4 h-4 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm"></div>
+                
+                {/* Main cloud */}
+                <div className="bg-white/90 dark:bg-slate-700/90 backdrop-blur-sm p-5 rounded-2xl rounded-br-3xl shadow-lg border border-primary/20">
+                  <p className="text-base-content/90 whitespace-pre-line text-sm sm:text-base leading-relaxed italic">
+                    {userData?.about || "This user hasn't provided any information about themselves yet."}
+                  </p>
+                  
+                  <div className="flex justify-end mt-2 gap-1">
+                    <span className="inline-block w-1 h-1 bg-primary/60 rounded-full"></span>
+                    <span className="inline-block w-1 h-1 bg-primary/60 rounded-full"></span>
+                    <span className="inline-block w-1 h-1 bg-primary/60 rounded-full"></span>
+                  </div>
+                </div>
+                
+                {/* Additional cloud decorations */}
+                <div className="absolute -bottom-4 left-8 w-16 h-8 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm -z-10"></div>
+                <div className="absolute -bottom-2 left-12 w-12 h-6 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm -z-10"></div>
+              </div>
+            </div>
           </div>
 
           {/* Desktop Profile Image */}

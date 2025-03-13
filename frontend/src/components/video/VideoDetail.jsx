@@ -54,6 +54,13 @@ const VideoDetail = () => {
     );
   }
 
+  // Format duration to hh:mm:ss following VideoCard.jsx format
+  const formatDuration = (duration) => {
+    if (!duration) return '00:00:00'; // Handle zero duration
+    const [hours, minutes, seconds] = duration.split(':');
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-20 min-h-screen">
       <div className="aspect-video mb-8">
@@ -71,7 +78,7 @@ const VideoDetail = () => {
         
         <div className="flex items-center gap-4 text-sm text-gray-500">
           <span className="badge badge-sm">{video.category || 'Uncategorized'}</span>
-          <span>{Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')}</span>
+          <span>{formatDuration(video.duration)}</span>
           <span>{video.views.toLocaleString()} views</span>
         </div>
 

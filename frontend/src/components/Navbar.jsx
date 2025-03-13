@@ -165,7 +165,7 @@ const Navbar = () => {
                     ) : (
                       <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
                     )}
-                    <span className="text-xs font-medium">{item.label}</span>
+                    <span className="text-xs hidden lg:block">{item.label}</span>
                   </Link>
                 </li>
                 );

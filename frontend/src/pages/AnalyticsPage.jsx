@@ -176,7 +176,7 @@ const AnalyticsPage = () => {
   ];
 
   return (
-    <div className=" py-20 px-4 min-h-screen">
+    <div className=" py-20 mb-4 px-4 min-h-screen">
       <div className="flex flex-col gap-6">
         <div className="card bg-base-100 border border-primary/10">
           <div className="card-body">
@@ -205,8 +205,8 @@ const AnalyticsPage = () => {
 
             <div className="flex justify-end">
               {periodType === 'fixed' ? (
-                <div className="join bg-base-200 p-2 rounded-lg border border-primary/10">
-                  <div className="join-item flex flex-col px-4">
+                <div className="join bg-base-200 rounded-lg border border-primary/10 p-2">
+                  <div className="join-item flex flex-col">
                     <span className="text-xs text-base-content/70 mb-1">Start Date</span>
                     <input
                       type="date"
@@ -215,8 +215,8 @@ const AnalyticsPage = () => {
                       onChange={(e) => setCustomRange(prev => ({...prev, start: e.target.value}))}
                     />
                   </div>
-                  <div className="divider divider-horizontal"></div>
-                  <div className="join-item flex flex-col px-4">
+                  <div className="divider divider-horizontal "></div>
+                  <div className="join-item flex flex-col  ">
                     <span className="text-xs text-base-content/70 mb-1">End Date</span>
                     <input
                       type="date"
@@ -275,7 +275,7 @@ const AnalyticsPage = () => {
                   <chart.icon className="w-6 h-6" />
                   {chart.title}
                 </h3>
-                <div className="p-4 bg-base-100 rounded-xl h-[400px] border border-primary/10">
+                <div className=" h-[400px]">
                   <Bar data={chart.data} options={chartOptions} />
                 </div>
               </div>

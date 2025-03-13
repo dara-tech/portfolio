@@ -41,7 +41,8 @@ export async function generateVideoSuggestion(topic, retryCount = 0) {
       "description": "string",
       "youtubeId": "string", 
       "thumbnail": "string",
-      "duration": "string"
+      "duration": "string",
+      "category": "string"
     }
     
     Rules:
@@ -56,6 +57,7 @@ export async function generateVideoSuggestion(topic, retryCount = 0) {
     - The youtubeId should be the real video ID from the YouTube URL
     - The thumbnail should be the actual video thumbnail URL
     - Duration should be in the format HH:MM:SS
+    - Category should be one of: "Programming", "Web Development", "Data Science", "Machine Learning", "DevOps", "Mobile Development", "Game Development", "Computer Science", "Software Engineering", "Other"
     - Do not include backticks or markdown formatting
     - Ensure valid JSON format
     - Use double quotes for strings`;
@@ -78,7 +80,7 @@ export async function generateVideoSuggestion(topic, retryCount = 0) {
       const parsedResponse = JSON.parse(cleanResponse);
 
       // Validate the required fields
-      const requiredFields = ['title', 'description', 'youtubeId', 'thumbnail', 'duration'];
+      const requiredFields = ['title', 'description', 'youtubeId', 'thumbnail', 'duration', 'category'];
       const missingFields = requiredFields.filter(field => !parsedResponse[field]);
 
       if (missingFields.length > 0) {
@@ -126,6 +128,24 @@ export async function generateVideoSuggestion(topic, retryCount = 0) {
         throw new Error("Invalid YouTube thumbnail URL");
       }
 
+      // Validate category
+      const validCategories = [
+        "Programming",
+        "Web Development", 
+        "Data Science",
+        "Machine Learning",
+        "DevOps",
+        "Mobile Development",
+        "Game Development",
+        "Computer Science",
+        "Software Engineering",
+        "Other"
+      ];
+
+      if (!validCategories.includes(parsedResponse.category)) {
+        parsedResponse.category = "Other";
+      }
+
       // Enhance response with metadata
       parsedResponse.viewCount = viewCount;
       parsedResponse.likeCount = likeCount;
@@ -171,6 +191,7 @@ function validateVideoData(data) {
     duration: String(data.duration || '00:00:00'),
     viewCount: Number(data.viewCount || 0),
     likeCount: Number(data.likeCount || 0),
-    channelTitle: String(data.channelTitle || '')
+    channelTitle: String(data.channelTitle || ''),
+    category: String(data.category || 'Other')
   };
 }

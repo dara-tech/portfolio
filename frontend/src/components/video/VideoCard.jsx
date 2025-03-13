@@ -7,11 +7,10 @@ const VideoCard = ({ video }) => {
   const getYoutubeId = (url) => {
     try {
       const urlObj = new URL(url);
-      if (urlObj.pathname.includes('/shorts/')) {
-        return urlObj.pathname.split('/shorts/')[1];
-      }
-      return urlObj.searchParams.get('v');
-    } catch (err) {
+      return urlObj.pathname.includes('/shorts/') 
+        ? urlObj.pathname.split('/shorts/')[1]
+        : urlObj.searchParams.get('v');
+    } catch {
       return null;
     }
   };
@@ -26,25 +25,33 @@ const VideoCard = ({ video }) => {
   return (
     <Link to={`/videos/${video._id}`}>
       <div 
-        className="group relative bg-base-100 rounded-xl overflow-hidden shadow-lg ring-2 ring-primary/10 transition-all duration-300"
+        className="card card-compact group relative bg-base-100 overflow-hidden shadow-lg ring-2 ring-primary/10 transition-all duration-300"
       >
-        {/* Thumbnail Container */}
+        {/* Video Container */}
         <div className="relative aspect-video">
-          <img
-            src={`https://img.youtube.com/vi/${getYoutubeId(video.url)}/maxresdefault.jpg`}
-            alt={video.title}
-            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-          />
-          
-          {/* Overlay on hover */}
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Play className="w-16 h-16 text-white" />
-          </div>
+          {getYoutubeId(video.url) ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${getYoutubeId(video.url)}`}
+              title={video.title}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <div className="w-full h-full bg-base-200 flex items-center justify-center">
+              <Play className="w-12 h-12 text-base-content/50" />
+            </div>
+          )}
           
           {/* Duration badge */}
           <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm flex items-center gap-1">
             <Clock className="w-4 h-4" />
             {formatDuration(video.duration || '00:00:00')}
+          </div>
+
+          {/* Category badge */}
+          <div className="absolute top-2 left-2">
+            <span className="badge badge-primary">{video.category || 'Uncategorized'}</span>
           </div>
         </div>
 
@@ -54,15 +61,13 @@ const VideoCard = ({ video }) => {
             {video.title}
           </h3>
           
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <span className="badge badge-ghost">{video.category || 'Uncategorized'}</span>
+          <div className="flex items-center justify-end text-sm text-gray-500">
             <div className="flex items-center gap-1">
               <Eye className="w-4 h-4" />
               {video.views.toLocaleString()} views
             </div>
           </div>
           
-          {/* Description preview */}
           <p className="mt-2 text-sm text-gray-600 line-clamp-2">
             {video.description}
           </p>

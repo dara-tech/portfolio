@@ -29,6 +29,11 @@ const videoSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    category: {
+        type: String,
+        trim: true,
+        default: 'Uncategorized'
+    },
     createdAt: {
         type: Date,
         default: Date.now

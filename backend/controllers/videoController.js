@@ -23,30 +23,52 @@ export const getVideo = async (req, res) => {
 
 export const createVideo = async (req, res) => {
   try {
-    // Extract YouTube ID from URL if present
-    let youtubeId = null;
-    if (req.body.url) {
-      const urlParams = new URL(req.body.url).searchParams;
-      youtubeId = urlParams.get('v');
+    // Validate request body for required fields
+    const { title, description, url } = req.body;
+    if (!title || !description || !url) {
+      return res.status(400).json({ success: false, message: 'Title, description, and URL are required.' });
     }
 
+    // Function to extract YouTube ID from URL (including Shorts)
+    const extractYouTubeId = (url) => {
+      const youtubeRegex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|(?:v|e(?:mbed)?)\/)([a-zA-Z0-9_-]{11})|\S*?youtu\.be\/([a-zA-Z0-9_-]{11})|(?:youtube\.com\/shorts\/([a-zA-Z0-9_-]{11}))))/;
+      const match = url.match(youtubeRegex);
+      return match ? match[1] || match[2] || match[3] : null;
+    };
+
+    // Log URL for debugging
+    console.log('Received URL:', url);
+
+    // Extract YouTube ID from URL
+    const youtubeId = extractYouTubeId(url);
+    if (!youtubeId) {
+      return res.status(400).json({ success: false, message: 'Invalid YouTube URL provided.' });
+    }
+
+    // Check if the YouTube ID exists already in the database
+    const existingVideo = await Video.findOne({ youtubeId });
+    if (existingVideo) {
+      return res.status(409).json({
+        success: false,
+        message: 'A video with this YouTube URL already exists.'
+      });
+    }
+
+    // Create video entry in the database
     const video = await Video.create({
-      ...req.body,
+      title,
+      description,
+      url,
       youtubeId
     });
 
     res.status(201).json({ success: true, data: video });
   } catch (error) {
-    // Handle duplicate youtubeId error specifically
-    if (error.code === 11000 && error.keyPattern?.youtubeId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'A video with this YouTube URL already exists'
-      });
-    }
-    res.status(400).json({ success: false, message: error.message });
+    console.error('Error creating video:', error);
+    res.status(500).json({ success: false, message: 'An error occurred while creating the video: ' + error.message });
   }
 };
+
 
 export const updateVideo = async (req, res) => {
   try {
