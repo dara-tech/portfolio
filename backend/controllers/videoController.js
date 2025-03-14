@@ -20,13 +20,35 @@ export const getVideo = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 export const createVideo = async (req, res) => {
   try {
-    // Validate request body for required fields
-    const { title, description, url } = req.body;
+    // Extract all fields from request body
+    const {
+      title,
+      description,
+      url,
+      thumbnail,
+      duration,
+      views,
+      category,
+      channelTitle
+    } = req.body;
+
+    // Validate required fields
     if (!title || !description || !url) {
-      return res.status(400).json({ success: false, message: 'Title, description, and URL are required.' });
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Title, description, and URL are required.' 
+      });
+    }
+
+    // Validate duration format (HH:MM:SS)
+    const durationRegex = /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/;
+    if (duration && !durationRegex.test(duration)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Duration must be in HH:MM:SS format'
+      });
     }
 
     // Function to extract YouTube ID from URL (including Shorts)
@@ -36,16 +58,16 @@ export const createVideo = async (req, res) => {
       return match ? match[1] || match[2] || match[3] : null;
     };
 
-    // Log URL for debugging
-    console.log('Received URL:', url);
-
     // Extract YouTube ID from URL
     const youtubeId = extractYouTubeId(url);
     if (!youtubeId) {
-      return res.status(400).json({ success: false, message: 'Invalid YouTube URL provided.' });
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Invalid YouTube URL provided.' 
+      });
     }
 
-    // Check if the YouTube ID exists already in the database
+    // Check if video with youtubeId already exists
     const existingVideo = await Video.findOne({ youtubeId });
     if (existingVideo) {
       return res.status(409).json({
@@ -54,18 +76,27 @@ export const createVideo = async (req, res) => {
       });
     }
 
-    // Create video entry in the database
+    // Create video with all fields
     const video = await Video.create({
       title,
       description,
       url,
+      thumbnail,
+      duration: duration || '00:00:00', // Default duration if not provided
+      views: views || 0,
+      category: category || 'Other',
+      channelTitle,
       youtubeId
     });
 
     res.status(201).json({ success: true, data: video });
+
   } catch (error) {
     console.error('Error creating video:', error);
-    res.status(500).json({ success: false, message: 'An error occurred while creating the video: ' + error.message });
+    res.status(500).json({ 
+      success: false, 
+      message: 'An error occurred while creating the video: ' + error.message 
+    });
   }
 };
 

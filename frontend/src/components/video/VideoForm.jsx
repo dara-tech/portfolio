@@ -168,6 +168,7 @@ const VideoForm = () => {
         description: formData.description.trim(),
         url: formData.url.trim(),
         thumbnail: formData.thumbnail,
+        duration: formData.duration.trim(),
         views: formData.views,
         category: formData.category
       };
