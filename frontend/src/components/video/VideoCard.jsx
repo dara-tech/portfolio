@@ -25,7 +25,7 @@ const VideoCard = ({ video }) => {
   return (
     <Link to={`/videos/${video._id}`}>
       <div 
-        className="card card-compact group relative bg-base-100 overflow-hidden shadow-lg ring-2 ring-primary/10 transition-all duration-300"
+        className="card card-compact group relative bg-base-100 overflow-hidden shadow-lg ring-2 ring-primary/10 transition-all duration-300 h-full"
       >
         {/* Video Container */}
         <div className="relative aspect-video">
@@ -56,21 +56,21 @@ const VideoCard = ({ video }) => {
         </div>
 
         {/* Content */}
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-1">
           <h3 className="text-lg font-semibold line-clamp-2 mb-2 group-hover:text-primary transition-colors">
             {video.title}
           </h3>
           
-          <div className="flex items-center justify-end text-sm text-gray-500">
+          <p className="text-sm text-gray-600 line-clamp-2 flex-1">
+            {video.description}
+          </p>
+
+          <div className="flex items-center justify-end text-sm text-gray-500 mt-2">
             <div className="flex items-center gap-1">
               <Eye className="w-4 h-4" />
               {video.views.toLocaleString()} views
             </div>
           </div>
-          
-          <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-            {video.description}
-          </p>
         </div>
       </div>
     </Link>

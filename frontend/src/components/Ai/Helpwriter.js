@@ -1,12 +1,43 @@
 import { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+  headerIds: false,
+  highlight: (code, lang) => `<pre class="bg-base-300 p-4 rounded-lg my-2"><code class="language-${lang}">${code}</code></pre>`
+});
+
 const useHelpWriter = (editor, tone, correctionType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [suggestion, setSuggestion] = useState("");
+
+  const formatResponse = (text) => {
+    const cleanText = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/```(\w+)?\n([\s\S]*?)\n```/g, (_, lang, code) => `\n\`\`\`${lang || ''}\n${code.trim()}\n\`\`\`\n`);
+
+    const htmlContent = marked(cleanText);
+    const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
+      ADD_TAGS: ['code', 'pre'],
+      ADD_ATTR: ['class'],
+    });
+
+    return sanitizedHtml
+      .replace(/<a /g, '<a class="link link-primary" target="_blank" ')
+      .replace(/<ul>/g, '<ul class="list-disc list-inside my-2 space-y-1">')
+      .replace(/<ol>/g, '<ol class="list-decimal list-inside my-2 space-y-1">')
+      .replace(/<h([1-6])>/g, '<h$1 class="font-bold my-2">')
+      .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-primary pl-4 my-2">')
+      .replace(/<table>/g, '<table class="table table-zebra w-full">')
+      .replace(/<code>/g, '<code class="bg-base-300 px-1 rounded text-sm sm:text-base md:text-lg lg:text-xl">');
+  };
 
   const generateSuggestion = async () => {
     if (!editor) return;
@@ -44,7 +75,7 @@ const useHelpWriter = (editor, tone, correctionType) => {
       const response = await result.response;
       const text = response.text().trim();
 
-      setSuggestion(text);
+      setSuggestion(formatResponse(text));
     } catch (error) {
       console.error("Error generating suggestion:", error);
     } finally {

@@ -21,7 +21,7 @@ const Chat = () => {
     setIsTyping(true);
     for (let i = 0; i <= text.length; i++) {
       setStreamedText(text.slice(0, i));
-      await new Promise(resolve => setTimeout(resolve, 20));
+      await new Promise(resolve => setTimeout(resolve, 5)); // Reduced from 20ms to 5ms
     }
     setIsTyping(false);
     setStreamedText('');

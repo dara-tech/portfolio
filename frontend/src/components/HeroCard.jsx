@@ -170,9 +170,9 @@ const HeroCard = () => {
                 <a
                   href={userData.cv}
                   download
-                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition-colors duration-200"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-primary-content transition-colors duration-200"
                 >
-                  <Download className="w-4 h-4" />
+                  <Download className="w-4 h-4 " />
                   Download Resume
                 </a>
               </div>

@@ -154,8 +154,8 @@ const Editor = ({ initialValue, onChange }) => {
 
         {/* Display AI suggestion */}
         {suggestion && (
-          <div className="mt-2 p-3 bg-gray-100 rounded">
-            <p>{suggestion}</p>
+          <div className="mt-2 p-3 bg-base-100 rounded">
+            <div dangerouslySetInnerHTML={{ __html: suggestion }} />
             <button
               className="btn btn-sm btn-success mt-2"
               onClick={applySuggestion}

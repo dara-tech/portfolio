@@ -157,8 +157,8 @@ const Navbar = () => {
                   <li key={item.path}>
                   <Link
                     to={item.path}
-                    className={`flex flex-col items-center p-2 w-20 rounded-lg transition-all duration-300 ${
-                      isActive(item.path) ? 'text-primary bg-primary/10' : 'text-base-content hover:scale-105'
+                    className={`flex flex-col items-center p-2 w-20 rounded-lg transition-all duration-300 relative ${
+                      isActive(item.path) ? 'text-primary before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary' : 'text-base-content hover:scale-105'
                     }`}
                   >
                    {item.userImage ? (
@@ -180,8 +180,8 @@ const Navbar = () => {
                   <li key={item.path}>
                     <Link
                       to={item.path}
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        isActive(item.path) ? 'text-primary scale-110 bg-primary/10' : 'text-base-content hover:scale-105'
+                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 relative ${
+                        isActive(item.path) ? 'text-primary before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary' : 'text-base-content hover:scale-105'
                       }`}
                     >
                       <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
