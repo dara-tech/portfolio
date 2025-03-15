@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAdminProfile } from "../hooks/useAdminProfile";
-import { Facebook, Instagram, Twitter, Linkedin, Github, Download, Code2 } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, Github, Download, Code2, ExternalLink, NotebookPen } from "lucide-react";
 
 const HeroCard = () => {
   const { formData: userData, loading } = useAdminProfile();
@@ -29,7 +29,6 @@ const HeroCard = () => {
 
       animateText();
 
-      // Rotate through skills
       const interval = setInterval(() => {
         setActiveSkillIndex(prev => (prev + 1) % (userData?.skills?.length || 1));
       }, 2000);
@@ -39,14 +38,14 @@ const HeroCard = () => {
   }, [loading, userData?.username, userData?.describe]);
 
   const getSocialIcon = (platform) => {
-    switch (platform.toLowerCase()) {
-      case 'github': return Github;
-      case 'linkedin': return Linkedin;
-      case 'twitter': return Twitter;
-      case 'facebook': return Facebook;
-      case 'instagram': return Instagram;
-      default: return null;
-    }
+    const icons = {
+      github: Github,
+      linkedin: Linkedin, 
+      twitter: Twitter,
+      facebook: Facebook,
+      instagram: Instagram
+    };
+    return icons[platform.toLowerCase()] || null;
   };
 
   const SocialLink = ({ href, platform }) => {
@@ -58,48 +57,64 @@ const HeroCard = () => {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="p-2 hover:text-primary transition-colors duration-300"
+        className="group relative p-3 hover:text-primary transition-colors duration-200 rounded-lg"
       >
         <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-base-200 text-base-content text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {platform}
+        </span>
       </a>
     );
   };
 
+  const ProfileImage = ({ isMobile = false }) => (
+    <div className={`${isMobile ? 'block lg:hidden mx-auto w-48 sm:w-56 md:w-64 py-10 -mb-20' : 'hidden lg:block relative'}`}>
+      <div className="relative group">
+        <div className="flex items-center  gap-2 absolute -top-4 -left-4 z-20 bg-base-100 p-2 rounded-full shadow-sm">
+
+          <p className="text-base-content/80 text-xs leading-relaxed">
+            {userData?.about || "This user hasn't provided any information about themselves yet."}
+          </p>
+        </div>
+       
+        <div className="aspect-square relative z-10 overflow-hidden rounded-lg">
+          {loading ? (
+            <div className="w-full h-full bg-base-200 animate-pulse" />
+          ) : userData?.profilePic ? (
+            <img
+              src={userData.profilePic}
+              alt={userData.username}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/api/placeholder/500/500";
+              }}
+            />
+          ) : (
+            <img 
+              src="/api/placeholder/500/500" 
+              alt="placeholder" 
+              className="w-full h-full object-cover" 
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="w-full min-h-screen flex items-center py-8 md:py-0">
+    <div className="w-full min-h-screen flex items-center py-20 lg:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-          {/* Mobile Profile Image */}
-          <div className="block lg:hidden mx-auto w-48 sm:w-56 md:w-64  py-10">
-            <div className="aspect-square relative z-10 overflow-hidden rounded-full border-4 border-primary/20">
-              {loading ? (
-                <div className="w-full h-full bg-base-200 animate-pulse" />
-              ) : userData?.profilePic ? (
-                <img
-                  src={userData.profilePic}
-                  alt={userData.username}
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/api/placeholder/500/500";
-                  }}
-                />
-              ) : (
-                <img 
-                  src="/api/placeholder/500/500" 
-                  alt="placeholder" 
-                  className="w-full h-full object-cover" 
-                />
-              )}
-            </div>
-          </div>
+          <ProfileImage isMobile={true} />
 
-          {/* Content Section */}
-          <div className="space-y-4 text-center lg:text-left">
-            <div>
-              <h2 className="text-base sm:text-lg text-primary/80 mb-2 font-mono">&lt;hello world/&gt;</h2>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-light">
-                I'm{" "}
+          <div className="space-y-6 text-center lg:text-left bg-base-100 p-8 rounded-lg">
+            <div className="relative">
+              <h2 className="text-base text-primary mb-2 font-mono">
+                &lt;hello world/&gt;
+              </h2>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-base-content">
+                I am{" "}
                 <span className="font-bold relative">
                   {loading ? "Loading..." : displayName}
                   {isTypingName && (
@@ -109,8 +124,8 @@ const HeroCard = () => {
               </h1>
             </div>
 
-            <div className="relative h-20 sm:h-24 overflow-hidden">
-              <p className="text-lg sm:text-xl md:text-2xl text-base-content/80 absolute transition-all duration-300">
+            <div className="relative h-20 sm:h-28 overflow-hidden">
+              <p className="text-lg sm:text-xl text-base-content/70 absolute">
                 {loading ? "Loading..." : displayDescription}
                 {isTypingDescription && (
                   <span className="inline-block w-0.5 h-4 bg-primary animate-blink ml-1" />
@@ -118,34 +133,36 @@ const HeroCard = () => {
               </p>
             </div>
 
-            <div className="relative h-12 overflow-hidden">
+            <div className="relative h-12 overflow-hidden rounded-lg bg-base-100 ">
               {userData?.skills && (
                 <div 
-                  className="transition-all duration-500 absolute w-full"
+                  className="transition-transform duration-300 absolute w-full"
                   style={{ transform: `translateY(-${activeSkillIndex * 3}rem)` }}
                 >
                   {userData.skills.map((skill, index) => (
                     <div 
                       key={skill}
-                      className={`h-12 flex items-center justify-center lg:justify-start text-xl sm:text-2xl font-light transition-opacity duration-300 ${
+                      className={`h-12 flex items-center justify-center lg:justify-start text-xl font-light transition-opacity duration-200 ${
                         index === activeSkillIndex ? 'opacity-100' : 'opacity-0'
                       }`}
                     >
-                      {skill}
+                      <span className="text-primary">
+                        {skill}
+                      </span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-4 sm:gap-6 pt-4">
-              <div className="h-px flex-1 bg-base-content/10" />
-              <div className="flex justify-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-4 pt-4">
+              <div className="h-px flex-1 bg-base-200" />
+              <div className="flex justify-center gap-2">
                 {userData?.socialLinks?.map((link) => (
                   <SocialLink key={link._id} href={link.url} platform={link.platform} />
                 ))}
               </div>
-              <div className="h-px flex-1 bg-base-content/10" />
+              <div className="h-px flex-1 bg-base-200" />
             </div>
 
             {userData?.cv && (
@@ -153,80 +170,16 @@ const HeroCard = () => {
                 <a
                   href={userData.cv}
                   download
-                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 rounded-full"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition-colors duration-200"
                 >
                   <Download className="w-4 h-4" />
                   Download Resume
                 </a>
               </div>
             )}
-
-            {/* Show about section - Dream Cloud Style */}
-            <div className="pt-8 relative">
-              <div className="flex items-center gap-2 mb-4">
-                <h2 className="text-lg font-semibold flex items-center">
-                  <span className="mr-2">💭</span> About Me
-                </h2>
-                <div className="h-px flex-1 bg-base-content/10"></div>
-              </div>
-              
-              <div className="relative">
-                {/* Cloud shape with multiple bubbles */}
-                <div className="absolute -top-6 right-8 lg:right-16 w-8 h-8 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm"></div>
-                <div className="absolute -top-8 right-12 lg:right-24 w-6 h-6 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm"></div>
-                <div className="absolute -top-10 right-16 lg:right-32 w-4 h-4 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm"></div>
-                
-                {/* Main cloud */}
-                <div className="bg-white/90 dark:bg-slate-700/90 backdrop-blur-sm p-5 rounded-2xl rounded-br-3xl shadow-lg border border-primary/20">
-                  <p className="text-base-content/90 whitespace-pre-line text-sm sm:text-base leading-relaxed italic">
-                    {userData?.about || "This user hasn't provided any information about themselves yet."}
-                  </p>
-                  
-                  <div className="flex justify-end mt-2 gap-1">
-                    <span className="inline-block w-1 h-1 bg-primary/60 rounded-full"></span>
-                    <span className="inline-block w-1 h-1 bg-primary/60 rounded-full"></span>
-                    <span className="inline-block w-1 h-1 bg-primary/60 rounded-full"></span>
-                  </div>
-                </div>
-                
-                {/* Additional cloud decorations */}
-                <div className="absolute -bottom-4 left-8 w-16 h-8 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm -z-10"></div>
-                <div className="absolute -bottom-2 left-12 w-12 h-6 bg-white/80 dark:bg-slate-700/80 rounded-full blur-sm -z-10"></div>
-              </div>
-            </div>
           </div>
 
-          {/* Desktop Profile Image */}
-          <div className="hidden lg:block relative">
-            <div className="aspect-square relative z-10 overflow-hidden rounded-lg shadow-xl">
-              {loading ? (
-                <div className="w-full h-full bg-base-200 animate-pulse" />
-              ) : userData?.profilePic ? (
-                <img
-                  src={userData.profilePic}
-                  alt={userData.username}
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/api/placeholder/500/500";
-                  }}
-                />
-              ) : (
-                <img 
-                  src="/api/placeholder/500/500" 
-                  alt="placeholder" 
-                  className="w-full h-full object-cover" 
-                />
-              )}
-            </div>
-
-            {/* <div className="absolute -left-4 bottom-8 py-3 px-6 bg-base-100 border border-base-content/10 shadow-lg backdrop-blur-sm rounded-lg">
-              <div className="flex items-center gap-3">
-                <Code2 className="w-5 h-5 text-primary" />
-                <span className="font-mono text-base-content/60">available for work</span>
-              </div>
-            </div> */}
-          </div>
+          <ProfileImage />
         </div>
       </div>
     </div>

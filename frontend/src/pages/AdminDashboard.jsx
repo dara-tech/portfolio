@@ -46,12 +46,12 @@ const AdminDashboard = () => {
   return (
     <div className="container mx-auto py-20 px-4 min-h-screen">
       <div className="flex flex-col gap-6">
-        <div className="card bg-base-100 shadow-xl">
+        <div className="card bg-base-100 ring-1 ring-primary/10">
           <div className="card-body">
             <h2 className="card-title text-3xl font-bold mb-4">
               Welcome back, {userData?.username || 'Admin'}!
             </h2>
-            <div className="stats shadow">
+            <div className="stats ring-1 ring-primary/10 bg-base-200">
               <div className="stat">
                 <div className="stat-title">Total Projects</div>
                 <div className="stat-value">{projects?.length || 0}</div>
