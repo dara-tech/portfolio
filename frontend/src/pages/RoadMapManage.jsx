@@ -4,6 +4,7 @@ import { Loader2, Plus, Edit, Trash2, Search, Filter } from 'lucide-react';
 import { useRoadMapByID, useDeleteRoadMap, useUpdateRoadMap } from '../hooks/useRoadMap';
 import RoadmapEdit from '../components/roadmap/RoadmapEdit';
 import RoadMapCreate from './RoadMapCreate';
+import { Loading } from '../components/common/Loading';
 
 const RoadMapManage = () => {
   const { roadMaps, loading, error } = useRoadMapByID();
@@ -60,16 +61,11 @@ const RoadMapManage = () => {
   };
 
   const handleSaveRoadmap = (newRoadmap) => {
-
     // Handle the saved roadmap, e.g., save it to state or make an API call
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
-      </div>
-    );
+    return <Loading type="grid" text="Loading roadmaps..." />;
   }
 
   if (error || deleteError || updateError) {

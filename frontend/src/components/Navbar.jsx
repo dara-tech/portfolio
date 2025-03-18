@@ -15,8 +15,9 @@ import {
   Map,
   MessageSquare,
   PenSquare,
-  Video ,
-  Clapperboard
+  Video,
+  Clapperboard,
+  BookOpen
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -62,6 +63,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: Home },
     { path: '/projects', label: 'Projects', icon: FolderKanban },
     { path: '/roadmap', label: 'Roadmap', icon: Map },
+    { path: '/lessons', label: 'Lessons', icon: BookOpen },
     { path: '/chat', label: 'Chat', icon: MessageSquare },
     { path: '/videos', label: 'Videos', icon: Video },
   ];
@@ -70,6 +72,7 @@ const Navbar = () => {
     { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/admin/projects', label: 'Projects', icon: PanelTopClose },
     { path: '/admin/roadmap', label: ' Roadmap', icon: Map },
+    { path: '/admin/lessons', label: 'Lessons', icon: BookOpen },
     { path: '/admin/write', label: 'Write', icon: PenSquare },   
     { path: '/admin/videos', label: 'Videos', icon: Clapperboard },   
     { path: '/admin/profile', label: 'Profile', icon: UserCircle, userImage: userData?.profilePic || '/default-avatar.png' },

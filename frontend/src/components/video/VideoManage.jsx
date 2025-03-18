@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Trash2, Edit, Loader, Search, Filter, ArrowUpDown } from 'lucide-react';
+import { Trash2, Edit, Loader, Search, Filter, ArrowUpDown, Plus, RefreshCw, AlertTriangle, Eye, Film } from 'lucide-react';
 import useVideo from '../../hooks/useVideo';
 
 const VideoManage = () => {
@@ -98,22 +98,31 @@ const VideoManage = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader className="animate-spin h-8 w-8" />
+      <div className="flex flex-col justify-center items-center min-h-screen bg-base-100">
+        <div className="card shadow-xl bg-base-200 p-8 text-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="loading loading-spinner loading-lg text-primary"></div>
+            <h2 className="text-xl font-semibold mt-2">Loading Videos</h2>
+            <p className="text-base-content/70">Please wait while we fetch your video library...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   // Main render
   return (
-    <div className=" p-6 py-24 min-h-screen">
+    <div className="container mx-auto p-6  py-20 min-h-screen">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Manage Videos</h1>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Video Library
+        </h1>
         <Link 
           to="/admin/videos/new" 
-          className="btn btn-primary btn-sm  transition-all duration-300"
+          className="btn btn-primary shadow-md hover:shadow-lg transition-all duration-300"
         >
+          <Plus size={18} className="mr-1" />
           Add New Video
         </Link>
       </div>
@@ -121,113 +130,178 @@ const VideoManage = () => {
       {/* Error message */}
       {error && (
         <div className="alert alert-error mb-6 shadow-lg">
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <p>{error}</p>
-          </div>
+          <AlertTriangle className="h-6 w-6 mr-2" />
+          <p>{error}</p>
+          <button 
+            className="btn btn-sm btn-ghost ml-auto"
+            onClick={() => setError('')}
+          >
+            Dismiss
+          </button>
         </div>
       )}
 
       {/* Search and filter controls */}
-      <div className="flex gap-6 mb-8">
-        <div className="form-control flex-1">
-          <div className="relative">
-            <input
-              type="search"
-              placeholder="Search videos..."
-              className="input input-bordered input-lg w-full pl-12 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" />
+      <div className="card bg-base-200 shadow-md mb-8">
+        <div className="card-body p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="form-control flex-1">
+              <div className="input-group">
+                <input
+                  type="search"
+                  placeholder="Search videos by title..."
+                  className="input input-bordered w-full focus:outline-none focus:border-primary"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+              </div>
+            </div>
+
+            <div className="form-control w-full md:w-56">
+              <div className="input-group">
+                <select
+                  className="select select-bordered w-full focus:outline-none focus:border-primary"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {categories.map(category => (
+                    <option key={category} value={category}>
+                      {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <select
-          className="select select-bordered select-lg w-56 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map(category => (
-            <option key={category} value={category}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </option>
-          ))}
-        </select>
+      {/* Stats summary */}
+      <div className="stats shadow mb-8 w-full">
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <Film className="w-8 h-8" />
+          </div>
+          <div className="stat-title">Total Videos</div>
+          <div className="stat-value">{videos.length}</div>
+        </div>
+        
+        <div className="stat">
+          <div className="stat-figure text-secondary">
+            <Eye className="w-8 h-8" />
+          </div>
+          <div className="stat-title">Total Views</div>
+          <div className="stat-value">
+            {videos.reduce((sum, video) => sum + video.views, 0).toLocaleString()}
+          </div>
+        </div>
+        
+        <div className="stat">
+          <div className="stat-figure text-accent">
+            <Filter className="w-8 h-8" />
+          </div>
+          <div className="stat-title">Categories</div>
+          <div className="stat-value">{categories.length - 1}</div>
+        </div>
       </div>
 
       {/* Videos table */}
-      <div className="overflow-x-auto bg-base-100 ">
-        <table className="table w-full">
-          <thead>
-            <tr className="bg-base-200">
-              <th onClick={() => handleSort('title')} className="cursor-pointer hover:bg-base-300 transition-colors duration-200">
-                <div className="flex items-center gap-2 py-4">
-                  Title
-                  <ArrowUpDown className="h-4 w-4" />
-                </div>
-              </th>
-              <th onClick={() => handleSort('category')} className="cursor-pointer hover:bg-base-300 transition-colors duration-200">
-                <div className="flex items-center gap-2 py-4">
-                  Category
-                  <ArrowUpDown className="h-4 w-4" />
-                </div>
-              </th>
-              <th onClick={() => handleSort('views')} className="cursor-pointer hover:bg-base-300 transition-colors duration-200">
-                <div className="flex items-center gap-2 py-4">
-                  Views
-                  <ArrowUpDown className="h-4 w-4" />
-                </div>
-              </th>
-              <th className="py-4">Preview</th>
-              <th className="py-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredVideos.map(video => (
-              <tr key={video._id} className="hover:bg-base-200 transition-colors duration-200">
-                <td className="font-medium py-4">{video.title}</td>
-                <td className="py-4">
-                  <span className="badge badge-lg badge-ghost">{video.category || 'N/A'}</span>
-                </td>
-                <td className="py-4">{video.views.toLocaleString()}</td>
-                <td className="py-4">
-                  {video.url && getYoutubeId(video.url) && (
-                    <div className="w-48 aspect-video rounded-lg overflow-hidden shadow-lg">
-                      <iframe
-                        className="w-full h-full"
-                        src={`https://www.youtube.com/embed/${getYoutubeId(video.url)}`}
-                        title={video.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    </div>
-                  )}
-                </td>
-                <td className="py-4">
-                  <div className="flex flex-col gap-3 items-center justify-center">
-                    <Link
-                      to={`/admin/videos/edit/${video._id}`}
-                      className="btn btn-ghost btn-sm hover:bg-primary/10 "
-                      data-tip="Edit video"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(video._id)}
-                      className="btn btn-ghost btn-sm hover:bg-error/10 text-error"
-                      data-tip="Delete video"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="card bg-base-100 shadow-xl overflow-hidden ">
+        <div className="card-body p-0">
+          {filteredVideos.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="flex flex-col items-center gap-4">
+                <Film className="w-16 h-16 text-base-content/30" />
+                <h3 className="text-xl font-semibold">No videos found</h3>
+                <p className="text-base-content/70 max-w-md">
+                  {searchTerm || selectedCategory !== 'all' 
+                    ? "Try adjusting your search or filter criteria" 
+                    : "Add your first video to get started"}
+                </p>
+                <Link to="/admin/videos/new" className="btn btn-primary mt-4">
+                  <Plus size={18} className="mr-1" />
+                  Add New Video
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="table w-full">
+                <thead>
+                  <tr className="bg-base-200">
+                    <th onClick={() => handleSort('title')} className="cursor-pointer hover:bg-base-300 transition-colors">
+                      <div className="flex items-center gap-2 py-4">
+                        Title
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th onClick={() => handleSort('category')} className="cursor-pointer hover:bg-base-300 transition-colors">
+                      <div className="flex items-center gap-2 py-4">
+                        Category
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th onClick={() => handleSort('views')} className="cursor-pointer hover:bg-base-300 transition-colors">
+                      <div className="flex items-center gap-2 py-4">
+                        Views
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th className="py-4">Preview</th>
+                    <th className="py-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredVideos.map(video => (
+                    <tr key={video._id} className="hover:bg-base-200 transition-colors">
+                      <td className="font-medium py-4">{video.title}</td>
+                      <td className="py-4">
+                        <div className="badge badge-lg badge-outline">{video.category || 'Uncategorized'}</div>
+                      </td>
+                      <td className="py-4">
+                        <div className="flex items-center gap-2">
+                          <Eye className="w-4 h-4 text-base-content/70" />
+                          {video.views.toLocaleString()}
+                        </div>
+                      </td>
+                      <td className="py-4">
+                        {video.url && getYoutubeId(video.url) && (
+                          <div className="w-48 aspect-video rounded-lg overflow-hidden shadow-lg">
+                            <iframe
+                              className="w-full h-full"
+                              src={`https://www.youtube.com/embed/${getYoutubeId(video.url)}`}
+                              title={video.title}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            />
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-4">
+                        <div className="flex gap-2">
+                          <Link
+                            to={`/admin/videos/edit/${video._id}`}
+                            className="btn btn-sm btn-outline btn-primary"
+                            data-tip="Edit video"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(video._id)}
+                            className="btn btn-sm btn-outline btn-error"
+                            data-tip="Delete video"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

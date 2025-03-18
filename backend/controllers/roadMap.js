@@ -28,6 +28,9 @@ export const getRoadMapById = async (req, res) => {
     if (!roadMap) {
       return res.status(404).json({ message: 'Roadmap not found' });
     }
+    // Increment views
+    roadMap.views += 1;
+    await roadMap.save();
     res.status(200).json(roadMap);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -59,4 +62,3 @@ export const deleteRoadMap = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-

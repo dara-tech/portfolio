@@ -4,6 +4,7 @@ import useProjects from '../../hooks/useProjects';
 import ErrorBoundary from '../ErrorBoundary';
 import ProjectCard from '../projects/ProjectCard';
 import { Search, Filter, X, ChevronDown, Sliders } from 'lucide-react';
+import { Loading } from '../common/Loading';
 
 const ProjectList = () => {
   const { projects = [], loading, error } = useProjects();
@@ -36,7 +37,7 @@ const ProjectList = () => {
     setSearchQuery('');
   }, []);
 
-  if (loading) return <div className="flex justify-center items-center min-h-[400px]"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
+  if (loading) return <Loading type="grid" text="Loading projects..." />;
   if (error) return <div className="alert alert-error max-w-2xl mx-auto mt-8 "><X className="w-6 h-6" /><span>Error loading projects: {error.message}</span></div>;
 
   return (

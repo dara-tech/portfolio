@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import VideoCard from '../components/video/VideoCard';
 import useVideo from '../hooks/useVideo';
-import { Loader, Search, Filter } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
+import { Loading } from '../components/common/Loading';
 
 const VideoPage = () => {
   const [videos, setVideos] = useState([]);
@@ -52,11 +53,7 @@ const VideoPage = () => {
   }, [searchTerm, selectedCategory]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader className="animate-spin h-8 w-8" />
-      </div>
-    );
+    return <Loading type="grid" text="Loading videos..." />;
   }
 
   if (error) {

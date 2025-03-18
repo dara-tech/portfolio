@@ -24,6 +24,10 @@ import VideoManage from './components/video/VideoManage';
 import VideoForm from './components/video/VideoForm';
 import VideoPage from './pages/VideoPage';
 import VideoDetailPage from './pages/VideoDetailPage';
+import LessonPage from './pages/LessonPage';
+import LessonDetail from './components/lesson/LessonDetail';
+import LessonManage from './components/lesson/LessonManage';
+import LessonForm from './components/lesson/LessonForm';
 function App() {
   const {theme} = useThemeStore();
   return (
@@ -40,6 +44,8 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/videos" element={<VideoPage />} />
           <Route path="/videos/:id" element={<VideoDetailPage />} />
+          <Route path="/lessons" element={<LessonPage />} />
+          <Route path="/lessons/:id" element={<LessonDetail />} />
           {/* Admin Auth routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/settings" element={<SettingPage />} />
@@ -55,6 +61,9 @@ function App() {
           <Route path="/admin/roadmap" element={<ProtectedRoute><RoadMapManage /></ProtectedRoute>} />
           <Route path="/admin/roadmap/create-roadmap" element={<ProtectedRoute><RoadMapCreate /></ProtectedRoute>} />
           <Route path="/admin/write" element={<ProtectedRoute><Writer /></ProtectedRoute>} />
+          <Route path="/admin/lessons" element={<ProtectedRoute><LessonManage /></ProtectedRoute>} />
+          <Route path="/admin/lessons/new" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
+          <Route path="/admin/lessons/edit/:id" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
         </Routes>
       </Router>
     </div>

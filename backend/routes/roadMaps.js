@@ -2,7 +2,6 @@ import express from 'express';
 import { getRoadMaps, getRoadMapById, createRoadMap, updateRoadMap, deleteRoadMap } from '../controllers/roadMap.js';
 import { authenticateToken } from '../middleware/auth.js';
 
-
 const router = express.Router();
 
 // Public routes

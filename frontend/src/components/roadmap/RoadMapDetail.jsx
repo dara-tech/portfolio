@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, BookOpen, Link as LinkIcon, Clock, Zap, AlertCircle } from 'lucide-react';
+import { ChevronRight, BookOpen, Link as LinkIcon, Clock, Zap, AlertCircle, Eye } from 'lucide-react';
 
 const RoadMapDetail = ({ roadMap }) => {
   if (!roadMap) {
@@ -33,6 +33,11 @@ const RoadMapDetail = ({ roadMap }) => {
           <AlertCircle className="w-6 h-6 mx-auto mb-2 text-warning" />
           <div className="text-sm text-base-content/60">Difficulty</div>
           <div className="font-semibold">{roadMap.difficulty || "N/A"}</div>
+        </div>
+        <div className="text-center">
+          <Eye className="w-6 h-6 mx-auto mb-2 text-info" />
+          <div className="text-sm text-base-content/60">Views</div>
+          <div className="font-semibold">{roadMap.views || 0}</div>
         </div>
       </motion.div>
 

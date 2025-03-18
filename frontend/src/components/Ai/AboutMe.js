@@ -18,7 +18,7 @@ export function useGeminiGeneration() {
       
       const enhancedPrompt = `
         You are a professional profile writer helping create compelling content for user profiles.
-        Generate a concise and engaging response (50-75 words) that:
+        Generate a concise and engaging response (20-50 words) that:
         
         1. Addresses: ${prompt}
         2. Uses professional yet approachable language

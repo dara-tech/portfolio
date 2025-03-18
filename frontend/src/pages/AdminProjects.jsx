@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Plus, Loader2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import useProjects from '../hooks/useProjects';
 import ProjectCard from '../components/projects/ProjectCardAdmin';
 import ProjectForm from '../components/projects/ProjectForm';
 import ProjectModal from '../components/projects/ProjectModal';
+import { Loading } from '../components/common/Loading';
 
 const AdminProjects = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -133,11 +134,7 @@ const AdminProjects = () => {
           </button>
         </div>
 
-        {loading && (
-          <div className="flex justify-center items-center h-64">
-            <Loader2 className="w-12 h-12 animate-spin text-primary" />
-          </div>
-        )}
+        {loading && <Loading type="grid" text="Loading projects..." />}
 
         {error && (
           <div className="alert alert-error shadow-lg mb-6">
@@ -158,16 +155,18 @@ const AdminProjects = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects?.map((project) => (
-            <ProjectCard
-              key={project._id}
-              project={project}
-              onEdit={handleOpenModal}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
+        {!loading && projects && projects.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project._id}
+                project={project}
+                onEdit={handleOpenModal}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <AnimatePresence>

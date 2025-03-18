@@ -17,12 +17,14 @@ export const useRoadMap = (id) => {
   const [roadMap, setRoadMap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [views, setViews] = useState(0);
 
   useEffect(() => {
     const fetchRoadMap = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/roadmaps/${id}`, getAuthHeaders());
         setRoadMap(response.data);
+        setViews(response.data.views);
         setLoading(false);
       } catch (err) {
         setError('Failed to load roadmap. Please try again later.');
@@ -33,7 +35,7 @@ export const useRoadMap = (id) => {
     fetchRoadMap();
   }, [id]);
 
-  return { roadMap, loading, error };
+  return { roadMap, loading, error, views };
 };
 
 export const useRoadMapByID = () => {
@@ -58,6 +60,7 @@ export const useRoadMapByID = () => {
 
   return { roadMaps, loading, error };
 };
+
 export const useCreateRoadMap = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -123,4 +126,5 @@ export const useDeleteRoadMap = () => {
 
   return { deleteRoadMap, loading, error };
 };
+
 export default useRoadMap;
