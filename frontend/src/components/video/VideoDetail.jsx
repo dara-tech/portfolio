@@ -79,7 +79,7 @@ const VideoDetail = () => {
         <div className="flex items-center gap-4 text-sm text-gray-500">
           <span className="badge badge-sm">{video.category || 'Uncategorized'}</span>
           <span>{formatDuration(video.duration)}</span>
-          <span>{video.views.toLocaleString()} views</span>
+          <span> {video.viewCount ? video.viewCount.toLocaleString() : 'N/A'} views</span>
         </div>
 
         <p className="text-gray-600 whitespace-pre-wrap">{video.description}</p>

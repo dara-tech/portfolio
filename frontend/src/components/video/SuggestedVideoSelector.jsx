@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import { generateVideoSuggestion } from '../Ai/VideoGenerator';
-import { Loader, Video, Eye } from 'lucide-react';
+import { Loader, Video, Eye, Wand2 } from 'lucide-react';
 
 const SuggestedVideoSelector = ({ onVideoSelect }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [enhancingDescription, setEnhancingDescription] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('gemini-2.0-flash');
+
+  const models = [
+    { id: 'gemini-2.0-flash', name: 'Gemini Flash' },
+    { id: 'gemini-1.0-pro', name: 'Gemini Pro' },
+    { id: 'gemini-1.0-ultra', name: 'Gemini Ultra' }
+  ];
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -14,11 +22,14 @@ const SuggestedVideoSelector = ({ onVideoSelect }) => {
     setLoading(true);
     setError('');
     setSuggestions([]);
+    setEnhancingDescription(false);
 
     try {
-      const result = await generateVideoSuggestion(searchTerm);
+      const result = await generateVideoSuggestion(searchTerm, 0, selectedModel);
       if (result.success) {
-        setSuggestions([result.data]); // Assuming we get a single suggestion
+        setEnhancingDescription(true);
+        setSuggestions([result.data]);
+        setEnhancingDescription(false);
       } else {
         setError(result.error);
       }
@@ -31,6 +42,20 @@ const SuggestedVideoSelector = ({ onVideoSelect }) => {
 
   return (
     <div className="w-full mb-8">
+      <div className="flex gap-2 mb-4">
+        <select
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
+          className="select select-bordered"
+        >
+          {models.map(model => (
+            <option key={model.id} value={model.id}>
+              {model.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      
       <div className="flex gap-2">
         <input
           type="text"
@@ -43,9 +68,9 @@ const SuggestedVideoSelector = ({ onVideoSelect }) => {
           type="button" 
           className="btn btn-primary"
           onClick={handleSearch}
-          disabled={loading}
+          disabled={loading || enhancingDescription}
         >
-          {loading ? <Loader className="animate-spin" /> : 'Get Suggestions'}
+          {loading ? <Loader className="animate-spin" /> : enhancingDescription ? <Wand2 className="animate-pulse" /> : 'Get Suggestions'}
         </button>
       </div>
 
@@ -64,7 +89,7 @@ const SuggestedVideoSelector = ({ onVideoSelect }) => {
               onClick={() => onVideoSelect(video)}
             >
               <div className="flex flex-col md:flex-row">
-                <figure className=" relative">
+                <figure className="relative">
                   <img 
                     src={video.thumbnail} 
                     alt={video.title}
@@ -80,8 +105,13 @@ const SuggestedVideoSelector = ({ onVideoSelect }) => {
                   <div className="flex gap-4 mt-2">
                     <span className="flex items-center gap-1 text-sm">
                       <Eye className="w-4 h-4" />
-                      {video.views ? video.views.toLocaleString() : 'N/A'} views
+                      {video.viewCount ? video.viewCount.toLocaleString() : 'N/A'} views
                     </span>
+                    {video.channelTitle && (
+                      <span className="text-sm text-gray-500">
+                        {video.channelTitle}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -93,4 +123,4 @@ const SuggestedVideoSelector = ({ onVideoSelect }) => {
   );
 };
 
-export default SuggestedVideoSelector; 
+export default SuggestedVideoSelector;

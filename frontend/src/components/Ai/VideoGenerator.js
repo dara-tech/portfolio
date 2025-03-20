@@ -4,6 +4,7 @@ import DOMPurify from 'dompurify';
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_API_KEY);
 const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+const DEEPSEEK_API_KEY = import.meta.env.VITE_DEEPSEEK_API_KEY;
 
 const MAX_RETRIES = 3;
 
@@ -26,6 +27,32 @@ async function checkVideoExists(videoId) {
   } catch (error) {
     console.error('Error checking video existence:', error);
     return { exists: false, metadata: null };
+  }
+}
+
+// Helper function to get enhanced description using DeepSeek API
+async function getEnhancedDescription(topic, originalDescription) {
+  try {
+    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat",
+        messages: [{
+          role: "user",
+          content: `Enhance this video description for the topic "${topic}": ${originalDescription}\n\nMake it more detailed and educational while keeping the main points.`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    return data.choices[0]?.message?.content || originalDescription;
+  } catch (error) {
+    console.error('Error enhancing description:', error);
+    return originalDescription;
   }
 }
 
@@ -122,6 +149,9 @@ export async function generateVideoSuggestion(topic, retryCount = 0) {
       if (viewCount < 10000) {
         throw new Error("Video has insufficient views for optimal learning experience");
       }
+
+      // Get enhanced description using DeepSeek API
+      parsedResponse.description = await getEnhancedDescription(topic, parsedResponse.description);
 
       // Validate thumbnail URL
       if (!parsedResponse.thumbnail.startsWith('https://i.ytimg.com/')) {

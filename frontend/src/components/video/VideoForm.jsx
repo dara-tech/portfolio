@@ -494,7 +494,7 @@ const VideoForm = () => {
                   )}
                   <div className="badge badge-outline flex items-center gap-1 p-3">
                     <Eye className="w-3 h-3" />
-                    {formData.views} views
+                    {formData.viewCount ? formData.viewCount.toLocaleString() : 'N/A'} views
                   </div>
                   {isShort && (
                     <div className="badge badge-secondary p-3">Short</div>

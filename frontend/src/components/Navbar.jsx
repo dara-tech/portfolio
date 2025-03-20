@@ -187,8 +187,7 @@ const Navbar = () => {
                         isActive(item.path) ? 'text-primary before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary' : 'text-base-content hover:scale-105'
                       }`}
                     >
-                      <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
-                      <span className="text-xs font-medium">{item.label}</span>
+                      <Icon className={`w-6 h-6 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
                     </Link>
                   </li>
                 );
@@ -198,8 +197,7 @@ const Navbar = () => {
                   to="/admin/login"
                   className="flex flex-col items-center p-2 rounded-lg transition-all duration-300 text-primary hover:scale-105"
                 >
-                  <UserCircle className="w-6 h-6 mb-1" />
-                  <span className="text-xs font-medium">Login</span>
+                  <UserCircle className="w-6 h-6" />
                 </Link>
               </li>
             </>
