@@ -65,7 +65,7 @@ const Navbar = () => {
     { path: '/roadmap', label: 'Roadmap', icon: Map },
     { path: '/lessons', label: 'Lessons', icon: BookOpen },
     { path: '/chat', label: 'Chat', icon: MessageSquare },
-    { path: '/videos', label: 'Videos', icon: Video },
+    { path: '/videos', label: 'Videos', icon: Clapperboard },
   ];
 
   const adminNavItems = [
@@ -119,7 +119,7 @@ const Navbar = () => {
                         isActive(item.path) ? 'bg-primary text-primary-content hover:bg-primary scale-105 shadow-lg' : ''
                       }`}
                     >
-                      <Icon className={`w-4 h-4 mr-2 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
+                      <Icon className={`w-4 h-4 mr-4 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
                       {item.label}
                     </Link>
                   </li>
@@ -161,7 +161,7 @@ const Navbar = () => {
                   <Link
                     to={item.path}
                     className={`flex flex-col items-center p-2 w-20 rounded-lg transition-all duration-300 relative ${
-                      isActive(item.path) ? 'text-primary before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary' : 'text-base-content hover:scale-105'
+                      isActive(item.path) ? 'text-primary before:absolute before:-top-1 before:left-0 before:right-0 before:h-0.5 before:bg-primary' : 'text-base-content hover:scale-105'
                     }`}
                   >
                    {item.userImage ? (
@@ -184,10 +184,10 @@ const Navbar = () => {
                     <Link
                       to={item.path}
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 relative ${
-                        isActive(item.path) ? 'text-primary before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary' : 'text-base-content hover:scale-105'
+                        isActive(item.path) ? 'text-primary before:absolute before:-top-1.5 before:left-0 before:right-0 before:h-0.5 before:bg-primary' : 'text-base-content hover:scale-105'
                       }`}
                     >
-                      <Icon className={`w-6 h-6 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
+                      <Icon className={`w-6 h-6 transition-transform duration-300 ${isActive(item.path) ? 'scale-130' : ''}`} />
                     </Link>
                   </li>
                 );
