@@ -167,7 +167,7 @@ const Navbar = () => {
                    {item.userImage ? (
                       userImage && <img src={userImage} alt="User" className={`w-7 h-7 rounded-full transition-transform duration-300 ${isActive(item.path) ? 'ring-2 ring-primary ring-offset-2' : ''}`} />
                     ) : (
-                      <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
+                      <Icon className={`w-6 h-6 mb-2 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : ''}`} />
                     )}
                     <span className="text-xs hidden lg:block">{item.label}</span>
                   </Link>
