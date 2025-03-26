@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const API_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:5002"
-    : "https://daracheol.onrender.com";
+    : "https://daracheol-6adc.onrender.com";
 
 export const useAdminProfile = () => {
   const [formData, setFormData] = useState({
