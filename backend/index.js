@@ -57,7 +57,7 @@ app.get("*", (req, res) => {
 
 const server = http.createServer(app);
 
-const AUTO_RELOAD_INTERVAL = 900000;
+const AUTO_RELOAD_INTERVAL = 300000;
 
 const autoReload = () => {
   https.get("https://daracheol-6adc.onrender.com/", (res) => {
