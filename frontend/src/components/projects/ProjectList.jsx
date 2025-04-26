@@ -59,7 +59,7 @@ const ProjectList = () => {
             className="mb-8 space-y-4 bg-base-200 p-4 rounded-lg shadow-md overflow-hidden "
           >
             <div className="flex flex-wrap gap-4">
-              <div className="flex-1 min-w-[200px]">
+              <div className="flex-1 min-w-[200px] relative">
                 <input
                   type="text"
                   placeholder="Search projects..."
@@ -67,7 +67,7 @@ const ProjectList = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="input input-bordered w-full pl-10 focus:outline-none"
                 />
-                <Search className="absolute left-7 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50" size={18} />
               </div>
               <select
                 value={filters.category}

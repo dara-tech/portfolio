@@ -229,15 +229,15 @@ const Chat = () => {
       )}
 
       {/* Input form */}
-      <div className="p-4 bg-base-200 border-t border-base-300">
-        <form onSubmit={handleSubmit} className="flex max-w-3xl mx-auto mb-16 lg:mb-0">
-          <div className="join w-full shadow-lg">
+      <div className="p-4 lg:mb-14  ">
+        <form onSubmit={handleSubmit} className="flex max-w-3xl mx-auto">
+          <div className="join w-full shadow-lg ring-primary p-4 rounded-3xl bg-base-200">
             <input
               ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="input input-bordered join-item flex-grow focus:outline-none focus:border-primary"
+              className="input input-bordered join-item flex-grow focus:outline-none focus:border-none "
               placeholder="Type your message..."
               disabled={isLoading}
             />

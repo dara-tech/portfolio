@@ -31,4 +31,10 @@ export const THEMES = [
     "dim",
     "nord",
     "sunset",
+    "khmer",
+    "facebook-lite",
+    "x-core",
+    "x-grok",
+    "chatgpt-core"
   ];
+  

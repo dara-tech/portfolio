@@ -115,7 +115,7 @@ const Navbar = () => {
       </div>
       <div className="flex items-baseline">
         <span className="text-xl">Portfolio</span>
-        <span className="text-xl text-primary font-extrabold transition-colors duration-300 group-hover:text-secondary">.dev</span>
+        <span className="text-xl text-primary font-extrabold transition-colors duration-300 group-hover:text-secondary">.Dara</span>
       </div>
     </Link>
   );
@@ -288,10 +288,10 @@ const Navbar = () => {
       </div>
 
       {/* Bottom Navigation for Mobile */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-base-200 shadow-lg z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-base-200 shadow-lg z-50">
         <ul className="grid grid-cols-5 py-1">
           {token ? (
-            adminNavItems.slice(0, 5).map((item) => {
+            adminNavItems.slice(0, 4).map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
               return (
@@ -305,7 +305,7 @@ const Navbar = () => {
                       {active && <span className="absolute inset-0 animate-ping rounded-lg bg-primary/30" style={{animationDuration: '1.5s'}}></span>}
                     </div>
                     <span className={`text-xs mt-1 transition-all duration-300 ${active ? 'text-primary font-medium' : ''}`}>
-                      {item.label.split(' ')[0]}
+                      {item.label}
                     </span>
                     {active && <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>}
                   </Link>
@@ -313,7 +313,7 @@ const Navbar = () => {
               );
             })
           ) : (
-            navItems.slice(0, 5).map((item) => {
+            navItems.slice(0, 4).map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
               return (
@@ -327,7 +327,7 @@ const Navbar = () => {
                       {active && <span className="absolute inset-0 animate-ping rounded-lg bg-primary/30" style={{animationDuration: '1.5s'}}></span>}
                     </div>
                     <span className={`text-xs mt-1 transition-all duration-300 ${active ? 'text-primary font-medium' : ''}`}>
-                      {item.label.split(' ')[0]}
+                      {item.label}
                     </span>
                     {active && <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>}
                   </Link>

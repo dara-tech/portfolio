@@ -1,5 +1,316 @@
 @import "tailwindcss";
-@plugin "daisyui";
 @plugin "daisyui" {
     themes: all;
 }
+@plugin "daisyui/theme" {
+    name: "khmer";
+    default: false;
+    prefersdark: false;
+    color-scheme: "light";
+    
+    /* Serene Sunrise Palette */
+    --color-base-100: oklch(98% 0.02 65);  /* Morning mist */
+    --color-base-200: oklch(95% 0.03 65);  /* Soft dawn */
+    --color-base-300: oklch(92% 0.04 65);  /* Gentle shadows */
+    --color-base-content: oklch(20% 0.02 65); /* Rich earth */
+
+    /* Golden Hour */
+    --color-primary: oklch(85% 0.15 75);    /* Warm sunlight */
+    --color-primary-content: oklch(15% 0.08 75);
+
+    /* Lotus Pink */
+    --color-secondary: oklch(88% 0.12 15);  /* Delicate petals */
+    --color-secondary-content: oklch(20% 0.08 15);
+
+    /* Temple Stone */
+    --color-accent: oklch(75% 0.08 85);     /* Ancient wisdom */
+    --color-accent-content: oklch(98% 0.02 85);
+
+    /* Sacred Gray */
+    --color-neutral: oklch(80% 0.02 85);    /* Timeless balance */
+    --color-neutral-content: oklch(15% 0 0);
+
+    /* River Blue */
+    --color-info: oklch(75% 0.12 245);      /* Flowing knowledge */
+    --color-info-content: oklch(98% 0.02 245);
+
+    /* Bamboo Green */
+    --color-success: oklch(80% 0.15 155);   /* Natural growth */
+    --color-success-content: oklch(98% 0.02 155);
+
+    /* Spice Orange */
+    --color-warning: oklch(80% 0.15 75);    /* Mindful caution */
+    --color-warning-content: oklch(15% 0.08 75);
+
+    /* Crimson Silk */
+    --color-error: oklch(70% 0.18 30);      /* Graceful strength */
+    --color-error-content: oklch(98% 0.02 30);
+
+    /* Angkor Curves */
+    --radius-selector: 0.75rem;
+    --radius-field: 0.625rem;
+    --radius-box: 0.875rem;
+
+    /* Sacred Proportions */
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+
+    /* Temple Lines */
+    --border: 1.5px;
+
+    /* Stone Depth */
+    --depth: 3;
+
+    /* Rice Paper */
+    --noise: 0.08;
+
+    /* Khmer Typography */
+    --font-family: "Hanuman", "Moul", system-ui, -apple-system, sans-serif;
+}
+@plugin "daisyui/theme" {
+    name: "facebook-lite";
+    default: false;
+    prefersdark: false;
+    color-scheme: "light";
+  
+    /* Base UI – Minimal and clean */
+    --color-base-100: oklch(100% 0 0); /* Pure white */
+    --color-base-200: oklch(98% 0 0);  /* Almost white */
+    --color-base-300: oklch(95% 0 0);  /* Light gray */
+    --color-base-content: oklch(20% 0 0); /* Dark gray text */
+  
+    /* Primary - Subtle blue */
+    --color-primary: oklch(60% 0.15 250);
+    --color-primary-content: oklch(100% 0 0);
+  
+    /* Secondary - Light blue */
+    --color-secondary: oklch(70% 0.1 250);
+    --color-secondary-content: oklch(100% 0 0);
+  
+    /* Accent - Soft red */
+    --color-accent: oklch(70% 0.1 30);
+    --color-accent-content: oklch(100% 0 0);
+  
+    /* Neutral - Pure gray */
+    --color-neutral: oklch(90% 0 0);
+    --color-neutral-content: oklch(20% 0 0);
+  
+    /* Info - Muted blue */
+    --color-info: oklch(75% 0.1 260);
+    --color-info-content: oklch(20% 0 0);
+  
+    /* Success - Minimal green */
+    --color-success: oklch(80% 0.1 140);
+    --color-success-content: oklch(20% 0 0);
+  
+    /* Warning - Soft orange */
+    --color-warning: oklch(85% 0.1 80);
+    --color-warning-content: oklch(20% 0 0);
+  
+    /* Error - Light red */
+    --color-error: oklch(80% 0.1 30);
+    --color-error-content: oklch(100% 0 0);
+  
+    /* Minimal UI */
+    --radius-selector: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.25rem;
+  
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+  
+    /* Subtle effects */
+    --border: 1px solid oklch(90% 0 0);
+    --depth: 4;
+    --noise: 0;
+  
+    /* Minimal interactions */
+    --shadow-default: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    --glow-focus: 0 0 0 2px oklch(95% 0.05 250);
+}
+@plugin "daisyui/theme" {
+
+    name: "x-core";
+    default: false;
+    prefersdark: true;
+    color-scheme: "dark";
+  
+    /* Base dark shell */
+    --color-base-100: oklch(10% 0.003 260); /* near-black */
+    --color-base-200: oklch(15% 0.003 260); /* surface dark */
+    --color-base-300: oklch(22% 0.005 260); /* soft border */
+    --color-base-content: oklch(98% 0.001 260); /* white text */
+  
+    /* X-blue primary (tweet button, icons) */
+    --color-primary: oklch(75% 0.25 240); 
+    --color-primary-content: oklch(10% 0.005 240);
+  
+    /* Secondary sky blue (hover, links) */
+    --color-secondary: oklch(68% 0.3 250);
+    --color-secondary-content: oklch(12% 0.005 250);
+  
+    /* Accent soft blue (tag highlights, mentions) */
+    --color-accent: oklch(70% 0.22 255);
+    --color-accent-content: oklch(15% 0.01 255);
+  
+    /* Neutral (gray tweets/posts) */
+    --color-neutral: oklch(30% 0.01 260);
+    --color-neutral-content: oklch(90% 0.005 260);
+  
+    /* Info (verified, promoted) */
+    --color-info: oklch(80% 0.22 245);
+    --color-info-content: oklch(12% 0.005 245);
+  
+    /* Success (posted, followed) */
+    --color-success: oklch(75% 0.25 160);
+    --color-success-content: oklch(14% 0.01 160);
+  
+    /* Warning (rate limit, caution) */
+    --color-warning: oklch(78% 0.22 85);
+    --color-warning-content: oklch(14% 0.01 85);
+  
+    /* Error (post failed, alert) */
+    --color-error: oklch(70% 0.28 25);
+    --color-error-content: oklch(98% 0.005 25);
+  
+    /* UI radius: sharp and modern */
+    --radius-selector: 0.75rem;
+    --radius-field: 0.75rem;
+    --radius-box: 1rem;
+  
+    --size-selector: 0.4rem;
+    --size-field: 0.4rem;
+  
+    --border: 1px solid var(--color-base-300);
+    --depth: 2;
+    --noise: 0.2;
+  
+    /* Optional extra visuals */
+    --glow-link: 0 0 8px var(--color-primary);
+    --highlight-text: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  }
+  @plugin "daisyui/theme" {
+    name: "x-grok";
+    default: false;
+    prefersdark: true;
+    color-scheme: "dark";
+  
+    /* Pure black and white UI */
+    --color-base-100: oklch(0% 0 0);  /* true black */
+    --color-base-200: oklch(5% 0 0); /* near black */
+    --color-base-300: oklch(10% 0 0); /* dark gray */
+    --color-base-content: oklch(100% 0 0); /* pure white */
+  
+    /* Primary - white */
+    --color-primary: oklch(100% 0 0);
+    --color-primary-content: oklch(0% 0 0);
+  
+    /* Secondary - light gray */
+    --color-secondary: oklch(85% 0 0);
+    --color-secondary-content: oklch(0% 0 0);
+  
+    /* Accent - mid gray */
+    --color-accent: oklch(70% 0 0);
+    --color-accent-content: oklch(0% 0 0);
+  
+    /* Neutral - dark gray */
+    --color-neutral: oklch(30% 0 0);
+    --color-neutral-content: oklch(100% 0 0);
+  
+    /* Info - very light gray */
+    --color-info: oklch(90% 0 0);
+    --color-info-content: oklch(0% 0 0);
+  
+    /* Success - white */
+    --color-success: oklch(100% 0 0);
+    --color-success-content: oklch(0% 0 0);
+  
+    /* Warning - light gray */
+    --color-warning: oklch(80% 0 0);
+    --color-warning-content: oklch(0% 0 0);
+  
+    /* Error - darkest gray */
+    --color-error: oklch(20% 0 0);
+    --color-error-content: oklch(100% 0 0);
+  
+    /* Minimal sharp edges */
+    --radius-selector: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.25rem;
+  
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+  
+    --border: 1px solid oklch(15% 0 0);
+    --depth: 2;
+    --noise: 0;
+  
+    /* Monochrome effects */
+    --glow: 0 0 8px oklch(100% 0 0);
+    --highlight: linear-gradient(90deg, oklch(100% 0 0), oklch(85% 0 0));
+  }
+
+  @plugin "daisyui/theme" {
+    name: "chatgpt-core";
+    default: false;
+    prefersdark: true;
+    color-scheme: "dark";
+  
+    /* Clean dark UI shell */
+    --color-base-100: oklch(10% 0.005 145);  /* deep dark */
+    --color-base-200: oklch(14% 0.005 145);  /* cards, modals */
+    --color-base-300: oklch(18% 0.006 145);  /* borders */
+    --color-base-content: oklch(96% 0.001 145); /* readable white */
+  
+    /* ChatGPT Green core */
+    --color-primary: oklch(78% 0.17 140);  /* soft emerald */
+    --color-primary-content: oklch(12% 0.01 140);  /* text on green */
+  
+    /* Secondary AI blue (links, accents) */
+    --color-secondary: oklch(72% 0.2 220); 
+    --color-secondary-content: oklch(12% 0.01 220);
+  
+    /* Accent mint glow (hover, borders) */
+    --color-accent: oklch(70% 0.22 180);
+    --color-accent-content: oklch(10% 0.005 180);
+  
+    /* Calm neutral UI */
+    --color-neutral: oklch(30% 0.005 145);
+    --color-neutral-content: oklch(94% 0.002 145);
+  
+    /* Info (bot prompts, tips) */
+    --color-info: oklch(82% 0.15 210);
+    --color-info-content: oklch(14% 0.01 210);
+  
+    /* Success (message sent) */
+    --color-success: oklch(78% 0.18 135);
+    --color-success-content: oklch(12% 0.01 135);
+  
+    /* Warning (rate limits, etc.) */
+    --color-warning: oklch(76% 0.2 85);
+    --color-warning-content: oklch(12% 0.01 85);
+  
+    /* Error (failed send, disconnect) */
+    --color-error: oklch(70% 0.25 30);
+    --color-error-content: oklch(96% 0.005 30);
+  
+    /* Soft UI curves */
+    --radius-selector: 1rem;
+    --radius-field: 1rem;
+    --radius-box: 1.25rem;
+  
+    --size-selector: 0.4rem;
+    --size-field: 0.4rem;
+  
+    --border: 1px solid var(--color-base-300);
+    --depth: 2;
+    --noise: 0.2;
+  
+    /* Chat-specific effects */
+    --chat-highlight: linear-gradient(to right, var(--color-accent), transparent);
+    --ai-glow: 0 0 8px var(--color-primary);
+    --message-bubble: var(--color-base-200);
+  }
+  
+  
+  
