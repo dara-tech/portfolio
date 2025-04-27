@@ -129,6 +129,70 @@
     --glow-focus: 0 0 0 2px oklch(95% 0.05 250);
 }
 @plugin "daisyui/theme" {
+    name: "netflix-core";
+    default: false;
+    prefersdark: true;
+    color-scheme: "dark";
+  
+    /* Netflix dark theme base */
+    --color-base-100: oklch(8% 0 0);        /* Pure black */
+    --color-base-200: oklch(10% 0 0);       /* Slightly lighter black */
+    --color-base-300: oklch(12% 0 0);       /* Dark gray */
+    --color-base-content: oklch(98% 0 0);    /* Clean white text */
+  
+    /* Netflix Red */
+    --color-primary: oklch(63% 0.28 25);     /* Vibrant Netflix red */
+    --color-primary-content: oklch(100% 0 0);
+  
+    /* Secondary dark red */
+    --color-secondary: oklch(53% 0.25 25);   /* Darker red for depth */
+    --color-secondary-content: oklch(100% 0 0);
+  
+    /* Accent - subtle gray */
+    --color-accent: oklch(70% 0.01 0);      /* Very subtle gray */
+    --color-accent-content: oklch(10% 0 0);
+  
+    /* Neutral dark */
+    --color-neutral: oklch(15% 0 0);        /* Clean dark gray */
+    --color-neutral-content: oklch(95% 0 0);
+  
+    /* Info blue */
+    --color-info: oklch(65% 0.15 240);      /* Subtle blue */
+    --color-info-content: oklch(100% 0 0);
+  
+    /* Success green */
+    --color-success: oklch(65% 0.15 150);   /* Muted green */
+    --color-success-content: oklch(100% 0 0);
+  
+    /* Warning yellow */
+    --color-warning: oklch(75% 0.15 80);    /* Soft yellow */
+    --color-warning-content: oklch(10% 0 0);
+  
+    /* Error red */
+    --color-error: oklch(63% 0.28 25);      /* Same as primary */
+    --color-error-content: oklch(100% 0 0);
+  
+    /* Minimal rounded corners */
+    --radius-selector: 0.125rem;
+    --radius-field: 0.125rem;
+    --radius-box: 0.25rem;
+  
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+  
+    /* Clean borders */
+    --border: 1px solid oklch(12% 0 0);
+    --depth: 2;
+    --noise: 0;
+  
+    /* Subtle effects */
+    --glow-hover: 0 0 8px rgba(229, 9, 20, 0.5);
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    /* Netflix Typography */
+    --font-family: "Netflix Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+@plugin "daisyui/theme" {
 
     name: "x-core";
     default: false;
@@ -311,6 +375,22 @@
     --ai-glow: 0 0 8px var(--color-primary);
     --message-bubble: var(--color-base-200);
   }
-  
-  
-  
+  /* Base font */
+body {
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Heading font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Monospace font (optional for code blocks) */
+code {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Khmer text */
+.khmer-text {
+  font-family: 'Hanuman', sans-serif;
+}

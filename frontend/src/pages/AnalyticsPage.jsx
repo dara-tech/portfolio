@@ -322,95 +322,95 @@ const AnalyticsPage = () => {
   ];
 
   return (
-    <div className="py-20 mb-4 px-4 min-h-screen">
-      <div className="flex flex-col gap-6">
+    <div className="py-20 md:py-20 mb-4 px-2 md:px-4 min-h-screen">
+      <div className="flex flex-col gap-4 md:gap-6">
         <div className="card bg-base-100 border border-primary/10">
-          <div className="card-body">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <h1 className="text-4xl font-bold">Analytics Dashboard</h1>
+          <div className="card-body p-3 md:p-6">
+            <div className="flex flex-col gap-4">
+              <h1 className="text-2xl md:text-4xl font-bold">Analytics Dashboard</h1>
               
-              <div className="flex gap-4">
-                <div className="tabs tabs-boxed">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="tabs tabs-boxed tabs-sm md:tabs-md">
                   <a 
-                    className={`tab gap-2 ${periodType === 'fixed' ? 'tab-active' : ''}`}
+                    className={`tab gap-1 md:gap-2 ${periodType === 'fixed' ? 'tab-active' : ''}`}
                     onClick={() => setPeriodType('fixed')}
                   >
-                    <Calendar className="w-4 h-4" />
-                    Fixed Period
+                    <Calendar className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="text-xs md:text-sm">Fixed Period</span>
                   </a>
                   <a 
-                    className={`tab gap-2 ${periodType === 'relative' ? 'tab-active' : ''}`}
+                    className={`tab gap-1 md:gap-2 ${periodType === 'relative' ? 'tab-active' : ''}`}
                     onClick={() => setPeriodType('relative')}
                   >
-                    <Clock className="w-4 h-4" />
-                    Relative
+                    <Clock className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="text-xs md:text-sm">Relative</span>
                   </a>
                 </div>
 
-                <div className="tabs tabs-boxed">
+                <div className="tabs tabs-boxed tabs-sm md:tabs-md">
                   <a 
-                    className={`tab gap-2 ${chartType === 'bar' ? 'tab-active' : ''}`}
+                    className={`tab gap-1 md:gap-2 ${chartType === 'bar' ? 'tab-active' : ''}`}
                     onClick={() => setChartType('bar')}
                   >
-                    <BarChart2 className="w-4 h-4" />
-                    Bar
+                    <BarChart2 className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="text-xs md:text-sm">Bar</span>
                   </a>
                   <a 
-                    className={`tab gap-2 ${chartType === 'line' ? 'tab-active' : ''}`}
+                    className={`tab gap-1 md:gap-2 ${chartType === 'line' ? 'tab-active' : ''}`}
                     onClick={() => setChartType('line')}
                   >
-                    <TrendingUp className="w-4 h-4" />
-                    Line
+                    <TrendingUp className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="text-xs md:text-sm">Line</span>
                   </a>
                   <a 
-                    className={`tab gap-2 ${chartType === 'doughnut' ? 'tab-active' : ''}`}
+                    className={`tab gap-1 md:gap-2 ${chartType === 'doughnut' ? 'tab-active' : ''}`}
                     onClick={() => setChartType('doughnut')}
                   >
-                    <PieChart className="w-4 h-4" />
-                    Doughnut
+                    <PieChart className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="text-xs md:text-sm">Doughnut</span>
                   </a>
                 </div>
               </div>
             </div>
 
-            <div className="divider"></div>
+            <div className="divider my-2 md:my-4"></div>
 
-            <div className="flex justify-between items-center">
-              <div className="tabs tabs-boxed">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="tabs tabs-boxed tabs-sm md:tabs-md w-full md:w-auto">
                 <a 
-                  className={`tab gap-2 ${viewByContent === 'all' ? 'tab-active' : ''}`}
+                  className={`tab gap-1 md:gap-2 ${viewByContent === 'all' ? 'tab-active' : ''}`}
                   onClick={() => setViewByContent('all')}
                 >
-                  <Eye className="w-4 h-4" />
-                  All Content
+                  <Eye className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-xs md:text-sm">All Content</span>
                 </a>
                 <a 
-                  className={`tab gap-2 ${viewByContent === 'projects' ? 'tab-active' : ''}`}
+                  className={`tab gap-1 md:gap-2 ${viewByContent === 'projects' ? 'tab-active' : ''}`}
                   onClick={() => setViewByContent('projects')}
                 >
-                  <FileText className="w-4 h-4" />
-                  Projects
+                  <FileText className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-xs md:text-sm">Projects</span>
                 </a>
                 <a 
-                  className={`tab gap-2 ${viewByContent === 'videos' ? 'tab-active' : ''}`}
+                  className={`tab gap-1 md:gap-2 ${viewByContent === 'videos' ? 'tab-active' : ''}`}
                   onClick={() => setViewByContent('videos')}
                 >
-                  <VideoIcon className="w-4 h-4" />
-                  Videos
+                  <VideoIcon className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-xs md:text-sm">Videos</span>
                 </a>
                 <a 
-                  className={`tab gap-2 ${viewByContent === 'roadmaps' ? 'tab-active' : ''}`}
+                  className={`tab gap-1 md:gap-2 ${viewByContent === 'roadmaps' ? 'tab-active' : ''}`}
                   onClick={() => setViewByContent('roadmaps')}
                 >
-                  <Map className="w-4 h-4" />
-                  Roadmaps
+                  <Map className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-xs md:text-sm">Roadmaps</span>
                 </a>
               </div>
 
-              <div className="flex justify-end">
+              <div className="w-full md:w-auto">
                 {periodType === 'fixed' ? (
-                  <div className="join bg-base-200 rounded-lg border border-primary/10 p-2">
-                    <div className="join-item flex flex-col">
+                  <div className="join bg-base-200 rounded-lg border border-primary/10 p-2 flex flex-col md:flex-row gap-2">
+                    <div className="join-item flex flex-col w-full md:w-auto">
                       <span className="text-xs text-base-content/70 mb-1">Start Date</span>
                       <input
                         type="date"
@@ -419,8 +419,8 @@ const AnalyticsPage = () => {
                         onChange={(e) => setCustomRange(prev => ({...prev, start: e.target.value}))}
                       />
                     </div>
-                    <div className="divider divider-horizontal"></div>
-                    <div className="join-item flex flex-col">
+                    <div className="divider divider-horizontal hidden md:block"></div>
+                    <div className="join-item flex flex-col w-full md:w-auto">
                       <span className="text-xs text-base-content/70 mb-1">End Date</span>
                       <input
                         type="date"
@@ -432,7 +432,7 @@ const AnalyticsPage = () => {
                   </div>
                 ) : (
                   <select 
-                    className="select select-bordered select-primary w-full max-w-xs focus:outline-none"
+                    className="select select-bordered select-primary w-full md:w-auto focus:outline-none"
                     value={timeFilter}
                     onChange={(e) => setTimeFilter(e.target.value)}
                   >
@@ -451,23 +451,23 @@ const AnalyticsPage = () => {
         {/* Stats Cards */}
         <div className="stats stats-vertical lg:stats-horizontal bg-base-200 border border-primary/10">
           {statsCards.map((stat, index) => (
-            <div className="stat" key={index}>
+            <div className="stat p-3 md:p-4" key={index}>
               <div className={`stat-figure text-${stat.color}`}>
                 <div>
-                  <div className={`bg-${stat.color} text-${stat.color}-content rounded-full w-16 h-16 flex items-center justify-center`}>
-                    <stat.icon className="w-8 h-8" />
+                  <div className={`bg-${stat.color} text-${stat.color}-content rounded-full w-12 h-12 md:w-16 md:h-16 flex items-center justify-center`}>
+                    <stat.icon className="w-6 h-6 md:w-8 md:h-8" />
                   </div>
                 </div>
               </div>
-              <div className="stat-title">{stat.title}</div>
-              <div className={`stat-value text-${stat.color}`}>
+              <div className="stat-title text-sm md:text-base">{stat.title}</div>
+              <div className={`stat-value text-lg md:text-2xl text-${stat.color}`}>
                 {stat.value.toLocaleString()}
               </div>
-              <div className="stat-desc flex items-center gap-1">
+              <div className="stat-desc flex items-center gap-1 text-xs md:text-sm">
                 {stat.growth > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-success" />
+                  <TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-success" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-error" />
+                  <TrendingDown className="w-3 h-3 md:w-4 md:h-4 text-error" />
                 )}
                 {Math.abs(stat.growth).toFixed(1)}% from previous period
               </div>
@@ -478,21 +478,21 @@ const AnalyticsPage = () => {
         {/* Content-specific views */}
         {viewByContent !== 'all' && stats.contentViews.length > 0 && (
           <div className="card bg-base-200 border border-primary/10">
-            <div className="card-body">
-              <h3 className="card-title text-2xl font-bold">Top {viewByContent}</h3>
+            <div className="card-body p-3 md:p-6">
+              <h3 className="card-title text-xl md:text-2xl font-bold">Top {viewByContent}</h3>
               <div className="overflow-x-auto">
-                <table className="table">
+                <table className="table table-sm md:table-md">
                   <thead>
                     <tr>
-                      <th>Title</th>
-                      <th>Views</th>
+                      <th className="text-sm md:text-base">Title</th>
+                      <th className="text-sm md:text-base">Views</th>
                     </tr>
                   </thead>
                   <tbody>
                     {stats.contentViews.map((item, index) => (
                       <tr key={index}>
-                        <td>{truncateTitle(item.title)}</td>
-                        <td>{item.views.toLocaleString()}</td>
+                        <td className="text-sm md:text-base">{truncateTitle(item.title)}</td>
+                        <td className="text-sm md:text-base">{item.views.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -503,18 +503,18 @@ const AnalyticsPage = () => {
         )}
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {[
             { title: 'Project Views', icon: Eye, data: projectChartData },
             { title: 'Video Views', icon: VideoIcon, data: videoChartData }
           ].map((chart, index) => (
             <div key={index} className="card bg-base-200 border border-primary/10">
-              <div className="card-body">
-                <h3 className="card-title text-2xl font-bold flex items-center gap-2">
-                  <chart.icon className="w-6 h-6" />
+              <div className="card-body p-3 md:p-6">
+                <h3 className="card-title text-xl md:text-2xl font-bold flex items-center gap-2">
+                  <chart.icon className="w-5 h-5 md:w-6 md:h-6" />
                   {chart.title}
                 </h3>
-                <div className="h-[400px]">
+                <div className="h-[300px] md:h-[400px]">
                   {chartType === 'bar' ? (
                     <Bar data={chart.data} options={chartOptions} />
                   ) : chartType === 'line' ? (

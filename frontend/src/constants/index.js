@@ -35,6 +35,7 @@ export const THEMES = [
     "facebook-lite",
     "x-core",
     "x-grok",
-    "chatgpt-core"
+    "chatgpt-core",
+    "netflix-core"
   ];
   
