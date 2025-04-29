@@ -36,6 +36,9 @@ export const THEMES = [
     "x-core",
     "x-grok",
     "chatgpt-core",
-    "netflix-core"
+    "netflix-core",
+    "modern",
+    "cafe"
+
   ];
   
