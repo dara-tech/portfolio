@@ -36,7 +36,7 @@ export const AiGenerationDialog = ({
               type="text"
               value={aiConfig.topic}
               onChange={(e) => setAiConfig(prev => ({ ...prev, topic: e.target.value }))}
-              className="input w-full input-bordered input-lg focus:input-primary transition-colors text-sm"
+              className="input w-full  input-lg input-bordered focus:input-primary focus:outline-none focus:none transition-colors text-sm"
               placeholder="e.g., React Hooks, CSS Grid, JavaScript Promises..."
             />
           </div>
@@ -68,7 +68,7 @@ export const AiGenerationDialog = ({
             <textarea
               value={aiConfig.context}
               onChange={(e) => setAiConfig(prev => ({ ...prev, context: e.target.value }))}
-              className="textarea w-full textarea-bordered min-h-32 focus:textarea-primary transition-colors text-sm"
+              className="textarea w-full textarea-bordered min-h-32 focus:textarea-primary focus:none focus:outline-none transition-colors text-sm"
               placeholder="Add any specific requirements, prerequisites, or areas you'd like the lesson to focus on..."
             />
           </div>

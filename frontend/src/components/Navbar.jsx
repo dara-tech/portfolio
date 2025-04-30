@@ -503,9 +503,9 @@ const Navbar = () => {
 
   const renderBottomNav = () => (
     <div className={`fixed bottom-0 left-0 right-0 bg-base-200/95 backdrop-blur-xl shadow-lg z-50 transition-all duration-300 ${
-      mobileMenuOpen ? 'opacity-50 ' : 'opacity-100 h-16'
+      mobileMenuOpen ? 'opacity-50 ' : 'opacity-100 '
     }`}>
-      <ul className="grid grid-cols-5 py-1">
+      <ul className="grid grid-cols-5 py-2">
         {(token ? ADMIN_NAV_ITEMS : NAV_ITEMS).slice(0, 4).map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
