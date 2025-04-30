@@ -278,7 +278,7 @@ const Chat = () => {
                     value={editInput}
                     onChange={(e) => setEditInput(e.target.value)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
-                    className="textarea textarea-bordered w-full min-h-[100px] resize-none focus:outline-none focus:border-primary"
+                    className="textarea my-2 rounded-lg textarea-bordered w-full min-h-[100px] text-primary resize-none focus:outline-none focus:border-primary"
                     placeholder="Edit your message..."
                   />
                   <div className="flex justify-between items-center text-xs">
