@@ -252,7 +252,9 @@ const Chat = () => {
           <div 
             key={index} 
             className={`chat ${message.role === 'user' ? 'chat-end' : 'chat-start'} ${
-              animatingMessages.has(index) ? 'animate-[messageAppear_0.6s_ease-out_forwards]' : ''
+              animatingMessages.has(index) 
+                ? 'opacity-0 translate-y-5 scale-95 animate-[messageAppear_0.6s_ease-out_forwards]' 
+                : ''
             }`}
           >
             {message.role === 'assistant' && (
@@ -267,8 +269,8 @@ const Chat = () => {
                 message.role === 'user' 
                   ? 'chat-bubble-primary text-primary-content' 
                   : 'chat-bubble-secondary text-secondary-content'
-              } shadow-md relative group transition-transform duration-200 ${
-                animatingMessages.has(index) ? 'origin-left scale-95' : ''
+              } shadow-md relative group transition-all duration-200 ${
+                animatingMessages.has(index) ? 'origin-left' : ''
               }`}
             >
               {editingMessageId === index ? (
@@ -295,7 +297,7 @@ const Chat = () => {
                         className="btn btn-xs btn-primary transition-all hover:scale-105"
                         disabled={!editInput.trim()}
                       >
-                        Save & Get New Response
+                        Save 
                       </button>
                     </div>
                   </div>
@@ -408,7 +410,7 @@ const Chat = () => {
         </form>
       </div>
 
-      <style jsx global>{`
+      <style>{`
         @keyframes messageAppear {
           0% {
             opacity: 0;
