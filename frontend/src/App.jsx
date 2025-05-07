@@ -28,11 +28,11 @@ import LessonPage from './pages/LessonPage';
 import LessonDetail from './components/lesson/LessonDetail';
 import LessonManage from './components/lesson/LessonManage';
 import LessonForm from './components/lesson/LessonForm';
-import { testSEO } from './utils/testSEO';
+
 
 function App() {
   const {theme} = useThemeStore();
-  testSEO();
+
   return (
     <div data-theme={theme}>
       <Router>

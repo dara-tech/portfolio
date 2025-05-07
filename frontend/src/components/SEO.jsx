@@ -14,7 +14,7 @@ const SEO = ({
   const isDevelopment = import.meta.env.DEV;
   const siteUrl = isDevelopment 
     ? 'http://localhost:5173' // Vite's default development port
-    : 'https://your-domain.com'; // Your production domain
+    : 'https://daracheol-6adc.onrender.com'; // Your production domain
 
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
   const imageUrl = image ? `${siteUrl}${image}` : `${siteUrl}/og-image.jpg`;

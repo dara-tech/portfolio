@@ -6,9 +6,17 @@ import HeroCard from '../components/HeroCard';
 import SkillsSection from '../components/SkillsSection';
 import VideoPage from '../pages/VideoPage';
 import { MessageCircle } from 'lucide-react';
-
+import useSEO from '../hooks/useSEO';
 
 const Home = () => {
+  // Use SEO hook for the home page
+  useSEO({
+    title: 'Cheol Sovandara - Portfolio',
+    description: 'Welcome to my portfolio website. I am a full-stack developer specializing in web development, with expertise in React, Node.js, and modern web technologies.',
+    url: '/',
+    type: 'website',
+    keywords: ['portfolio', 'web development', 'full-stack developer', 'React', 'Node.js', 'JavaScript']
+  });
 
   return (
     <div className="min-h-screen  mb-4 py-4">
