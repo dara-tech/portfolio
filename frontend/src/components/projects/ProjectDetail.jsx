@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useProjects from '../../hooks/useProjects';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
-// import useSEO from '../../hooks/useSEO';
+import useSEO from '../../hooks/useSEO';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -47,22 +47,24 @@ const ProjectDetail = () => {
     transition: { duration: 0.6 }
   }), []);
 
+  // ✅ Safe SEO hook call
+
+ 
+    const cleanDescription = project?.description?.replace(/<[^>]*>/g, '').substring(0, 155);
+
+    useSEO({
+      title: project ? `${project.title} | Portfolio Project` : 'Loading...',
+      description: cleanDescription || '',
+      image: project?.image || '/vite.svg',
+      url: `/projects/${id}`,
+      type: 'article',
+      keywords: project?.technologies || []
+    });
+
+
   if (loading) return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-center items-center h-screen"><div className="loading loading-spinner loading-lg"></div></motion.div>;
   if (error) return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="alert alert-error shadow-lg"><div><span>Error: {error}</span></div></motion.div>;
   if (!project) return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="alert alert-warning shadow-lg"><div><span>Project not found</span></div></motion.div>;
-
-  // Clean HTML from description for meta tags
-  const cleanDescription = project.description?.replace(/<[^>]*>/g, '').substring(0, 155);
-
-  // Use the SEO hook
-  // useSEO({
-  //   title: `${project.title} | Portfolio Project`,
-  //   description: cleanDescription,
-  //   image: project.image || '/vite.svg', // Use vite.svg as fallback
-  //   url: `/projects/${id}`,
-  //   type: 'article',
-  //   keywords: project.technologies
-  // });
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="container mx-auto px-4 py-8 max-w-4xl min-h-screen">
