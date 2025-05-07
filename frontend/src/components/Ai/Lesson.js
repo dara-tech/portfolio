@@ -5,7 +5,7 @@ import DOMPurify from 'dompurify';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
-const MODEL = "gemini-2.0-pro-exp-02-05";
+const MODEL = "gemini-2.0-flash";
 
 // Enhanced marked configuration with structured data
 marked.setOptions({

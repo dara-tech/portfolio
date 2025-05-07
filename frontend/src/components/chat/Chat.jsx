@@ -19,6 +19,8 @@ const Chat = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const chatContainerRef = useRef(null);
   const [animatingMessages, setAnimatingMessages] = useState(new Set());
+  const [copiedMessageId, setCopiedMessageId] = useState(null);
+  const [showCopyTooltip, setShowCopyTooltip] = useState(false);
 
   // Detect scroll position to show/hide scroll button
   useEffect(() => {
@@ -129,15 +131,24 @@ const Chat = () => {
   };
 
   const renderMessageContent = (content) => {
-    const rawMarkup = marked(content);
+    // First sanitize the content to remove any HTML tags
+    const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [] });
+    // Then convert markdown to HTML
+    const rawMarkup = marked(sanitizedContent);
+    // Sanitize the markdown HTML output
     const sanitizedMarkup = DOMPurify.sanitize(rawMarkup);
     return { __html: sanitizedMarkup };
   };
 
-  const copyMessage = async (content) => {
+  const copyMessage = async (content, messageId) => {
     try {
       await navigator.clipboard.writeText(content);
-      // Could add a toast notification here
+      setCopiedMessageId(messageId);
+      setShowCopyTooltip(true);
+      setTimeout(() => {
+        setShowCopyTooltip(false);
+        setTimeout(() => setCopiedMessageId(null), 300);
+      }, 2000);
     } catch (err) {
       console.error('Failed to copy message:', err);
     }
@@ -252,7 +263,7 @@ const Chat = () => {
           <div 
             key={index} 
             className={`chat ${message.role === 'user' ? 'chat-end' : 'chat-start'} ${
-              animatingMessages.has(index) 
+              animatingMessages.has(index) && message.role === 'assistant'
                 ? 'opacity-0 translate-y-5 scale-95 animate-[messageAppear_0.6s_ease-out_forwards]' 
                 : ''
             }`}
@@ -311,11 +322,15 @@ const Chat = () => {
                   <div className="absolute -top-2 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0">
                     <div className="flex gap-1 bg-base-100/90 backdrop-blur-sm rounded-full p-1 shadow-lg border border-base-200">
                       <button
-                        onClick={() => copyMessage(message.content)}
-                        className="btn btn-xs btn-ghost p-1.5 rounded-full hover:bg-base-200 transition-all duration-200 hover:scale-110"
-                        title="Copy message"
+                        onClick={() => copyMessage(message.content, index)}
+                        className={`btn btn-xs btn-ghost p-1.5 rounded-full transition-all duration-200 ${
+                          copiedMessageId === index 
+                            ? 'bg-success/20 text-success hover:bg-success/30' 
+                            : 'hover:bg-base-200 hover:scale-110'
+                        }`}
+                        title={copiedMessageId === index ? "Copied!" : "Copy message"}
                       >
-                        <Copy size={14} className="text-base-content/70" />
+                        <Copy size={14} className={`${copiedMessageId === index ? 'animate-pulse' : ''}`} />
                       </button>
                       {message.role === 'user' && (
                         <button
@@ -384,7 +399,7 @@ const Chat = () => {
       )}
 
       {/* Input form */}
-      <div className="p-4 lg:mb-14  ">
+      <div className="p-4 lg:mb-14 mb-5 ">
         <form onSubmit={handleSubmit} className="flex max-w-3xl mx-auto">
           <div className="join w-full shadow-lg ring-primary p-4 rounded-3xl bg-base-200">
             <input
