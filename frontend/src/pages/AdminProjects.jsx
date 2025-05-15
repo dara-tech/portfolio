@@ -120,6 +120,22 @@ const AdminProjects = () => {
     fetchProjects();
   }, [fetchProjects]);
 
+  const renderSkeletonCards = () => {
+    return Array(6).fill().map((_, index) => (
+      <div key={index} className="card bg-base-200 shadow-xl animate-pulse">
+        <div className="h-48 bg-gray-300 rounded-t-xl"></div>
+        <div className="card-body">
+          <div className="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-300 rounded w-1/2 mb-4"></div>
+          <div className="flex space-x-2">
+            <div className="h-8 bg-gray-300 rounded w-1/4"></div>
+            <div className="h-8 bg-gray-300 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className="min-h-screen py-14 bg-base-100">
       <div className="container mx-auto px-4 py-8">
@@ -134,8 +150,6 @@ const AdminProjects = () => {
           </button>
         </div>
 
-        {loading && <Loading type="grid" text="Loading projects..." />}
-
         {error && (
           <div className="alert alert-error shadow-lg mb-6">
             <div>
@@ -147,15 +161,17 @@ const AdminProjects = () => {
           </div>
         )}
 
-        {!loading && (!projects || projects.length === 0) && (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {renderSkeletonCards()}
+          </div>
+        ) : !projects || projects.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-2xl text-gray-500 dark:text-gray-400">
               No projects found. Add a new project to get started!
             </p>
           </div>
-        )}
-
-        {!loading && projects && projects.length > 0 && (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
               <ProjectCard

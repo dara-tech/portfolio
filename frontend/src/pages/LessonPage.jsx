@@ -3,7 +3,6 @@ import { useParams, Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useLesson from "../hooks/useLesson";
 import LessonCard from "../components/lesson/LessonCard";
-import { Loading } from "../components/common/Loading";
 
 const LessonPage = () => {
   const { id } = useParams();
@@ -20,7 +19,25 @@ const LessonPage = () => {
   }, [id, fetchLessonById, fetchLessons]);
 
   if (loading) {
-    return <Loading type={id ? 'lesson' : 'grid'} text={id ? 'Loading lesson...' : 'Loading lessons...'} />;
+    return (
+      <div className="min-h-screen overflow-y-auto">
+        <div className="container mx-auto px-4 py-20">
+          <h1 className="text-3xl font-bold mb-8 text-center">Lessons</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="card bg-base-100 shadow-xl animate-pulse">
+                <div className="h-48 bg-base-300 rounded-t-xl"></div>
+                <div className="card-body">
+                  <div className="h-6 bg-base-300 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-base-300 rounded w-1/2 mb-4"></div>
+                  <div className="h-20 bg-base-300 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
@@ -44,8 +61,8 @@ const LessonPage = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-20">
+    <div className="min-h-screen overflow-y-auto">
+      <div className="card mx-auto px-4 py-20 ">
         <h1 className="text-3xl font-bold mb-8 text-center">Lessons</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

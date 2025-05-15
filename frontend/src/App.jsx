@@ -8,7 +8,7 @@ import AdminRegister from './pages/AdminRegister';
 import AdminDashboard from './pages/AdminDashboard';
 import AnalyticsPage from './pages/AnalyticsPage';
 import AdminProjects from './pages/AdminProjects';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar';
 import ProtectedRoute from './components/lib/projectdRoute';
 import ProjectDetail from './components/projects/ProjectDetail';
 import Profile from './pages/Profile';

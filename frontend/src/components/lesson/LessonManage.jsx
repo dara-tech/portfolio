@@ -18,7 +18,6 @@ const LessonManage = () => {
     fetchLessons();
   }, [fetchLessons]);
 
-  // Get unique categories
   const categories = React.useMemo(() => {
     if (!lessons) return ['all'];
     const uniqueCategories = [...new Set(lessons.map(lesson => lesson.category || 'Uncategorized'))];
@@ -85,18 +84,62 @@ const LessonManage = () => {
     navigate(`/lessons/${id}`);
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col justify-center items-center min-h-screen bg-base-100 ">
-        <div className="card bg-base-200 p-8 text-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="loading loading-spinner loading-lg text-primary"></div>
-            <h2 className="text-xl font-semibold mt-2">Loading Lessons</h2>
-            <p className="text-base-content/70">Please wait while we fetch your lesson library...</p>
+  const renderSkeleton = () => (
+    <div className="container mx-auto justify-center w-full p-6 py-20 min-h-screen">
+      <div className="flex md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="h-10 bg-base-300 rounded w-48 animate-pulse"></div>
+        <div className="h-10 bg-base-300 rounded w-40 animate-pulse"></div>
+      </div>
+      <div className="stats mb-8 w-full">
+        {[...Array(3)].map((_, index) => (
+          <div key={index} className="stat">
+            <div className="h-8 bg-base-300 rounded w-16 mb-2 animate-pulse"></div>
+            <div className="h-6 bg-base-300 rounded w-24 mb-1 animate-pulse"></div>
+            <div className="h-10 bg-base-300 rounded w-20 animate-pulse"></div>
+          </div>
+        ))}
+      </div>
+      <div className="card bg-base-200 mb-8">
+        <div className="card-body p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="h-12 bg-base-300 rounded flex-1 animate-pulse"></div>
+            <div className="h-12 bg-base-300 rounded w-56 animate-pulse"></div>
           </div>
         </div>
       </div>
-    );
+      <div className="card bg-base-100 overflow-hidden">
+        <div className="card-body p-0">
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <thead>
+                <tr className="bg-base-200">
+                  {[...Array(4)].map((_, index) => (
+                    <th key={index} className="py-4">
+                      <div className="h-6 bg-base-300 rounded w-24 animate-pulse"></div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(5)].map((_, rowIndex) => (
+                  <tr key={rowIndex} className="hover:bg-base-200 transition-colors">
+                    {[...Array(4)].map((_, colIndex) => (
+                      <td key={colIndex} className="py-4">
+                        <div className="h-6 bg-base-300 rounded w-full animate-pulse"></div>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return renderSkeleton();
   }
 
   if (error) {
@@ -113,7 +156,6 @@ const LessonManage = () => {
 
   return (
     <div className="container mx-auto justify-center w-full p-6 py-20 min-h-screen">
-      {/* Header */}
       <div className="flex  md:flex-row justify-between items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
           Lesson Library
@@ -127,7 +169,6 @@ const LessonManage = () => {
         </Link>
       </div>
 
-      {/* Stats summary */}
       <div className="stats mb-8 w-full">
         <div className="stat">
           <div className="stat-figure text-primary">
@@ -158,13 +199,11 @@ const LessonManage = () => {
         </div>
       </div>
 
-      {/* Search and filter controls */}
       <div className="card bg-base-200 mb-8">
         <div className="card-body p-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="form-control flex-1">
               <div className="input-group">
-             
                 <input
                   type="search"
                   placeholder="Search lessons by title or description..."
@@ -177,7 +216,6 @@ const LessonManage = () => {
 
             <div className="form-control w-full md:w-56">
               <div className="input-group">
-           
                 <select
                   className="select select-bordered w-full focus:outline-none focus:border-primary"
                   value={selectedCategory}
@@ -195,7 +233,6 @@ const LessonManage = () => {
         </div>
       </div>
 
-      {/* Lessons table */}
       <div className="card bg-base-100 overflow-hidden">
         <div className="card-body p-0">
           {filteredLessons.length === 0 ? (
@@ -282,7 +319,6 @@ const LessonManage = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {isDeleting && (
         <div className="modal modal-open">
           <div className="modal-box">

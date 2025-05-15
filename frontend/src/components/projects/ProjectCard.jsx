@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';     
 
@@ -6,11 +5,7 @@ const ProjectCard = ({ project }) => {
   const { _id, title, description, image, technologies, githubLink, liveDemoLink, slug } = project;
 
   return (
-    <motion.div
-      className="card bg-base-200 focus:outline-none"
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className="card bg-base-200 hover:shadow-lg transition-shadow duration-300">
       <figure className="h-48 overflow-hidden">
         <img src={image} alt={title} className="w-full h-full object-cover" />
       </figure>
@@ -38,7 +33,7 @@ const ProjectCard = ({ project }) => {
           </Link>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

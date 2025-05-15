@@ -41,20 +41,28 @@ const VideoPage = () => {
     });
   }, [videos, searchTerm, selectedCategory]);
 
-  // Calculate pagination
   const totalPages = Math.ceil(filteredVideos.length / videosPerPage);
   const indexOfLastVideo = currentPage * videosPerPage;
   const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
   const currentVideos = filteredVideos.slice(indexOfFirstVideo, indexOfLastVideo);
 
-  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory]);
 
-  if (loading) {
-    return <Loading type="grid" text="Loading videos..." />;
-  }
+  const renderSkeletonLoaders = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[...Array(6)].map((_, index) => (
+        <div key={index} className="card bg-base-100 shadow-xl animate-pulse">
+          <div className="h-48 bg-base-300 rounded-t-xl"></div>
+          <div className="card-body">
+            <div className="h-4 bg-base-300 rounded w-3/4 mb-2"></div>
+            <div className="h-4 bg-base-300 rounded w-1/2"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   if (error) {
     return (
@@ -67,12 +75,11 @@ const VideoPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-24 min-h-screen">
+    <div className="container mx-auto px-4 py-24 min-h-screen ">
       <div className="flex flex-col gap-8">
         <h1 className="text-4xl font-bold">Videos</h1>
         
         <div className="flex items-center gap-4">
-          {/* Search bar */}
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -84,7 +91,6 @@ const VideoPage = () => {
             />
           </div>
 
-          {/* Category filter */}
           <div className="flex items-center gap-2">
             <Filter className="text-gray-400" />
             <select
@@ -101,15 +107,16 @@ const VideoPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentVideos.map(video => (
-            <VideoCard key={video._id} video={video} />
-          ))}
-        </div>
+        {loading ? renderSkeletonLoaders() : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {currentVideos.map(video => (
+              <VideoCard key={video._id} video={video} />
+            ))}
+          </div>
+        )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-2 mb-20">
             <button
               className="btn btn-circle btn-sm"
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}

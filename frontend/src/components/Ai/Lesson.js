@@ -5,9 +5,8 @@ import DOMPurify from 'dompurify';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
-const MODEL = "gemini-2.0-flash";
+const MODEL = "gemini-1.5-flash";
 
-// Enhanced marked configuration with structured data
 marked.setOptions({
   breaks: true,
   gfm: true,
@@ -24,9 +23,7 @@ marked.setOptions({
   smartypants: true
 });
 
-// Advanced response formatting with enhanced styling
 const formatResponse = (text) => {
-  // Advanced text preprocessing
   const preprocessedText = text
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
     .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
@@ -35,18 +32,15 @@ const formatResponse = (text) => {
     )
     .replace(/\[\[(.*?)\]\]/g, '<mark class="bg-primary/20 px-1 rounded">$1</mark>');
 
-  // Convert to HTML with marked
   const htmlContent = marked(preprocessedText);
 
-  // Enhanced sanitization with more allowed elements and attributes
   const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
-    ADD_TAGS: ['code', 'pre', 'mark', 'sup', 'sub', 'details', 'summary'],
-    ADD_ATTR: ['class', 'id', 'target', 'rel', 'data-*'],
+    ADD_TAGS: ['code', 'pre', 'mark', 'sup', 'sub', 'details', 'summary', 'img'],
+    ADD_ATTR: ['class', 'id', 'target', 'rel', 'data-*', 'src', 'alt'],
     FORBID_TAGS: ['style', 'script'],
     FORBID_ATTR: ['onerror', 'onload', 'onclick']
   });
 
-  // Advanced styling with Tailwind classes
   return sanitizedHtml
     .replace(/<a /g, '<a class="link link-primary hover:link-secondary transition-colors" target="_blank" rel="noopener noreferrer" ')
     .replace(/<ul>/g, '<ul class="list-disc list-inside my-3 space-y-2">')
@@ -60,7 +54,8 @@ const formatResponse = (text) => {
     .replace(/<\/table>/g, '</table></div>')
     .replace(/<code>/g, '<code class="bg-base-300 px-1.5 py-0.5 rounded text-sm font-mono">')
     .replace(/<pre>/g, '<pre class="relative group">')
-    .replace(/<p>/g, '<p class="my-3 leading-relaxed">');
+    .replace(/<p>/g, '<p class="my-3 leading-relaxed">')
+    .replace(/<img /g, '<img class="max-w-full h-auto rounded-lg my-4" ');
 };
 
 export class Lesson {
@@ -102,7 +97,6 @@ export class Lesson {
     }
   }
 
-  // Private helper methods
   static async #enrichLessonData(lessonData) {
     return {
       title: lessonData.title,
@@ -112,7 +106,8 @@ export class Lesson {
       difficulty: lessonData.difficulty,
       duration: lessonData.duration,
       stepIndex: parseInt(lessonData.stepIndex, 10),
-      resources: lessonData.resources
+      resources: lessonData.resources,
+      imageUrl: lessonData.imageUrl
     };
   }
 
@@ -147,7 +142,7 @@ export function useAiLessonGeneration() {
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
 
-  const generateLesson = async (topic, difficulty, additionalContext = '') => {
+  const generateLesson = async (topic, difficulty, additionalContext = '', imageFile = null) => {
     setLoading(true);
     setError(null);
     setProgress(0);
@@ -155,7 +150,7 @@ export function useAiLessonGeneration() {
     try {
       const model = genAI.getGenerativeModel({ model: MODEL });
       
-      const prompt = `
+      let prompt = `
         Create a detailed lesson about ${topic} at ${difficulty} level.
         Additional context: ${additionalContext}
         
@@ -164,13 +159,29 @@ export function useAiLessonGeneration() {
         - Description/Introduction
         - Main content with examples
         - Code samples where relevant
+        - ImageLink
         - Practice exercises
         - Additional resources
         
         Use markdown formatting.
       `;
+
+      let result;
+      if (imageFile) {
+        const imageData = await imageFile.arrayBuffer();
+        const imageParts = [
+          {
+            inlineData: {
+              data: Buffer.from(imageData).toString('base64'),
+              mimeType: imageFile.type
+            }
+          }
+        ];
+        result = await model.generateContent([prompt, ...imageParts]);
+      } else {
+        result = await model.generateContent(prompt);
+      }
       
-      const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
       
@@ -187,7 +198,8 @@ export function useAiLessonGeneration() {
         difficulty: difficulty.toLowerCase(),
         duration: '30m',
         stepIndex: 0,
-        resources: []
+        resources: [],
+        imageUrl: imageFile ? URL.createObjectURL(imageFile) : null
       };
       
       setProgress(100);

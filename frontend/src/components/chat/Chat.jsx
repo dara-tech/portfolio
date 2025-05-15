@@ -399,7 +399,7 @@ const Chat = () => {
       )}
 
       {/* Input form */}
-      <div className="p-4 lg:mb-14 mb-5 ">
+      <div className="p-4 lg:mb-20 mb-10 ">
         <form onSubmit={handleSubmit} className="flex max-w-3xl mx-auto">
           <div className="join w-full shadow-lg ring-primary p-4 rounded-3xl bg-base-200">
             <input

@@ -3,40 +3,44 @@
     themes: all;
 }
 
+
+
 @plugin "daisyui/theme" {
-  name: "cafe";
+  name: "green";
   default: true;
   prefersdark: true;
   color-scheme: "dark";
-  --color-base-100: oklch(27% 0.077 45.635);
-  --color-base-200: oklch(41% 0.112 45.904);
-  --color-base-300: oklch(47% 0.137 46.201);
-  --color-base-content: oklch(96% 0.059 95.617);
-  --color-primary: oklch(75% 0.183 55.934);
-  --color-primary-content: oklch(25% 0.092 26.042);
-  --color-secondary: oklch(71% 0.203 305.504);
+  --color-base-100: oklch(27% 0.046 192.524);
+  --color-base-200: oklch(38% 0.063 188.416);
+  --color-base-300: oklch(43% 0.078 188.216);
+  --color-base-content: oklch(95% 0.051 180.801);
+  --color-primary: oklch(59% 0.145 163.225);
+  --color-primary-content: oklch(98% 0.014 180.72);
+  --color-secondary: oklch(82% 0.119 306.383);
   --color-secondary-content: oklch(29% 0.149 302.717);
-  --color-accent: oklch(71% 0.203 305.504);
-  --color-accent-content: oklch(29% 0.149 302.717);
-  --color-neutral: oklch(66% 0.179 58.318);
-  --color-neutral-content: oklch(98% 0.022 95.277);
-  --color-info: oklch(74% 0.16 232.661);
-  --color-info-content: oklch(29% 0.066 243.157);
-  --color-success: oklch(77% 0.152 181.912);
-  --color-success-content: oklch(27% 0.046 192.524);
-  --color-warning: oklch(75% 0.183 55.934);
-  --color-warning-content: oklch(26% 0.079 36.259);
-  --color-error: oklch(51% 0.222 16.935);
-  --color-error-content: oklch(25% 0.092 26.042);
+  --color-accent: oklch(82% 0.12 346.018);
+  --color-accent-content: oklch(28% 0.109 3.907);
+  --color-neutral: oklch(60% 0.118 184.704);
+  --color-neutral-content: oklch(98% 0.014 180.72);
+  --color-info: oklch(71% 0.143 215.221);
+  --color-info-content: oklch(98% 0.019 200.873);
+  --color-success: oklch(69% 0.17 162.48);
+  --color-success-content: oklch(97% 0.021 166.113);
+  --color-warning: oklch(79% 0.184 86.047);
+  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-error: oklch(64% 0.246 16.439);
+  --color-error-content: oklch(96% 0.015 12.422);
   --radius-selector: 2rem;
-  --radius-field: 1rem;
-  --radius-box: 0rem;
+  --radius-field: 0.5rem;
+  --radius-box: 2rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
-  --border: 1px;
+  --border: 2px;
   --depth: 0;
-  --noise: 1;
+  --noise: 0;
 }
+
+
 
 @plugin "daisyui/theme" {
   name: "modern";

@@ -4,7 +4,6 @@ import { Trash2, Edit, Loader, Search, Filter, ArrowUpDown, Plus, RefreshCw, Ale
 import useVideo from '../../hooks/useVideo';
 
 const VideoManage = () => {
-  // State management
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -13,17 +12,13 @@ const VideoManage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   
   const navigate = useNavigate();
-  
-  // Custom hook
   const { getAllVideos, deleteVideo } = useVideo();
 
-  // Get unique categories from videos
   const categories = useMemo(() => {
     const uniqueCategories = [...new Set(videos.map(video => video.category || 'Uncategorized'))];
     return ['all', ...uniqueCategories];
   }, [videos]);
 
-  // Extract YouTube ID from URL
   const getYoutubeId = (url) => {
     try {
       const urlObj = new URL(url);
@@ -36,7 +31,6 @@ const VideoManage = () => {
     }
   };
 
-  // Filtered and sorted videos with memoization
   const filteredVideos = useMemo(() => {
     return videos
       .filter(video => {
@@ -54,7 +48,6 @@ const VideoManage = () => {
       });
   }, [videos, searchTerm, selectedCategory, sortConfig]);
 
-  // Fetch videos on component mount
   useEffect(() => {
     const fetchVideos = async () => {
       try {
@@ -70,13 +63,11 @@ const VideoManage = () => {
     fetchVideos();
   }, [getAllVideos]);
 
-  // Event handlers
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this video?')) {
       try {
         await deleteVideo(id);
         setVideos(prevVideos => prevVideos.filter(video => video._id !== id));
-        // Refresh the page after successful deletion
         navigate(0);
       } catch (err) {
         setError('Failed to delete video');
@@ -95,25 +86,66 @@ const VideoManage = () => {
     setSearchTerm(e.target.value);
   };
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="flex flex-col justify-center items-center min-h-screen bg-base-100">
-        <div className="card shadow-xl bg-base-200 p-8 text-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="loading loading-spinner loading-lg text-primary"></div>
-            <h2 className="text-xl font-semibold mt-2">Loading Videos</h2>
-            <p className="text-base-content/70">Please wait while we fetch your video library...</p>
+  const renderSkeletonLoading = () => (
+    <div className="container mx-auto p-6 py-20 min-h-screen">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="h-10 w-48 bg-base-300 rounded animate-pulse"></div>
+        <div className="h-10 w-40 bg-base-300 rounded animate-pulse"></div>
+      </div>
+      <div className="card bg-base-200 shadow-md mb-8">
+        <div className="card-body p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="h-10 w-full bg-base-300 rounded animate-pulse"></div>
+            <div className="h-10 w-56 bg-base-300 rounded animate-pulse"></div>
           </div>
         </div>
       </div>
-    );
+      <div className="stats shadow mb-8 w-full">
+        {[...Array(3)].map((_, index) => (
+          <div key={index} className="stat">
+            <div className="h-8 w-8 bg-base-300 rounded-full animate-pulse mb-2"></div>
+            <div className="h-4 w-24 bg-base-300 rounded animate-pulse mb-2"></div>
+            <div className="h-6 w-16 bg-base-300 rounded animate-pulse"></div>
+          </div>
+        ))}
+      </div>
+      <div className="card bg-base-100 shadow-xl overflow-hidden">
+        <div className="card-body p-0">
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <thead>
+                <tr className="bg-base-200">
+                  {[...Array(5)].map((_, index) => (
+                    <th key={index} className="py-4">
+                      <div className="h-6 w-24 bg-base-300 rounded animate-pulse"></div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(5)].map((_, rowIndex) => (
+                  <tr key={rowIndex} className="hover:bg-base-200 transition-colors">
+                    {[...Array(5)].map((_, colIndex) => (
+                      <td key={colIndex} className="py-4">
+                        <div className="h-6 w-full bg-base-300 rounded animate-pulse"></div>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return renderSkeletonLoading();
   }
 
-  // Main render
   return (
     <div className="container mx-auto p-6  py-20 min-h-screen">
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
           Video Library
@@ -127,7 +159,6 @@ const VideoManage = () => {
         </Link>
       </div>
 
-      {/* Error message */}
       {error && (
         <div className="alert alert-error mb-6 shadow-lg">
           <AlertTriangle className="h-6 w-6 mr-2" />
@@ -141,7 +172,6 @@ const VideoManage = () => {
         </div>
       )}
 
-      {/* Search and filter controls */}
       <div className="card bg-base-200 shadow-md mb-8">
         <div className="card-body p-4">
           <div className="flex flex-col md:flex-row gap-4">
@@ -176,7 +206,6 @@ const VideoManage = () => {
         </div>
       </div>
 
-      {/* Stats summary */}
       <div className="stats shadow mb-8 w-full">
         <div className="stat">
           <div className="stat-figure text-primary">
@@ -205,7 +234,6 @@ const VideoManage = () => {
         </div>
       </div>
 
-      {/* Videos table */}
       <div className="card bg-base-100 shadow-xl overflow-hidden ">
         <div className="card-body p-0">
           {filteredVideos.length === 0 ? (

@@ -37,11 +37,26 @@ const ProjectList = () => {
     setSearchQuery('');
   }, []);
 
-  if (loading) return <Loading type="grid" text="Loading projects..." />;
+  const renderSkeletonLoaders = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[...Array(6)].map((_, index) => (
+        <div key={index} className="bg-base-200 p-4 rounded-lg shadow-md animate-pulse">
+          <div className="w-full h-48 bg-base-300 rounded-md mb-4"></div>
+          <div className="h-6 bg-base-300 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-base-300 rounded w-1/2 mb-4"></div>
+          <div className="flex space-x-2">
+            <div className="h-8 bg-base-300 rounded w-1/4"></div>
+            <div className="h-8 bg-base-300 rounded w-1/4"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   if (error) return <div className="alert alert-error max-w-2xl mx-auto mt-8 "><X className="w-6 h-6" /><span>Error loading projects: {error.message}</span></div>;
 
   return (
-    <div className=" container mx-auto px-4 py-24 ">
+    <div className="container mx-auto px-4 py-24">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Projects</h1>
         <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="btn btn-primary">
@@ -56,7 +71,7 @@ const ProjectList = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="mb-8 space-y-4 bg-base-200 p-4 rounded-lg shadow-md overflow-hidden "
+            className="mb-8 space-y-4 bg-base-200 p-4 rounded-lg shadow-md overflow-hidden"
           >
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 min-w-[200px] relative">
@@ -117,7 +132,9 @@ const ProjectList = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {filteredProjects.length === 0 ? (
+          {loading ? (
+            renderSkeletonLoaders()
+          ) : filteredProjects.length === 0 ? (
             <div className="text-center py-12">
               <Filter className="mx-auto mb-4 w-12 h-12 text-gray-400" />
               <h3 className="text-xl font-semibold mb-2">No projects found</h3>

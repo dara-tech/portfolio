@@ -9,14 +9,6 @@ const RoadMapPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  if (loading) {
-    return <Loading type="grid" text="Loading roadmaps..." />;
-  }
-
-  if (error) {
-    return <div className="text-center text-red-500 font-semibold text-lg">{error}</div>;
-  }
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentRoadMaps = roadMaps.slice(indexOfFirstItem, indexOfLastItem);
@@ -28,18 +20,28 @@ const RoadMapPage = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       <div className="container mx-auto px-4 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {roadMaps.length > 0 ? (
+          {loading ? (
+            Array(6).fill().map((_, index) => (
+              <div key={index} className="bg-base-200 rounded-lg p-4 animate-pulse">
+                <div className="h-40 bg-base-300 rounded-lg mb-4"></div>
+                <div className="h-4 bg-base-300 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-base-300 rounded w-1/2"></div>
+              </div>
+            ))
+          ) : error ? (
+            <div className="col-span-full text-center text-red-500 font-semibold text-lg">{error}</div>
+          ) : roadMaps.length > 0 ? (
             currentRoadMaps.map((roadMap) => <RoadMapCard key={roadMap._id} roadMap={roadMap} />)
           ) : (
             <div className="col-span-full text-center text-gray-600 text-lg">No roadmaps found</div>
           )}
         </div>
 
-        {roadMaps.length > itemsPerPage && (
-          <div className="flex justify-center items-center gap-2 mt-8">
+        {!loading && roadMaps.length > itemsPerPage && (
+          <div className="flex justify-center items-center gap-2 mb-10 ">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}

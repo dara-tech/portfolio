@@ -38,7 +38,7 @@ export const THEMES = [
     "chatgpt-core",
     "netflix-core",
     "modern",
-    "cafe"
+    "green"
 
   ];
   
