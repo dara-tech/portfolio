@@ -21,12 +21,12 @@ const LessonPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen overflow-y-auto">
-        <div className="container mx-auto px-4 py-20">
-          <h1 className="text-3xl font-bold mb-8 text-center">Lessons</h1>
+        <div className="container mx-auto px-4 py-20 mt-10">
+          {/* <h1 className="text-3xl font-bold mb-8 text-center">Lessons</h1> */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {[...Array(6)].map((_, index) => (
               <div key={index} className="card bg-base-100 shadow-xl animate-pulse">
-                <div className="h-48 bg-base-300 rounded-t-xl"></div>
+                <div className="h-48 bg-base-300 rounded-4xl"></div>
                 <div className="card-body">
                   <div className="h-6 bg-base-300 rounded w-3/4 mb-2"></div>
                   <div className="h-4 bg-base-300 rounded w-1/2 mb-4"></div>
@@ -62,8 +62,8 @@ const LessonPage = () => {
 
   return (
     <div className="min-h-screen overflow-y-auto">
-      <div className="card mx-auto px-4 py-20 ">
-        <h1 className="text-3xl font-bold mb-8 text-center">Lessons</h1>
+      <div className="container mx-auto px-4 py-20 mt-10 ">
+        {/* <h1 className="text-3xl font-bold mb-8 text-center">Lessons</h1> */}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {lessons.length > 0 ? (

@@ -13,7 +13,7 @@ const BottomNav = memo(({
     <div className={`fixed bottom-0 left-0 right-0  shadow-lg z-50 transition-all duration-300 ${
       isMobileMenuOpen ? 'opacity-50' : 'opacity-100'
     }`}>
-      <ul className="grid grid-cols-5 py-2 mb-6 bg-base-100 mx-4 backdrop-blur-xl rounded-full lg:max-w-lg lg:mx-auto">
+      <ul className="grid grid-cols-5 py-2 mb-6 bg-base-300 mx-4 backdrop-blur-xl rounded-4xl lg:max-w-lg lg:mx-auto">
         {(token ? ADMIN_NAV_ITEMS : NAV_ITEMS).slice(0, 4).map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);

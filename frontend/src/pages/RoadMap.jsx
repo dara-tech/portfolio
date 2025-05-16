@@ -22,10 +22,10 @@ const RoadMapPage = () => {
   return (
     <div className="min-h-screen ">
       <div className="container mx-auto px-4 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 mt-10">
           {loading ? (
             Array(6).fill().map((_, index) => (
-              <div key={index} className="bg-base-200 rounded-lg p-4 animate-pulse">
+              <div key={index} className="bg-base-200 rounded-4xl p-4 animate-pulse ">
                 <div className="h-40 bg-base-300 rounded-lg mb-4"></div>
                 <div className="h-4 bg-base-300 rounded w-3/4 mb-2"></div>
                 <div className="h-4 bg-base-300 rounded w-1/2"></div>

@@ -3,7 +3,7 @@ import { Calendar, Clock, Tag } from "lucide-react";
 
 const LessonCard = ({ lesson }) => {
   return (
-    <li className="card bg-base-100 transition-shadow duration-300 border-primary/20 border-1">
+    <li className="card bg-base-100 shadow-xl h-full flex flex-col border border-primary/10">
       {lesson.image && (
         <figure className="h-48 overflow-hidden">
           <img 
