@@ -9,11 +9,10 @@ const Logo = memo(({ className = "" }) => (
   >
     <div className="relative">
       <Terminal className="w-6 h-6 text-primary transform transition-transform group-hover:rotate-12" />
-      <Code2 className="w-3 h-3 text-secondary absolute -top-1 -right-1 transform transition-transform group-hover:scale-125" />
     </div>
     <div className="flex items-baseline">
-      <span className="text-xl">Portfolio</span>
-      <span className="text-xl text-primary font-extrabold transition-colors duration-300 group-hover:text-secondary">.Dara</span>
+      <span className="text-xl">Sovandara</span>
+      <span className="text-xl text-primary font-extrabold transition-colors duration-300 group-hover:text-secondary">_Choel</span>
     </div>
   </Link>
 ));

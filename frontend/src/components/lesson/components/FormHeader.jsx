@@ -2,7 +2,7 @@ import { ArrowLeft, Wand2 } from 'lucide-react';
 
 export const FormHeader = ({ id, navigate, setShowAiDialog }) => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-10">
       <div className="flex items-center">
         <button 
           onClick={() => navigate('/admin/lessons')}
@@ -21,7 +21,7 @@ export const FormHeader = ({ id, navigate, setShowAiDialog }) => {
         </div>
       </div>
       
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 ">
         {!id && ( // Only show AI generation for new lessons
           <button
             type="button"

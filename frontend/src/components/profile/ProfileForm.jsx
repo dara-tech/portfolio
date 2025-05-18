@@ -40,6 +40,14 @@ const ProfileForm = ({ formData, handleChange, cvFile, handleCvChange, setFormDa
         onChange={handleChange}
         placeholder="Enter your email"
       />
+       <TextInput
+        label="Location"
+        name="location"
+        type="location"
+        value={formData.location}
+        onChange={handleChange}
+        placeholder="Enter your location"
+      />
 
       <TextArea
         label="Description"

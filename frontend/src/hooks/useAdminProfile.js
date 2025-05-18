@@ -35,6 +35,7 @@ const fetchAdminProfile = async () => {
         setFormData({
           username: data.username || "",
           email: data.email || "",
+          location: data.location || "",
           describe: data.describe || "",
           exp: data.exp || "",
           profilePic: data.profilePic || "",

@@ -57,7 +57,7 @@ export const getAdmin = async (req, res) => {
 
 export const updateAdmin = async (req, res) => {
   try {
-    const { username, email, describe, exp, profilePic, cv, password, socialLinks, about, skills } = req.body;
+    const { username, email,location, describe, exp, profilePic, cv, password, socialLinks, about, skills } = req.body;
     const admin = await Admin.findById(req.admin._id);
 
     if (!admin) {
@@ -74,6 +74,7 @@ export const updateAdmin = async (req, res) => {
       profilePic,
       cv,
       about,
+      location,
       socialLinks: socialLinks ? JSON.parse(socialLinks) : undefined,
       skills: skills ? JSON.parse(skills) : undefined
     });

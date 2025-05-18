@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Trash2, RefreshCw, Bot, PanelRight, ArrowUp, Copy, Edit2 } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { chatWithAI } from '../Ai/ChatModel';
-import DOMPurify from 'dompurify';
-import { marked } from 'marked';
+import ChatHeader from './components/ChatHeader';
+import ChatMessage from './components/ChatMessage';
+import ChatInput from './components/ChatInput';
+import EmptyChat from './components/EmptyChat';
+import ChatError from './components/ChatError';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -220,174 +223,58 @@ const Chat = () => {
 
   return (
     <div className="pt-16 pb-16 lg:pb-4 flex flex-col h-screen bg-gradient-to-br from-base-200 to-base-300">
-      {/* Chat header with controls */}
-      <div className="p-4 bg-base-200/80 backdrop-blur-sm border-b border-base-300 flex items-center justify-between shadow-sm">
-        <h2 className="text-lg font-semibold flex items-center">
-          <Bot size={20} className="mr-2 text-primary" />
-          Chat Assistant
-        </h2>
-        <div className="flex gap-2">
-          <button 
-            onClick={clearChat} 
-            className="btn btn-sm btn-ghost tooltip tooltip-left" 
-            data-tip="Clear chat"
-            disabled={isLoading || messages.length === 0}
-          >
-            <Trash2 size={18} className="text-error" />
-          </button>
-          <button 
-            onClick={retryLastMessage} 
-            className="btn btn-sm btn-ghost tooltip tooltip-left" 
-            data-tip="Retry last message"
-            disabled={isLoading || messages.length === 0}
-          >
-            <RefreshCw size={18} className={`text-primary ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
-        </div>
-      </div>
+      <ChatHeader 
+        onClear={clearChat}
+        onRetry={retryLastMessage}
+        isLoading={isLoading}
+        hasMessages={messages.length > 0}
+      />
 
-      {/* Chat messages area */}
       <div 
         ref={chatContainerRef}
         className="flex-grow overflow-y-auto p-4 space-y-4 scroll-smooth"
       >
-        {messages.length === 0 && !isTyping && (
-          <div className="flex flex-col items-center justify-center h-full text-center opacity-70">
-            <Bot size={20} className="p-2 rounded-full justify-center items-center text-primary opacity-50" />
-            <h3 className="text-xl font-medium mb-2">How can I help you today?</h3>
-            <p className="max-w-md text-sm">Ask me anything, and I'll do my best to assist you!</p>
-          </div>
-        )}
+        {messages.length === 0 && !isTyping && <EmptyChat />}
 
         {messages.map((message, index) => (
-          <div 
-            key={index} 
-            className={`chat ${message.role === 'user' ? 'chat-end' : 'chat-start'} ${
-              animatingMessages.has(index) && message.role === 'assistant'
-                ? 'opacity-0 translate-y-5 scale-95 animate-[messageAppear_0.6s_ease-out_forwards]' 
-                : ''
-            }`}
-          >
-            {message.role === 'assistant' && (
-              <div className="chat-image avatar">
-                <div className="p-2 rounded-full justify-center items-center bg-primary/20 text-primary grid place-items-center">
-                  <Bot size={20} />
-                </div>
-              </div>
-            )}
-            <div 
-              className={`chat-bubble ${
-                message.role === 'user' 
-                  ? 'chat-bubble-primary text-primary-content' 
-                  : 'chat-bubble-secondary text-secondary-content'
-              } shadow-md relative group transition-all duration-200 ${
-                animatingMessages.has(index) ? 'origin-left' : ''
-              }`}
-            >
-              {editingMessageId === index ? (
-                <div className="flex flex-col gap-2 w-full">
-                  <textarea
-                    ref={editTextareaRef}
-                    value={editInput}
-                    onChange={(e) => setEditInput(e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
-                    className="textarea my-2 rounded-lg textarea-bordered w-full min-h-[100px] text-primary resize-none focus:outline-none focus:border-primary"
-                    placeholder="Edit your message..."
-                  />
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-base-content/60">Press Enter to save, Esc to cancel</span>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => setEditingMessageId(null)}
-                        className="btn btn-xs btn-ghost hover:bg-base-200 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button 
-                        onClick={() => saveEdit(index)}
-                        className="btn btn-xs btn-primary transition-all hover:scale-105"
-                        disabled={!editInput.trim()}
-                      >
-                        Save 
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div 
-                    className="prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={renderMessageContent(message.content)} 
-                  />
-                  <div className="absolute -top-2 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0">
-                    <div className="flex gap-1 bg-base-100/90 backdrop-blur-sm rounded-full p-1 shadow-lg border border-base-200">
-                      <button
-                        onClick={() => copyMessage(message.content, index)}
-                        className={`btn btn-xs btn-ghost p-1.5 rounded-full transition-all duration-200 ${
-                          copiedMessageId === index 
-                            ? 'bg-success/20 text-success hover:bg-success/30' 
-                            : 'hover:bg-base-200 hover:scale-110'
-                        }`}
-                        title={copiedMessageId === index ? "Copied!" : "Copy message"}
-                      >
-                        <Copy size={14} className={`${copiedMessageId === index ? 'animate-pulse' : ''}`} />
-                      </button>
-                      {message.role === 'user' && (
-                        <button
-                          onClick={() => startEditing(index, message.content)}
-                          className="btn btn-xs btn-ghost p-1.5 rounded-full hover:bg-base-200 transition-all duration-200 hover:scale-110"
-                          title="Edit message"
-                        >
-                          <Edit2 size={14} className="text-base-content/70" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+          <ChatMessage
+            key={index}
+            message={message}
+            index={index}
+            editingMessageId={editingMessageId}
+            editInput={editInput}
+            editTextareaRef={editTextareaRef}
+            copiedMessageId={copiedMessageId}
+            animatingMessages={animatingMessages}
+            onEdit={startEditing}
+            onCopy={copyMessage}
+            onEditInputChange={(e) => setEditInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onCancelEdit={() => setEditingMessageId(null)}
+            onSaveEdit={saveEdit}
+          />
         ))}
 
         {isTyping && (
-          <div className="chat chat-start">
-            <div className="chat-image avatar">
-              <div className=" rounded-full items-center justify-center bg-primary/20 text-primary grid place-items-center">
-                <Bot size={20} />
-              </div>
-            </div>
-            <div className="chat-bubble chat-bubble-secondary text-secondary-content shadow-md">
-              <div 
-                className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={renderMessageContent(streamedText)} 
-              />
-              <span className="loading loading-dots loading-sm"></span>
-            </div>
-          </div>
+          <ChatMessage
+            message={{ role: 'assistant', content: streamedText }}
+            index={messages.length}
+            editingMessageId={null}
+            copiedMessageId={null}
+            animatingMessages={new Set()}
+            onCopy={() => {}}
+          />
         )}
 
-        {error && (
-          <div className="chat chat-start">
-            <div className="chat-bubble bg-error/20 text-error border border-error/30">
-              <div className="flex items-center">
-                {error}
-                <button 
-                  onClick={retryLastMessage} 
-                  className="btn btn-xs btn-ghost ml-2"
-                  disabled={isLoading}
-                >
-                  Try again
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ChatError 
+          error={error}
+          onRetry={retryLastMessage}
+          isLoading={isLoading}
+        />
         
-        {/* Invisible element to scroll to */}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Scroll to bottom button */}
       {showScrollButton && (
         <button 
           onClick={scrollToBottom}
@@ -398,32 +285,13 @@ const Chat = () => {
         </button>
       )}
 
-      {/* Input form */}
-      <div className="p-4 lg:mb-20 mb-10 ">
-        <form onSubmit={handleSubmit} className="flex max-w-3xl mx-auto">
-          <div className="join w-full shadow-lg ring-primary p-4 rounded-3xl bg-base-200">
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="input input-bordered join-item flex-grow focus:outline-none focus:border-none "
-              placeholder="Type your message..."
-              disabled={isLoading}
-            />
-            <button 
-              type="submit" 
-              className="btn btn-primary join-item"
-              disabled={isLoading || !input.trim()}
-            >
-              {isLoading ? 
-                <span className="loading loading-spinner loading-sm"></span> : 
-                <Send size={18} />
-              }
-            </button>
-          </div>
-        </form>
-      </div>
+      <ChatInput
+        input={input}
+        isLoading={isLoading}
+        inputRef={inputRef}
+        onInputChange={(e) => setInput(e.target.value)}
+        onSubmit={handleSubmit}
+      />
 
       <style>{`
         @keyframes messageAppear {
