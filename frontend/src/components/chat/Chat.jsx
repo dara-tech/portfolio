@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { chatWithAI } from '../Ai/ChatModel';
+import { generateImageFromPrompt } from '../Ai/AiImageGen';
+import { marked } from 'marked';
 import ChatHeader from './components/ChatHeader';
 import ChatMessage from './components/ChatMessage';
 import ChatInput from './components/ChatInput';
@@ -25,7 +27,6 @@ const Chat = () => {
   const [copiedMessageId, setCopiedMessageId] = useState(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
 
-  // Detect scroll position to show/hide scroll button
   useEffect(() => {
     const handleScroll = () => {
       if (!chatContainerRef.current) return;
@@ -42,14 +43,12 @@ const Chat = () => {
     }
   }, []);
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isTyping, streamedText]);
 
-  // Focus input on component mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -63,15 +62,12 @@ const Chat = () => {
     setIsTyping(false);
     setStreamedText('');
     
-    // Add animation for the new message
-    const newMessage = { role: 'assistant', content: text };
+    const newMessage = { role: 'assistant', content: text, type: 'text' };
     setMessages(prev => [...prev, newMessage]);
     
-    // Add animation class
     const messageId = messages.length;
     setAnimatingMessages(prev => new Set([...prev, messageId]));
     
-    // Remove animation class after animation completes
     setTimeout(() => {
       setAnimatingMessages(prev => {
         const newSet = new Set(prev);
@@ -85,7 +81,7 @@ const Chat = () => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage = { role: 'user', content: input.trim() };
+    const userMessage = { role: 'user', content: input.trim(), type: 'text' };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -93,6 +89,7 @@ const Chat = () => {
 
     try {
       const aiResponse = await chatWithAI([...messages, userMessage]);
+      const aiMessage = { role: 'assistant', content: aiResponse, type: 'text' };
       animateTextStream(aiResponse);
     } catch (error) {
       console.error('Chat Error:', error);
@@ -133,15 +130,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const renderMessageContent = (content) => {
-    // First sanitize the content to remove any HTML tags
-    const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [] });
-    // Then convert markdown to HTML
-    const rawMarkup = marked(sanitizedContent);
-    // Sanitize the markdown HTML output
-    const sanitizedMarkup = DOMPurify.sanitize(rawMarkup);
-    return { __html: sanitizedMarkup };
-  };
+  // Message content is now handled by ChatMessage component
 
   const copyMessage = async (content, messageId) => {
     try {
@@ -158,15 +147,12 @@ const Chat = () => {
   };
 
   const startEditing = (messageId, content) => {
-    // Only allow editing of user messages
     if (messages[messageId].role !== 'user') return;
     
     setEditingMessageId(messageId);
     setEditInput(content);
-    // Focus the textarea after a small delay to ensure it's rendered
     setTimeout(() => {
       editTextareaRef.current?.focus();
-      // Move cursor to end of text
       editTextareaRef.current?.setSelectionRange(
         editTextareaRef.current.value.length,
         editTextareaRef.current.value.length
@@ -177,16 +163,13 @@ const Chat = () => {
   const saveEdit = async (messageId) => {
     if (!editInput.trim()) return;
     
-    // Only allow editing of user messages
     if (messages[messageId].role !== 'user') return;
     
     const editedMessage = { ...messages[messageId], content: editInput };
     
-    // Remove the old AI response if it exists
     const messagesUpToEdit = messages.slice(0, messageId + 1);
     setMessages(messagesUpToEdit);
     
-    // Update the edited message
     setMessages(prev => prev.map((msg, idx) => 
       idx === messageId ? editedMessage : msg
     ));
@@ -194,14 +177,12 @@ const Chat = () => {
     setEditingMessageId(null);
     setEditInput('');
     
-    // Get new AI response
     setIsLoading(true);
     setError(null);
     
     try {
       const aiResponse = await chatWithAI(messagesUpToEdit);
       
-      // Add new AI response
       setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
     } catch (error) {
       console.error('Error getting new response:', error);
@@ -211,6 +192,41 @@ const Chat = () => {
     }
   };
 
+  const handleGenerateImage = async (prompt) => {
+    if (!prompt.trim() || isLoading) return;
+  
+    const userMessage = { role: 'user', content: prompt.trim(), type: 'text' };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+    setError(null);
+  
+    try {
+      const result = await generateImageFromPrompt(prompt);
+      
+      console.log("Generated result:", result);  // Log the result to inspect the data structure
+  
+      if (result && result.image) {
+        const aiMessage = { role: 'assistant', content: result.image, type: 'image' };
+        setMessages(prev => [...prev, aiMessage]);
+        
+        if (result.text) {
+          const textMessage = { role: 'assistant', content: result.text, type: 'text' };
+          setMessages(prev => [...prev, textMessage]);
+        }
+      } else {
+        // Log an error if the result does not contain an image
+        console.error('No image returned from the image generation API.');
+        setError('Failed to generate image. Please try again.');
+      }
+    } catch (error) {
+      console.error('Image generation error:', error);
+      setError('Failed to generate image. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   const handleKeyDown = (e, messageId) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -257,7 +273,7 @@ const Chat = () => {
 
         {isTyping && (
           <ChatMessage
-            message={{ role: 'assistant', content: streamedText }}
+            message={{ role: 'assistant', content: streamedText, type: 'text' }}
             index={messages.length}
             editingMessageId={null}
             copiedMessageId={null}
@@ -291,6 +307,7 @@ const Chat = () => {
         inputRef={inputRef}
         onInputChange={(e) => setInput(e.target.value)}
         onSubmit={handleSubmit}
+        onGenerateImage={handleGenerateImage}
       />
 
       <style>{`

@@ -1,8 +1,19 @@
-import React from 'react';
-import { Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { Send, Wand2, Image as ImageIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const ChatInput = ({ input, isLoading, inputRef, onInputChange, onSubmit }) => {
+const ChatInput = ({ input, isLoading, inputRef, onInputChange, onSubmit, onGenerateImage }) => {
+  const [isImageMode, setIsImageMode] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isImageMode) {
+      onGenerateImage(input);
+    } else {
+      onSubmit(e);
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -10,7 +21,7 @@ const ChatInput = ({ input, isLoading, inputRef, onInputChange, onSubmit }) => {
       transition={{ duration: 0.3 }}
       className="p-4 lg:mb-20 mb-10"
     >
-      <form onSubmit={onSubmit} className="flex flex-col max-w-3xl mx-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col max-w-3xl mx-auto">
         <div className="join w-full shadow-lg ring-primary p-4 rounded-3xl bg-base-200">
           <input
             ref={inputRef}
@@ -18,9 +29,20 @@ const ChatInput = ({ input, isLoading, inputRef, onInputChange, onSubmit }) => {
             value={input}
             onChange={onInputChange}
             className="input input-bordered join-item flex-grow focus:outline-none focus:border-none"
-            placeholder="Type your message..."
+            placeholder={isImageMode ? "Describe an image to generate..." : "Type your message..."}
             disabled={isLoading}
           />
+          
+          <button 
+            type="button" 
+            className={`btn join-item ${isImageMode ? 'btn-secondary' : 'btn-ghost'}`}
+            onClick={() => setIsImageMode(!isImageMode)}
+            disabled={isLoading}
+            title={isImageMode ? "Switch to text mode" : "Switch to image mode"}
+          >
+            <ImageIcon size={18} />
+          </button>
+          
           <button 
             type="submit" 
             className="btn btn-primary join-item"
@@ -28,7 +50,7 @@ const ChatInput = ({ input, isLoading, inputRef, onInputChange, onSubmit }) => {
           >
             {isLoading ? 
               <span className="loading loading-spinner loading-sm"></span> : 
-              <Send size={18} />
+              isImageMode ? <Wand2 size={18} /> : <Send size={18} />
             }
           </button>
         </div>
