@@ -15,37 +15,51 @@ highlight: (code, lang) => `<pre class="bg-base-300 p-4 rounded-lg my-2"><code c
 });
 
 export async function chatWithAI(messages, retryCount = 0) {
-try {
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-const recentMessages = messages.slice(-CONVERSATION_MEMORY);
-const finalPrompt = recentMessages.map(msg => `${msg.role}: ${msg.content}`).join("\n\n");
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    
+    // Filter out image messages and only keep text messages for the chat context
+    const textMessages = messages
+      .filter(msg => msg.type === 'text')
+      .slice(-CONVERSATION_MEMORY);
+    
+    // Format messages for the chat
+    const finalPrompt = textMessages
+      .map(msg => `${msg.role}: ${msg.content}`)
+      .join("\n\n");
 
-const chat = model.startChat();
-const result = await chat.sendMessage(finalPrompt);
+    const chat = model.startChat();
+    const result = await chat.sendMessage(finalPrompt);
 
-if (result?.response) {
-const responseText = await result.response.text();
+    if (!result?.response) {
+      throw new Error("No response received from AI");
+    }
 
-if (responseText.trim().startsWith('{')) {
-try {
-return JSON.parse(responseText);
-} catch (error) {
-console.warn("Response looked like JSON but failed to parse");
-return formatResponse(responseText);
-}
-}
+    const responseText = await result.response.text();
 
-return formatResponse(responseText);
-}
-throw new Error("No response received from AI");
-} catch (error) {
-if (retryCount < MAX_RETRIES) {
-console.warn(`Retry attempt ${retryCount + 1} of ${MAX_RETRIES}`);
-return chatWithAI(messages, retryCount + 1);
-}
-console.error("Error occurred in chatWithAI:", error);
-throw new Error("Failed to get AI response. Please try again later.");
-}
+    // Handle potential JSON responses
+    if (responseText.trim().startsWith('{')) {
+      try {
+        return JSON.parse(responseText);
+      } catch (error) {
+        console.warn("Response looked like JSON but failed to parse");
+        return formatResponse(responseText);
+      }
+    }
+
+    return formatResponse(responseText);
+  } catch (error) {
+    console.error("Chat error:", error.message);
+    
+    if (retryCount < MAX_RETRIES) {
+      console.warn(`Retry attempt ${retryCount + 1} of ${MAX_RETRIES}`);
+      // Short delay before retry to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+      return chatWithAI(messages, retryCount + 1);
+    }
+    
+    throw new Error("Failed to get AI response. Please try again later.");
+  }
 }
 
 function formatResponse(text) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bot, Copy, Edit2 } from 'lucide-react';
+import { Bot, Copy, Edit2, Download } from 'lucide-react';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 import { useAdminProfile } from '../../../hooks/useAdminProfile';
@@ -37,6 +37,15 @@ const ChatMessage = ({
     const sanitizedContent = DOMPurify.sanitize(message.content);
     const rawMarkup = marked.parse(sanitizedContent);
     return { __html: DOMPurify.sanitize(rawMarkup) };
+  };
+
+  const handleDownload = (imageUrl) => {
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'ai_generated_image.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -118,21 +127,31 @@ const ChatMessage = ({
 
             <div className="absolute -top-2 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0">
               <div className="flex gap-1 bg-base-100/90 backdrop-blur-sm rounded-full p-1 shadow-lg border border-base-200">
-                <button
-                  onClick={() => onCopy(message.content, index)}
-                  className={`btn btn-xs btn-ghost p-1.5 rounded-full transition-all duration-200 ${
-                    copiedMessageId === index
-                      ? 'bg-success/20 text-success hover:bg-success/30'
-                      : 'hover:bg-base-200 hover:scale-110'
-                  }`}
-                  title={copiedMessageId === index ? 'Copied!' : 'Copy message'}
-                >
-                  <Copy
-                    size={14}
-                    className={copiedMessageId === index ? 'animate-pulse' : ''}
-                  />
-                </button>
-                {message.role === 'user' && (
+                {message.type === 'image' ? (
+                  <button
+                    onClick={() => handleDownload(message.content)}
+                    className="btn btn-xs btn-ghost p-1.5 rounded-full hover:bg-base-200 transition-all duration-200 hover:scale-110"
+                    title="Download image"
+                  >
+                    <Download size={14} className="text-base-content/70" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onCopy(message.content, index)}
+                    className={`btn btn-xs btn-ghost p-1.5 rounded-full transition-all duration-200 ${
+                      copiedMessageId === index
+                        ? 'bg-success/20 text-success hover:bg-success/30'
+                        : 'hover:bg-base-200 hover:scale-110'
+                    }`}
+                    title={copiedMessageId === index ? 'Copied!' : 'Copy message'}
+                  >
+                    <Copy
+                      size={14}
+                      className={copiedMessageId === index ? 'animate-pulse' : ''}
+                    />
+                  </button>
+                )}
+                {message.role === 'user' && message.type !== 'image' && (
                   <button
                     onClick={() => onEdit(index, message.content)}
                     className="btn btn-xs btn-ghost p-1.5 rounded-full hover:bg-base-200 transition-all duration-200 hover:scale-110"
