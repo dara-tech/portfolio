@@ -3,7 +3,7 @@ import { GoogleGenAI, Modality } from "@google/genai";
 // Secure version (assumes backend environment)
 export async function generateImageFromPrompt(prompt) {
   try {
-    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GOOGLE_API_KEY });
 
 
     const response = await ai.models.generateContent({
