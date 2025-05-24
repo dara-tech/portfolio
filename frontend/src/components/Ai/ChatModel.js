@@ -8,22 +8,20 @@ const MAX_RETRIES = 3;
 const CONVERSATION_MEMORY = 5;
 
 marked.setOptions({
-breaks: true,
-gfm: true,
-headerIds: false,
-highlight: (code, lang) => `<pre class="bg-base-300 p-4 rounded-lg my-2"><code class="language-${lang}">${code}</code></pre>`
+  breaks: true,
+  gfm: true,
+  headerIds: false,
+  highlight: (code, lang) => `<pre class="bg-base-300 p-4 rounded-lg my-2"><code class="language-${lang}">${code}</code></pre>`
 });
 
 export async function chatWithAI(messages, retryCount = 0) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    // Filter out image messages and only keep text messages for the chat context
     const textMessages = messages
       .filter(msg => msg.type === 'text')
       .slice(-CONVERSATION_MEMORY);
     
-    // Format messages for the chat
     const finalPrompt = textMessages
       .map(msg => `${msg.role}: ${msg.content}`)
       .join("\n\n");
@@ -37,7 +35,6 @@ export async function chatWithAI(messages, retryCount = 0) {
 
     const responseText = await result.response.text();
 
-    // Handle potential JSON responses
     if (responseText.trim().startsWith('{')) {
       try {
         return JSON.parse(responseText);
@@ -53,7 +50,6 @@ export async function chatWithAI(messages, retryCount = 0) {
     
     if (retryCount < MAX_RETRIES) {
       console.warn(`Retry attempt ${retryCount + 1} of ${MAX_RETRIES}`);
-      // Short delay before retry to avoid rate limiting
       await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
       return chatWithAI(messages, retryCount + 1);
     }
@@ -63,23 +59,23 @@ export async function chatWithAI(messages, retryCount = 0) {
 }
 
 function formatResponse(text) {
-const cleanText = text
-.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-.replace(/\*(.*?)\*/g, '<em>$1</em>')
-.replace(/```(\w+)?\n([\s\S]*?)\n```/g, (_, lang, code) => `\n\`\`\`${lang || ''}\n${code.trim()}\n\`\`\`\n`);
+  const cleanText = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/```(\w+)?\n([\s\S]*?)\n```/g, (_, lang, code) => `\n\`\`\`${lang || ''}\n${code.trim()}\n\`\`\`\n`);
 
-const htmlContent = marked(cleanText);
-const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
-ADD_TAGS: ['code', 'pre'],
-ADD_ATTR: ['class'],
-});
+  const htmlContent = marked(cleanText);
+  const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
+    ADD_TAGS: ['code', 'pre'],
+    ADD_ATTR: ['class'],
+  });
 
-return sanitizedHtml
-.replace(/<a /g, '<a class="link link-primary" target="_blank" ')
-.replace(/<ul>/g, '<ul class="list-disc list-inside my-2 space-y-1">')
-.replace(/<ol>/g, '<ol class="list-decimal list-inside my-2 space-y-1">')
-.replace(/<h([1-6])>/g, '<h$1 class="font-bold my-2">')
-.replace(/<blockquote>/g, '<blockquote class="border-l-4 border-primary pl-4 my-2">')
-.replace(/<table>/g, '<table class="table table-zebra w-full">')
-.replace(/<code>/g, '<code class="bg-base-300 px-1 rounded text-sm sm:text-base md:text-lg lg:text-xl">');
+  return sanitizedHtml
+    .replace(/<a /g, '<a class="link link-primary" target="_blank" rel="noopener noreferrer" ')
+    .replace(/<ul>/g, '<ul class="list-disc list-inside my-2 space-y-1">')
+    .replace(/<ol>/g, '<ol class="list-decimal list-inside my-2 space-y-1">')
+    .replace(/<h([1-6])>/g, '<h$1 class="font-bold my-2">')
+    .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-primary pl-4 my-2">')
+    .replace(/<table>/g, '<table class="table table-zebra w-full">')
+    .replace(/<code>/g, '<code class="bg-base-300 px-1 rounded text-sm sm:text-base md:text-lg lg:text-xl">');
 }
