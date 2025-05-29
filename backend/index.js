@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import https from 'https';
+import { trackVisit } from './middleware/visitTracker.js';
 
 import authRoutes from './routes/adminRoutes.js';
 import projectRoutes from './routes/projectRoute.js';
@@ -31,6 +32,9 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
+
+// Track all visits
+app.use(trackVisit);
 
 const connectDB = async () => {
   try {

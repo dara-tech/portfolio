@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:5002"
+    ? "http://localhost:5001"
     : "https://daracheol-6adc.onrender.com";
 
 export const useAdminProfile = () => {

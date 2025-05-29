@@ -81,7 +81,7 @@ const ChatMessage = ({
             : 'chat-bubble-secondary text-secondary-content'
         } shadow-md relative group transition-all duration-200 ${
           animatingMessages.has(index) ? 'origin-left' : ''
-        }`}
+        } max-w-[80%] break-words`}
       >
         {editingMessageId === index ? (
           <div className="flex flex-col gap-2 w-full">

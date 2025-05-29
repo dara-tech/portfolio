@@ -42,7 +42,7 @@ const HeroCard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-base-100 to-base-300 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-base-100 to-base-300 p-4 ">
         <div className="max-w-4xl w-full bg-base-100 rounded-xl shadow-2xl p-8 space-y-6 animate-pulse">
           <div className="h-6 bg-base-300 rounded w-1/4"></div>
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
@@ -69,10 +69,10 @@ const HeroCard = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-base-100 to-base-300 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-base-100 to-base-300 p-4 ">
       <motion.div 
         {...animate}
-        className="max-w-4xl w-full bg-base-100 rounded-xl shadow-2xl p-8 space-y-6"
+        className="max-w-4xl w-full bg-base-100 rounded-xl shadow-2xl p-8 space-y-6 my-15"
       >
         <motion.div {...animate} className="flex items-center space-x-2 text-primary">
           <Terminal className="w-5 h-5" />
