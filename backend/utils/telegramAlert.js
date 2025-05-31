@@ -3,94 +3,72 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
-// Queue for pending messages
-let messageQueue = [];
+if (!TELEGRAM_BOT_TOKEN) {
+    throw new Error('❌ TELEGRAM_BOT_TOKEN is not defined in environment variables.');
+}
+
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
+
+const messageQueue = [];
 let isProcessing = false;
+let lastMessageTime = 0;
+const MIN_DELAY = 3000; // 3 seconds
 
-// Delay helper function
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Process the message queue with rate limiting
+ * Internal function to handle queued Telegram messages with delay to prevent rate limits
  */
 async function processQueue() {
-    if (isProcessing || messageQueue.length === 0) {
-        console.log('💬 Queue status:', { isProcessing, queueLength: messageQueue.length });
-        return;
-    }
-    
-    console.log('📦 Starting to process message queue. Length:', messageQueue.length);
+    if (isProcessing || messageQueue.length === 0) return;
+
     isProcessing = true;
-    
+
     while (messageQueue.length > 0) {
-        const { message, chatId, resolve, reject, attempts = 0 } = messageQueue[0];
-        
+        const { message, chatId, resolve, reject } = messageQueue[0];
+
+        const now = Date.now();
+        const timeSinceLastMessage = now - lastMessageTime;
+        if (timeSinceLastMessage < MIN_DELAY) {
+            await delay(MIN_DELAY - timeSinceLastMessage);
+        }
+
         try {
-            console.log('💬 Sending message to Telegram. Attempt:', attempts + 1);
-            const result = await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
-            messageQueue.shift(); // Remove the processed message
-            console.log('✅ Successfully sent message to Telegram');
+            const result = await bot.sendMessage(chatId, message, { parse_mode: 'MarkdownV2' });
+            messageQueue.shift();
+            lastMessageTime = Date.now();
             resolve(result);
-            
-            // Add a longer delay between messages to avoid rate limiting
-            if (messageQueue.length > 0) {
-                console.log('⏳ Waiting 3 seconds before next message...');
-                await delay(3000); // 3 second delay between messages
-            }
         } catch (error) {
-            console.error('❌ Error sending message:', error.message);
-            
-            if (error.code === 'TelegramError' && error.response?.statusCode === 429) {
-                const retryAfter = error.response.body?.parameters?.retry_after || 5;
-                console.log(`⏳ Rate limited. Waiting ${retryAfter} seconds...`);
-                
-                if (attempts < 3) { // Max 3 retry attempts
-                    // Move to the end of the queue with increased attempts
-                    const currentMessage = messageQueue.shift();
-                    messageQueue.push({ ...currentMessage, attempts: attempts + 1 });
-                    await delay(retryAfter * 1000);
-                } else {
-                    console.error('❌ Max retry attempts reached. Dropping message.');
-                    messageQueue.shift();
-                    reject(error);
-                }
-            } else {
-                console.error('❌ Non-rate-limit error. Dropping message.');
-                messageQueue.shift();
-                reject(error);
+            console.error('❌ Telegram send error:', error.message);
+
+            // Rate limit (Too Many Requests)
+            if (error.response?.statusCode === 429) {
+                const retryAfter = (error.response.body?.parameters?.retry_after || 30) * 1000;
+                console.warn(`⏳ Rate limited. Retrying in ${retryAfter / 1000} seconds...`);
+                await delay(retryAfter);
+                continue; // Retry same message
             }
+
+            messageQueue.shift(); // Drop failed message (non-retryable error)
+            reject(error);
         }
     }
-    
-    console.log('🌀 Queue processing complete');
+
     isProcessing = false;
 }
 
 /**
- * Send an alert message to a specific Telegram chat with rate limiting and retries
- * @param {string} message - The message to send
- * @param {string} chatId - The Telegram chat ID to send the message to
- * @returns {Promise} - The result of sending the message
+ * Send a basic alert message to Telegram (with queue + rate limit)
+ * @param {string} message - Telegram message (MarkdownV2 formatted)
+ * @param {string} chatId - Telegram Chat ID
  */
-export const sendTelegramAlert = async (message, chatId) => {
-    console.log('📣 Attempting to send Telegram alert:', {
-        chatId,
-        messageLength: message.length
-    });
-
-    if (!process.env.TELEGRAM_BOT_TOKEN) {
-        console.error('❌ TELEGRAM_BOT_TOKEN is not configured');
-        throw new Error('TELEGRAM_BOT_TOKEN is not configured');
-    }
-
+export const sendTelegramAlert = (message, chatId) => {
     if (!chatId) {
-        console.error('❌ Chat ID is required');
-        throw new Error('Chat ID is required');
+        throw new Error('❌ Chat ID is required to send a Telegram message.');
     }
 
-    console.log('📬 Adding message to queue. Current queue size:', messageQueue.length);
     return new Promise((resolve, reject) => {
         messageQueue.push({ message, chatId, resolve, reject });
         processQueue();
@@ -98,12 +76,12 @@ export const sendTelegramAlert = async (message, chatId) => {
 };
 
 /**
- * Send an alert message with additional details
+ * Send a formatted alert (with emoji and markdown)
  * @param {Object} options
- * @param {string} options.title - Alert title
- * @param {string} options.message - Alert message
- * @param {string} options.type - Alert type (info, warning, error)
- * @param {string} options.chatId - Telegram chat ID
+ * @param {string} options.title - Title of the alert
+ * @param {string} options.message - Body of the alert
+ * @param {string} [options.type=info] - Type: info | warning | error
+ * @param {string} options.chatId - Telegram Chat ID
  */
 export const sendFormattedAlert = async ({ title, message, type = 'info', chatId }) => {
     const emoji = {
@@ -112,7 +90,13 @@ export const sendFormattedAlert = async ({ title, message, type = 'info', chatId
         error: '🚨'
     };
 
-    const formattedMessage = `${emoji[type]} *${title}*\n\n${message}`;
-    
+    const formattedMessage = `${emoji[type]} *${escapeMarkdown(title)}*\n\n${escapeMarkdown(message)}`;
     return sendTelegramAlert(formattedMessage, chatId);
 };
+
+/**
+ * Escape special characters for MarkdownV2 formatting in Telegram
+ */
+function escapeMarkdown(text) {
+    return text.toString().replace(/([\\`*_\[\]()~>#+\-=|{}.!])/g, '\\$1');
+}
