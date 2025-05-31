@@ -2,6 +2,7 @@
 import { sendTelegramAlert } from '../utils/telegramAlert.js';
 import geoip from 'geoip-lite';
 import { UAParser } from 'ua-parser-js';
+import cookieParser from 'cookie-parser';
 
 export const trackVisit = async (req, res, next) => {
     const referrer = req.headers['referer'] || '';
@@ -12,7 +13,8 @@ export const trackVisit = async (req, res, next) => {
         path: req.path,
         referrer,
         isFrontendVisit,
-        isAssetRequest
+        isAssetRequest,
+        cookies: req.cookies
     });
 
     if (!isFrontendVisit || req.path === '/favicon.ico' || isAssetRequest || req.cookies._visited) {

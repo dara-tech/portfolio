@@ -42,7 +42,7 @@ async function processQueue() {
         } catch (error) {
             console.error('❌ Error sending message:', error.message);
             
-            if (error.code === 'ETELEGRAM' && error.response?.statusCode === 429) {
+            if (error.code === 'TelegramError' && error.response?.statusCode === 429) {
                 const retryAfter = error.response.body?.parameters?.retry_after || 5;
                 console.log(`⏳ Rate limited. Waiting ${retryAfter} seconds...`);
                 
