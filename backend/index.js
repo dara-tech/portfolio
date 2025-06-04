@@ -26,7 +26,8 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "http://localhost:5002",
-    "https://daracheol-6adc.onrender.com"
+    "https://daracheol-6adc.onrender.com",
+    "https://daracheol.com"
   ], 
   credentials: true 
 }));
