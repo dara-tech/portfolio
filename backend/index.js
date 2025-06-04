@@ -22,15 +22,17 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5002;
 
-app.use(cors({ 
+app.use(cors({
   origin: [
     "http://localhost:5173",
     "http://localhost:5002",
     "https://daracheol-6adc.onrender.com",
-    "https://daracheol.com"
-  ], 
-  credentials: true 
+    "https://daracheol.com",
+    "https://www.daracheol.com"  // ← Add this!
+  ],
+  credentials: true
 }));
+
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
