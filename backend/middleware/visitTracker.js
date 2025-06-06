@@ -8,6 +8,7 @@ export const trackVisit = async (req, res, next) => {
     const isFrontendVisit =
         referrer.includes('localhost:5173') ||
         referrer.includes('daracheol-6adc.onrender.com');
+        referrer.includes('daracheol.com')
     const isAssetRequest = req.path.match(/\.(js|css|png|jpg|jpeg|svg|ico|woff|ttf|map)$/i);
 
     if (!isFrontendVisit || req.path === '/favicon.ico' || isAssetRequest) {
