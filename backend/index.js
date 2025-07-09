@@ -47,12 +47,19 @@ console.log(`🔐 Allowed Origins: ${allowedOrigins.join(', ')}`);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    console.log(`CORS Check: Request from origin -> ${origin}`);
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    // Allow requests with no origin (like server-to-server, mobile apps, or curl requests)
+    // This includes Render's health checks and the auto-reload ping.
+    if (!origin) {
+      console.log(`CORS Check: Allowed request with no origin (server-to-server or health check).`);
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      console.log(`CORS Check: Allowed origin -> ${origin}`);
+      return callback(null, true);
     } else {
-      console.error(`CORS Error: Origin ${origin} not in allowed list: [${allowedOrigins.join(', ')}]`);
-      callback(new Error('❌ Not allowed by CORS'));
+      console.error(`CORS Error: Blocked origin -> ${origin}. Not in allowed list: [${allowedOrigins.join(', ')}]`);
+      return callback(new Error('❌ Not allowed by CORS'));
     }
   },
   credentials: true,
