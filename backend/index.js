@@ -24,23 +24,15 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5002;
 const isProduction = process.env.NODE_ENV === 'production';
-let allowedOrigins = [];
-
-if (isProduction) {
-  if (!process.env.ALLOWED_ORIGINS) {
-    console.error('❌ FATAL: ALLOWED_ORIGINS environment variable is not set in production.');
-    process.exit(1);
-  }
-  allowedOrigins = process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
-} else {
-  // Default origins for local development
-  allowedOrigins = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:5174',
-    'http://127.0.0.1:5174'
-  ];
-}
+const allowedOrigins = [
+  'https://www.daracheol.com',
+  'https://daracheol.com',
+  'https://daracheol-6adc.onrender.com',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5174'
+];
 
 console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 console.log(`🔐 Allowed Origins: ${allowedOrigins.join(', ')}`);
