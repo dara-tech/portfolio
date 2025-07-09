@@ -19,6 +19,16 @@ const MIN_DELAY = 3000; // 3 seconds
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
+ * Escape special characters for MarkdownV2 formatting in Telegram
+ * @param {string | number | null | undefined} text
+ * @returns {string}
+ */
+export function escapeMarkdown(text) {
+    if (text === null || typeof text === 'undefined') return '';
+    return text.toString().replace(/([\\`*_\[\]()~>#+\-=|{}.!])/g, '\\$1');
+}
+
+/**
  * Internal function to handle queued Telegram messages with delay to prevent rate limits
  */
 async function processQueue() {
@@ -43,7 +53,6 @@ async function processQueue() {
         } catch (error) {
             console.error('❌ Telegram send error:', error.message);
 
-            // Rate limit (Too Many Requests)
             if (error.response?.statusCode === 429) {
                 const retryAfter = (error.response.body?.parameters?.retry_after || 30) * 1000;
                 console.warn(`⏳ Rate limited. Retrying in ${retryAfter / 1000} seconds...`);
@@ -51,7 +60,7 @@ async function processQueue() {
                 continue; // Retry same message
             }
 
-            messageQueue.shift(); // Drop failed message (non-retryable error)
+            messageQueue.shift(); // Drop failed message
             reject(error);
         }
     }
@@ -60,8 +69,8 @@ async function processQueue() {
 }
 
 /**
- * Send a basic alert message to Telegram (with queue + rate limit)
- * @param {string} message - Telegram message (MarkdownV2 formatted)
+ * Send a raw MarkdownV2 Telegram message (with queue & rate limiting)
+ * @param {string} message - MarkdownV2 formatted string
  * @param {string} chatId - Telegram Chat ID
  */
 export const sendTelegramAlert = (message, chatId) => {
@@ -76,11 +85,11 @@ export const sendTelegramAlert = (message, chatId) => {
 };
 
 /**
- * Send a formatted alert (with emoji and markdown)
+ * Send a formatted message with title + body (MarkdownV2)
  * @param {Object} options
- * @param {string} options.title - Title of the alert
- * @param {string} options.message - Body of the alert
- * @param {string} [options.type=info] - Type: info | warning | error
+ * @param {string} options.title - Bolded MarkdownV2 title
+ * @param {string} options.message - Main body text
+ * @param {string} [options.type=info] - info | warning | error
  * @param {string} options.chatId - Telegram Chat ID
  */
 export const sendFormattedAlert = async ({ title, message, type = 'info', chatId }) => {
@@ -90,13 +99,6 @@ export const sendFormattedAlert = async ({ title, message, type = 'info', chatId
         error: '🚨'
     };
 
-    const formattedMessage = `${emoji[type]} *${escapeMarkdown(title)}*\n\n${escapeMarkdown(message)}`;
+    const formattedMessage = `${emoji[type] || ''} *${escapeMarkdown(title)}*\n\n${escapeMarkdown(message)}`;
     return sendTelegramAlert(formattedMessage, chatId);
 };
-
-/**
- * Escape special characters for MarkdownV2 formatting in Telegram
- */
-function escapeMarkdown(text) {
-    return text.toString().replace(/([\\`*_\[\]()~>#+\-=|{}.!])/g, '\\$1');
-}
