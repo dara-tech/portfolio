@@ -31,7 +31,7 @@ if (isProduction) {
     console.error('❌ FATAL: ALLOWED_ORIGINS environment variable is not set in production.');
     process.exit(1);
   }
-  allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+  allowedOrigins = process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
 } else {
   // Default origins for local development
   allowedOrigins = [
@@ -47,9 +47,11 @@ console.log(`🔐 Allowed Origins: ${allowedOrigins.join(', ')}`);
 
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log(`CORS Check: Request from origin -> ${origin}`);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS Error: Origin ${origin} not in allowed list: [${allowedOrigins.join(', ')}]`);
       callback(new Error('❌ Not allowed by CORS'));
     }
   },
