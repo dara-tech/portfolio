@@ -19,7 +19,7 @@ const Home = () => {
   });
 
   return (
-    <div className="min-h-screen  mb-4 py-4">
+    <div className="min-h-screen py-4">
     
 
       {/* Hero Section */}

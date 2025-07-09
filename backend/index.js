@@ -14,6 +14,10 @@ import projectRoutes from './routes/projectRoute.js';
 import roadmapRoutes from './routes/roadMaps.js';
 import videoRoutes from './routes/videoRoute.js';
 import lessonRoutes from './routes/lessonRoute.js';
+// import feedRoutes from './routes/feedRoutes.js';
+
+
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,6 +58,7 @@ app.use('/api', projectRoutes);
 app.use('/api', roadmapRoutes);
 app.use('/api', videoRoutes);
 app.use('/api', lessonRoutes);
+// app.use('/api', feedRoutes); // Changed to /api/feed for clarity
 app.use(express.json({ limit: '10mb' }));
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));

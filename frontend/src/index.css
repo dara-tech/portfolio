@@ -1,4 +1,10 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-base-100 to-base-300 min-h-screen;
+  }
+}
 @plugin "daisyui" {
     themes: all;
 }

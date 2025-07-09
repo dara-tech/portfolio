@@ -238,7 +238,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="pt-16 pb-16 lg:pb-4 flex flex-col h-screen bg-gradient-to-br from-base-200 to-base-300">
+    <div className="pt-16 pb-20 lg:pb-10 flex flex-col h-screen bg-gradient-to-br from-base-200 to-base-300">
       <ChatHeader 
         onClear={clearChat}
         onRetry={retryLastMessage}
