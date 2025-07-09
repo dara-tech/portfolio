@@ -58,7 +58,7 @@ export const trackVisit = async (req, res, next) => {
             `• Time: ${escapeMarkdown(new Date().toLocaleString())}\n` +
             `• Protocol: ${escapeMarkdown(req.protocol.toUpperCase())}`;
 
-        await sendTelegramAlert(message, process.env.TELEGRAM_CHAT_ID || '-1002508835850');
+        sendTelegramAlert(message, process.env.TELEGRAM_CHAT_ID || '-1002508835850');
     } catch (error) {
         console.error('Failed to track visit:', error.message);
     }
