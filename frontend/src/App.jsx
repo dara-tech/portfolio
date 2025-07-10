@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Home from './pages/Home';
@@ -32,6 +32,44 @@ import LessonForm from './components/lesson/LessonForm';
 
 function App() {
   const {theme} = useThemeStore();
+
+  useEffect(() => {
+    const trackVisit = async (position) => {
+      const visitKey = 'visit_tracked';
+      if (sessionStorage.getItem(visitKey)) {
+        return; // Already tracked this session
+      }
+
+      try {
+        const payload = {};
+        if (position) {
+          payload.latitude = position.coords.latitude;
+          payload.longitude = position.coords.longitude;
+        }
+
+        // Use the VITE_API_BASE_URL from .env or fallback to a relative path
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+        await fetch(`${apiBaseUrl}/api/visit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        sessionStorage.setItem(visitKey, 'true');
+      } catch (error) {
+        console.error('Error tracking visit:', error);
+      }
+    };
+
+    // Request high-accuracy location
+    navigator.geolocation.getCurrentPosition(
+      trackVisit, // Success callback
+      () => trackVisit(null), // Error callback (user denied or error)
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+  }, []);
 
   return (
     <div data-theme={theme}>

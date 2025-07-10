@@ -41,7 +41,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
 // Track all visits
-app.use(trackVisit);
+app.post('/api/visit', trackVisit);
 
 const connectDB = async () => {
   try {
