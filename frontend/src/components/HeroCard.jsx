@@ -27,16 +27,15 @@ const HeroCard = () => {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        // Adjust text color for better contrast on base-200/base-100 backgrounds
         className="text-base-content/70 hover:text-primary transition-colors duration-300"
-        whileHover={{ scale: 1.3, rotate: 10 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         variants={{
           hidden: { opacity: 0, y: 20 },
           visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 20 } }
         }}
       >
-        <Icon className="w-7 h-7 md:w-8 md:h-8" />
+        <Icon className="w-6 h-6 md:w-7 md:h-7" />
       </motion.a>
     ) : null;
   };
@@ -61,8 +60,8 @@ const HeroCard = () => {
   // Loading Skeleton
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-base-100 to-base-300 p-4">
-        <div className="max-w-4xl w-full bg-base-100 rounded-2xl shadow-2xl p-8 space-y-6 animate-pulse border border-base-200">
+      <div className="min-h-screen flex items-center justify-center bg-base-100 p-4">
+        <div className="max-w-4xl w-full bg-base-200 rounded-lg shadow-lg p-8 space-y-6 animate-pulse border border-base-300">
           <div className="h-6 bg-base-300 rounded w-1/4"></div>
           <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
             <div className="w-40 h-40 rounded-full bg-base-300 animate-pulse-slow"></div>
@@ -80,7 +79,7 @@ const HeroCard = () => {
             ))}
           </div>
           <div className="flex justify-center">
-            <div className="h-12 bg-base-300 rounded-full w-48"></div>
+            <div className="h-12 bg-base-300 rounded-lg w-48"></div>
           </div>
         </div>
       </div>
@@ -88,23 +87,19 @@ const HeroCard = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-base-100 to-base-300 p-4 font-sans text-base-content py-18 lg:py-24">
+    <div className="min-h-screen flex items-center justify-center bg-base-100 p-4 font-sans text-base-content py-18 lg:py-24">
       <motion.div
-        className="max-w-4xl w-full bg-base-100 rounded-2xl shadow-2xl p-8 space-y-8 border border-base-200 relative overflow-hidden transform hover:scale-[1.005] transition-transform duration-300 ease-out flex flex-col" // Added flex-col here
+        className="max-w-4xl w-full bg-base-200 rounded-lg shadow-lg p-8 space-y-8 border border-base-300 relative overflow-hidden"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Background Gradients/Blobs for visual interest (using primary and secondary theme colors) */}
-        <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/10 rounded-full mix-blend-screen filter blur-3xl opacity-50 animate-blob-slow"></div>
-        <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-secondary/10 rounded-full mix-blend-screen filter blur-3xl opacity-50 animate-blob-slow animation-delay-2000"></div>
-
         <motion.div variants={itemVariants} className="flex items-center space-x-3 text-primary mb-6">
           <Terminal className="w-6 h-6" />
           <span className="font-mono text-lg">&lt;hello_world /&gt;</span>
         </motion.div>
 
-        <div className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12 flex-grow"> {/* Added flex-grow */}
+        <div className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12 flex-grow">
           {userData?.profilePic && (
             <motion.div
               className="flex-shrink-0 relative group"
@@ -113,14 +108,7 @@ const HeroCard = () => {
               <img
                 src={userData.profilePic}
                 alt="Profile"
-                className="w-44 h-44 rounded-full object-cover border-4 border-primary shadow-xl group-hover:scale-105 transition-transform duration-300 ease-out"
-              />
-              {/* Subtle pulsating border effect on hover */}
-              <motion.div
-                className="absolute inset-0 rounded-full border-4 border-primary opacity-0 group-hover:opacity-100"
-                initial={{ scale: 1 }}
-                animate={{ scale: [1, 1.05, 1], opacity: [0, 1, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-44 h-44 rounded-full object-cover border-4 border-primary shadow-lg group-hover:scale-105 transition-transform duration-300 ease-out"
               />
             </motion.div>
           )}
@@ -151,7 +139,7 @@ const HeroCard = () => {
 
         <motion.div
           variants={itemVariants}
-          className="bg-base-200 p-4 rounded-lg flex items-center space-x-3 shadow-inner border border-base-300"
+          className="bg-base-100 p-4 rounded-lg flex items-center space-x-3 shadow-sm border border-base-300"
         >
           <Zap className="text-primary flex-shrink-0 w-6 h-6" />
           <div className="relative w-full h-8 overflow-hidden flex items-center">
@@ -181,9 +169,9 @@ const HeroCard = () => {
             <motion.a
               href={userData.cv}
               download
-              className="inline-flex items-center space-x-3 bg-primary text-primary-content px-8 py-4 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-out font-semibold text-lg"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center space-x-3 bg-primary text-primary-content px-8 py-4 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 ease-out font-semibold text-lg"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               <Download className="w-6 h-6" />
               <span>Download Resume</span>

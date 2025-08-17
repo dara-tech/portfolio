@@ -56,11 +56,15 @@ const ProjectList = () => {
   if (error) return <div className="alert alert-error max-w-2xl mx-auto mt-8 "><X className="w-6 h-6" /><span>Error loading projects: {error.message}</span></div>;
 
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="container mx-auto px-4 py-16">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Projects</h1>
-        <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="btn btn-primary">
-          <Sliders className="mr-2" /> {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
+        <h1 className="text-3xl font-bold text-base-content">Projects</h1>
+        <button 
+          onClick={() => setIsFilterOpen(!isFilterOpen)} 
+          className="btn btn-primary btn-outline"
+        >
+          <Sliders className="mr-2 w-4 h-4" /> 
+          {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
         </button>
       </div>
 
@@ -71,7 +75,7 @@ const ProjectList = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="mb-8 space-y-4 bg-base-200 p-4 rounded-lg shadow-md overflow-hidden"
+            className="mb-8 space-y-4 bg-base-200 p-6 rounded-lg border border-base-300 overflow-hidden"
           >
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 min-w-[200px] relative">
@@ -80,14 +84,14 @@ const ProjectList = () => {
                   placeholder="Search projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="input input-bordered w-full pl-10 focus:outline-none"
+                  className="input input-bordered w-full pl-10 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50" size={18} />
               </div>
               <select
                 value={filters.category}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="select select-bordered flex-1 min-w-[150px]"
+                className="select select-bordered flex-1 min-w-[150px] focus:ring-2 focus:ring-primary/20"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>{category === 'all' ? 'All Categories' : category}</option>
@@ -96,7 +100,7 @@ const ProjectList = () => {
               <select
                 value={filters.technology}
                 onChange={(e) => handleFilterChange('technology', e.target.value)}
-                className="select select-bordered flex-1 min-w-[150px]"
+                className="select select-bordered flex-1 min-w-[150px] focus:ring-2 focus:ring-primary/20"
               >
                 {technologies.map(tech => (
                   <option key={tech} value={tech}>{tech === 'all' ? 'All Technologies' : tech}</option>
@@ -105,19 +109,22 @@ const ProjectList = () => {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="select select-bordered flex-1 min-w-[150px]"
+                className="select select-bordered flex-1 min-w-[150px] focus:ring-2 focus:ring-primary/20"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
             </div>
             {(filters.category !== 'all' || filters.technology !== 'all' || searchQuery) && (
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-medium">Active filters:</span>
-                {filters.category !== 'all' && <span className="badge badge-primary">{filters.category}</span>}
-                {filters.technology !== 'all' && <span className="badge badge-secondary">{filters.technology}</span>}
-                {searchQuery && <span className="badge badge-accent">"{searchQuery}"</span>}
-                <button onClick={clearFilters} className="btn btn-sm btn-ghost">Clear all</button>
+              <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-base-300">
+                <span className="text-sm font-medium text-base-content/70">Active filters:</span>
+                {filters.category !== 'all' && <span className="badge badge-primary badge-outline">{filters.category}</span>}
+                {filters.technology !== 'all' && <span className="badge badge-secondary badge-outline">{filters.technology}</span>}
+                {searchQuery && <span className="badge badge-accent badge-outline">"{searchQuery}"</span>}
+                <button onClick={clearFilters} className="btn btn-sm btn-ghost text-base-content/70 hover:text-base-content">
+                  <X className="w-3 h-3 mr-1" />
+                  Clear all
+                </button>
               </div>
             )}
           </motion.div>
@@ -136,9 +143,9 @@ const ProjectList = () => {
             renderSkeletonLoaders()
           ) : filteredProjects.length === 0 ? (
             <div className="text-center py-12">
-              <Filter className="mx-auto mb-4 w-12 h-12 text-gray-400" />
-              <h3 className="text-xl font-semibold mb-2">No projects found</h3>
-              <p className="text-gray-600">Try adjusting your search or filters</p>
+              <Filter className="mx-auto mb-4 w-12 h-12 text-base-content/30" />
+              <h3 className="text-xl font-semibold mb-2 text-base-content">No projects found</h3>
+              <p className="text-base-content/60">Try adjusting your search or filters</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

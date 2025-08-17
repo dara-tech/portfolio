@@ -238,7 +238,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="pt-16 pb-20 lg:pb-10 flex flex-col h-screen bg-gradient-to-br from-base-200 to-base-300">
+    <div className="pt-20 pb-20 lg:pb-10 flex flex-col h-screen bg-base-100">
       <ChatHeader 
         onClear={clearChat}
         onRetry={retryLastMessage}
@@ -294,7 +294,7 @@ const Chat = () => {
       {showScrollButton && (
         <button 
           onClick={scrollToBottom}
-          className="absolute right-4 bottom-24 lg:bottom-20 btn btn-circle btn-sm btn-primary shadow-lg animate-bounce"
+          className="absolute right-4 bottom-24 lg:bottom-20 btn btn-circle btn-sm btn-primary shadow-md hover:shadow-lg transition-shadow"
           aria-label="Scroll to bottom"
         >
           <ArrowUp size={16} />
@@ -314,15 +314,11 @@ const Chat = () => {
         @keyframes messageAppear {
           0% {
             opacity: 0;
-            transform: translateY(20px) scale(0.95);
-          }
-          50% {
-            opacity: 0.5;
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(10px);
           }
           100% {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
           }
         }
       `}</style>

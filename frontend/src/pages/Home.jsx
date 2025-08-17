@@ -19,9 +19,7 @@ const Home = () => {
   });
 
   return (
-    <div className="min-h-screen py-4">
-    
-
+    <div className="min-h-screen">
       {/* Hero Section */}
       <HeroCard />
 
@@ -29,16 +27,18 @@ const Home = () => {
       <SkillsSection />
 
       {/* Featured Projects Preview */}
-      <div className="-my-30">
-      <ProjectList />
+      <div className="py-16 bg-base-200">
+        <ProjectList />
       </div>
+
       {/* Featured Videos Preview */}
-      <div className="-my-40">
+      <div className="py-16 bg-base-100">
         <VideoPage />
       </div>
-      <div className="my-20">
+
       {/* Contact Section */}
-      <ContactForm />
+      <div className="py-16 bg-base-200">
+        <ContactForm />
       </div>
     </div>
   );

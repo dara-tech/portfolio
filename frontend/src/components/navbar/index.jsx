@@ -64,8 +64,8 @@ const Navbar = () => {
 
   return (
     <>
-      <div className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        isScrolled ? 'bg-base-200/80 backdrop-blur-xl shadow-lg py-1' : 'bg-base-200/95 backdrop-blur-md py-3'
+      <div className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-base-200/95 backdrop-blur-md shadow-sm py-2' : 'bg-base-200/90 backdrop-blur-sm py-3'
       }`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -81,7 +81,7 @@ const Navbar = () => {
               onLogout={handleLogout}
             />
             <button 
-              className="lg:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="lg:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 hover:bg-base-300 transition-colors"
               onClick={toggleMobileMenu}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
