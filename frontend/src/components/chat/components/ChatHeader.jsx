@@ -20,7 +20,7 @@ const ChatHeader = ({ onClear, onRetry, isLoading, hasMessages }) => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="p-4 bg-base-200/80 backdrop-blur-sm border-b border-base-300 flex items-center justify-between shadow-sm relative"
+      className="py-6 px-4  border-base-300 flex items-center justify-between relative"
     >
       <h2 className="text-lg font-semibold flex items-center">
         <Bot size={20} className="mr-2 text-primary" />
