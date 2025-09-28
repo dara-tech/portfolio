@@ -21,25 +21,55 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <HeroCard />
+      <section className="relative">
+        <HeroCard />
+      </section>
 
       {/* Skills Section */}
-      <SkillsSection />
+      <section className="py-20 bg-base-100">
+        <div className="container mx-auto px-4">
+          <SkillsSection />
+        </div>
+      </section>
 
       {/* Featured Projects Preview */}
-      <div className="py-16 bg-base-200">
-        <ProjectList />
-      </div>
+      <section className="py-20 bg-base-200">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-base-content mb-4">Featured Projects</h2>
+            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+              Explore some of my recent work and creative projects
+            </p>
+          </div>
+          <ProjectList />
+        </div>
+      </section>
 
       {/* Featured Videos Preview */}
-      <div className="py-16 bg-base-100">
-        <VideoPage />
-      </div>
+      <section className="py-20 bg-base-100">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-base-content mb-4">Latest Videos</h2>
+            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+              Watch my latest tutorials and project walkthroughs
+            </p>
+          </div>
+          <VideoPage />
+        </div>
+      </section>
 
       {/* Contact Section */}
-      <div className="py-16 bg-base-200">
-        <ContactForm />
-      </div>
+      <section className="py-20 bg-base-200">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-base-content mb-4">Get In Touch</h2>
+            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+              Ready to work together? Let's discuss your next project
+            </p>
+          </div>
+          <ContactForm />
+        </div>
+      </section>
     </div>
   );
 };

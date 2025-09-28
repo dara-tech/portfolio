@@ -60,8 +60,8 @@ const HeroCard = () => {
   // Loading Skeleton
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100 p-4">
-        <div className="max-w-4xl w-full bg-base-200 rounded-lg shadow-lg p-8 space-y-6 animate-pulse border border-base-300">
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-6xl w-full bg-base-200 rounded-lg shadow-lg p-8 space-y-6 animate-pulse border border-base-300">
           <div className="h-6 bg-base-300 rounded w-1/4"></div>
           <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
             <div className="w-40 h-40 rounded-full bg-base-300 animate-pulse-slow"></div>
@@ -87,9 +87,9 @@ const HeroCard = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-100 p-4 font-sans text-base-content py-18 lg:py-24">
+    <div className="min-h-screen flex items-center justify-center p-4 font-sans text-base-content py-20">
       <motion.div
-        className="max-w-4xl w-full bg-base-200 rounded-lg shadow-lg p-8 space-y-8 border border-base-300 relative overflow-hidden"
+        className="max-w-6xl w-full bg-base-200 rounded-lg shadow-lg p-8 space-y-8 border border-base-300 relative overflow-hidden"
         variants={containerVariants}
         initial="hidden"
         animate="visible"

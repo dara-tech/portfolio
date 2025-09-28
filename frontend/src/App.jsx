@@ -75,7 +75,8 @@ function App() {
     <div data-theme={theme}>
       <Router>
         <Navbar />
-        <Routes>
+        <main className="pt-16">
+          <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />
@@ -105,7 +106,8 @@ function App() {
           <Route path="/admin/lessons" element={<ProtectedRoute><LessonManage /></ProtectedRoute>} />
           <Route path="/admin/lessons/new" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
           <Route path="/admin/lessons/edit/:id" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
-        </Routes>
+          </Routes>
+        </main>
       </Router>
     </div>
   );

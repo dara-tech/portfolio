@@ -90,8 +90,7 @@ const SkillsSection = () => {
   };
 
   return (
-    <div className="py-16 px-4 bg-base-100">
-      <div className="container mx-auto px-4">
+    <div className="w-full">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -172,7 +171,6 @@ const SkillsSection = () => {
             </motion.div>
           ))}
         </motion.div>
-      </div>
     </div>
   );
 };
