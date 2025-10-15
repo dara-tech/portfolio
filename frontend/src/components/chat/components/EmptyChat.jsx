@@ -14,38 +14,49 @@ const EmptyChat = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center h-full p-6 space-y-8 bg-gradient-to-b from-base-200 to-base-300">
+    <div className="flex flex-col items-center justify-center h-full p-12 space-y-8">
       <motion.div 
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-primary/20 rounded-full shadow-lg"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.2 }}
+        className="relative"
       >
-        {formData?.profilePic ? (
-          <img src={formData.profilePic} alt="Admin" className="w-20 h-20 rounded-full" />
-        ) : (
-          <Bot size={40} className="text-primary" />
-        )}
+        <div className="w-32 h-32 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-3xl flex items-center justify-center shadow-2xl border border-white/30 backdrop-blur-xl relative before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:rounded-3xl before:pointer-events-none">
+          {formData?.profilePic ? (
+            <img src={formData.profilePic} alt="Admin" className="w-20 h-20 rounded-2xl object-cover" />
+          ) : (
+            <Bot size={56} className="text-white drop-shadow-lg" />
+          )}
+        </div>
+        <div className="absolute -top-3 -right-3 w-10 h-10 bg-green-500/30 rounded-full flex items-center justify-center border border-green-500/40 backdrop-blur-sm shadow-lg">
+          <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+        </div>
       </motion.div>
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Welcome to AI Chat</h2>
-        <p className="text-base text-base-content/70 max-w-md">
-          Your intelligent assistant is ready to help. What would you like to explore today?
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="text-center"
+      >
+        <h2 className="text-5xl font-bold text-white mb-6 drop-shadow-sm">Welcome to AI Assistant</h2>
+        <p className="text-xl text-white/80 max-w-2xl leading-relaxed">
+          Your intelligent companion is ready to help with coding, creative tasks, problem-solving, and much more. 
+          What would you like to explore today?
         </p>
-      </div>
-      <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
-        {suggestions.map((suggestion, index) => (
-          <motion.button
-            key={index}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`flex flex-col items-center justify-center p-4 bg-base-100 rounded-lg shadow-md hover:shadow-lg transition-all ${suggestion.color}`}
-          >
-            {suggestion.icon}
-            <span className="mt-2 text-sm font-medium">{suggestion.text}</span>
-          </motion.button>
-        ))}
-      </div>
+      </motion.div>
+     
+       
+      
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+        className="text-center"
+      >
+   
+     
+      </motion.div>
     </div>
   );
 };

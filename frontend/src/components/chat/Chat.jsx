@@ -238,77 +238,82 @@ const Chat = () => {
   };
 
   return (
-    <div className=" lg:pb-10 flex flex-col h-screen ">
-      <ChatHeader 
-        onClear={clearChat}
-        onRetry={retryLastMessage}
-        isLoading={isLoading}
-        hasMessages={messages.length > 0}
-      />
-
-      <div 
-        ref={chatContainerRef}
-        className="flex-grow overflow-y-auto p-4 space-y-4 scroll-smooth"
-      >
-        {messages.length === 0 && !isTyping && <EmptyChat />}
-
-        {messages.map((message, index) => (
-          <ChatMessage
-            key={index}
-            message={message}
-            index={index}
-            editingMessageId={editingMessageId}
-            editInput={editInput}
-            editTextareaRef={editTextareaRef}
-            copiedMessageId={copiedMessageId}
-            animatingMessages={animatingMessages}
-            onEdit={startEditing}
-            onCopy={copyMessage}
-            onEditInputChange={(e) => setEditInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onCancelEdit={() => setEditingMessageId(null)}
-            onSaveEdit={saveEdit}
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Chat Container */}
+        <div className="rounded-3xl shadow-2xl overflow-hidden relative before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/10 before:to-transparent before:rounded-3xl before:pointer-events-none flex flex-col h-[80vh]">
+          <ChatHeader 
+            onClear={clearChat}
+            onRetry={retryLastMessage}
+            isLoading={isLoading}
+            hasMessages={messages.length > 0}
           />
-        ))}
 
-        {isTyping && (
-          <ChatMessage
-            message={{ role: 'assistant', content: streamedText, type: 'text' }}
-            index={messages.length}
-            editingMessageId={null}
-            copiedMessageId={null}
-            animatingMessages={new Set()}
-            onCopy={() => {}}
+          <div 
+            ref={chatContainerRef}
+            className="flex-grow overflow-y-auto p-8 space-y-8 scroll-smooth relative hide-scrollbar"
+          >
+            {messages.length === 0 && !isTyping && <EmptyChat />}
+
+            {messages.map((message, index) => (
+              <ChatMessage
+                key={index}
+                message={message}
+                index={index}
+                editingMessageId={editingMessageId}
+                editInput={editInput}
+                editTextareaRef={editTextareaRef}
+                copiedMessageId={copiedMessageId}
+                animatingMessages={animatingMessages}
+                onEdit={startEditing}
+                onCopy={copyMessage}
+                onEditInputChange={(e) => setEditInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onCancelEdit={() => setEditingMessageId(null)}
+                onSaveEdit={saveEdit}
+              />
+            ))}
+
+            {isTyping && (
+              <ChatMessage
+                message={{ role: 'assistant', content: streamedText, type: 'text' }}
+                index={messages.length}
+                editingMessageId={null}
+                copiedMessageId={null}
+                animatingMessages={new Set()}
+                onCopy={() => {}}
+              />
+            )}
+
+            <ChatError 
+              error={error}
+              onRetry={retryLastMessage}
+              isLoading={isLoading}
+            />
+            
+            <div ref={messagesEndRef} />
+          </div>
+
+          {showScrollButton && (
+            <button 
+              onClick={scrollToBottom}
+              className="absolute right-8 bottom-24 w-14 h-14 bg-white/10 backdrop-blur-xl text-white border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 flex items-center justify-center shadow-xl hover:shadow-2xl"
+              aria-label="Scroll to bottom"
+            >
+              <ArrowUp size={24} />
+            </button>
+          )}
+
+          <ChatInput
+            input={input}
+            isLoading={isLoading}
+            inputRef={inputRef}
+            onInputChange={(e) => setInput(e.target.value)}
+            onSubmit={handleSubmit}
+            onGenerateImage={handleGenerateImage}
           />
-        )}
-
-        <ChatError 
-          error={error}
-          onRetry={retryLastMessage}
-          isLoading={isLoading}
-        />
-        
-        <div ref={messagesEndRef} />
+        </div>
       </div>
-
-      {showScrollButton && (
-        <button 
-          onClick={scrollToBottom}
-          className="absolute right-4 bottom-24 lg:bottom-20 btn btn-circle btn-sm btn-primary shadow-md hover:shadow-lg transition-shadow"
-          aria-label="Scroll to bottom"
-        >
-          <ArrowUp size={16} />
-        </button>
-      )}
-
-      <ChatInput
-        input={input}
-        isLoading={isLoading}
-        inputRef={inputRef}
-        onInputChange={(e) => setInput(e.target.value)}
-        onSubmit={handleSubmit}
-        onGenerateImage={handleGenerateImage}
-      />
 
       <style>{`
         @keyframes messageAppear {
@@ -320,6 +325,35 @@ const Chat = () => {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+        
+        .glass-container {
+          background: rgba(255, 255, 255, 0.1) !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+          border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .glass-header {
+          background: rgba(255, 255, 255, 0.1) !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+        }
+        
+        .glass-input {
+          background: rgba(255, 255, 255, 0.1) !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+        }
+        
+        /* Hide scrollbar for all browsers */
+        .hide-scrollbar {
+          -ms-overflow-style: none;  /* Internet Explorer 10+ */
+          scrollbar-width: none;  /* Firefox */
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;  /* Safari and Chrome */
         }
       `}</style>
     </div>

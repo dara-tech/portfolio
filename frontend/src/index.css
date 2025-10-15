@@ -543,3 +543,323 @@ code {
 .khmer-text {
   font-family: 'Hanuman', sans-serif;
 }
+/* macOS-inspired design system */
+@layer components {
+  /* Advanced glassmorphism with Safari support */
+  .macos-glass {
+    background: rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .macos-glass-dark {
+    background: rgba(0, 0, 0, 0.15);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Enhanced window styling */
+  .macos-window {
+    box-shadow: 
+      0 32px 64px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* Sophisticated blur system with Safari support */
+  .macos-blur-xs {
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+
+  .macos-blur-sm {
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+
+  .macos-blur {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .macos-blur-md {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .macos-blur-lg {
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  .macos-blur-xl {
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+  }
+
+  .macos-blur-2xl {
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+  }
+
+  /* Advanced shadow system */
+  .macos-shadow-xs {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  .macos-shadow-sm {
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  .macos-shadow {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.08),
+      0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  }
+
+  .macos-shadow-md {
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  }
+
+  .macos-shadow-lg {
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.08),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .macos-shadow-xl {
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .macos-shadow-2xl {
+    box-shadow: 
+      0 50px 100px -20px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Refined border radius system */
+  .macos-rounded-xs {
+    border-radius: 4px;
+  }
+
+  .macos-rounded-sm {
+    border-radius: 6px;
+  }
+
+  .macos-rounded {
+    border-radius: 8px;
+  }
+
+  .macos-rounded-md {
+    border-radius: 12px;
+  }
+
+  .macos-rounded-lg {
+    border-radius: 16px;
+  }
+
+  .macos-rounded-xl {
+    border-radius: 20px;
+  }
+
+  .macos-rounded-2xl {
+    border-radius: 24px;
+  }
+
+  .macos-rounded-3xl {
+    border-radius: 32px;
+  }
+
+  /* Advanced interaction states */
+  .macos-interactive {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+
+  .macos-interactive:hover {
+    transform: translateY(-1px);
+    box-shadow: 
+      0 10px 25px -5px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .macos-interactive:active {
+    transform: translateY(0);
+    transition-duration: 0.1s;
+  }
+
+  /* Enhanced focus system */
+  .macos-focus {
+    outline: none;
+    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .macos-focus:focus-visible {
+    box-shadow: 
+      0 0 0 3px rgba(59, 130, 246, 0.4),
+      0 0 0 6px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Dock system enhancements */
+  .macos-dock {
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .dock-item {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom center;
+  }
+
+  .dock-item:hover {
+    transform: scale(1.15) translateY(-8px);
+  }
+
+  .dock-item:active {
+    transform: scale(1.05) translateY(-4px);
+    transition-duration: 0.1s;
+  }
+
+  .dock-bounce {
+    animation: dockBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  @keyframes dockBounce {
+    0% { transform: scale(1) translateY(0); }
+    25% { transform: scale(1.1) translateY(-4px); }
+    50% { transform: scale(1.2) translateY(-8px); }
+    75% { transform: scale(1.1) translateY(-4px); }
+    100% { transform: scale(1) translateY(0); }
+  }
+
+  /* Window controls refinement */
+  .macos-window-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  .macos-window-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .macos-window-control::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .macos-window-control:hover::before {
+    opacity: 1;
+  }
+
+  .macos-window-control--close {
+    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+  }
+
+  .macos-window-control--minimize {
+    background: linear-gradient(135deg, #ffd93d, #ffb300);
+  }
+
+  .macos-window-control--maximize {
+    background: linear-gradient(135deg, #6bcf7f, #4caf50);
+  }
+
+  /* Enhanced scrollbar styling */
+  .macos-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .macos-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+  }
+
+  .macos-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  .macos-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Advanced text selection */
+  .macos-selection::selection {
+    background: rgba(59, 130, 246, 0.25);
+    color: inherit;
+  }
+
+  .macos-selection::-moz-selection {
+    background: rgba(59, 130, 246, 0.25);
+    color: inherit;
+  }
+
+  /* Separator enhancements */
+  .macos-separator {
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 20%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.1) 80%,
+      transparent 100%
+    );
+  }
+
+  /* Utility classes for advanced layouts */
+  .macos-surface {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .macos-elevated {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .macos-floating {
+    background: rgba(255, 255, 255, 0.12);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+}

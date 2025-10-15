@@ -62,12 +62,16 @@ const Editor = ({ initialValue, onChange }) => {
   };
 
   const buttonClass = (isActive) =>
-    `btn btn-sm ${isActive ? "btn-primary" : "btn-ghost"}`;
+    `w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+      isActive 
+        ? "bg-white/30 text-white border border-white/40" 
+        : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+    }`;
 
   return (
-    <div className="card bg-base-100">
-      <div className="card-body bg-base-200 min-h-screen">
-        <div className="flex flex-wrap gap-2 mb-4">
+    <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden">
+      <div className="bg-white/5 backdrop-blur-sm min-h-screen p-6">
+        <div className="flex flex-wrap gap-3 mb-6">
           {/* Editor control buttons */}
           <button
             className={buttonClass(editor.isActive("bold"))}
@@ -87,10 +91,16 @@ const Editor = ({ initialValue, onChange }) => {
           >
             <UnderlineIcon size={18} />
           </button>
-          <button className="btn btn-sm" onClick={addLink}>
+          <button 
+            className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+            onClick={addLink}
+          >
             <LinkIcon size={18} />
           </button>
-          <button className="btn btn-sm" onClick={addImage}>
+          <button 
+            className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+            onClick={addImage}
+          >
             <ImageIcon size={18} />
           </button>
           <button
@@ -122,29 +132,29 @@ const Editor = ({ initialValue, onChange }) => {
           <select
             value={tone}
             onChange={(e) => setTone(e.target.value)}
-            className="select select-sm w-40 focus:outline-none"
+            className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 w-40"
           >
-            <option value="default">Default</option>
-            <option value="formal">Formal</option>
-            <option value="casual">Casual</option>
-            <option value="creative">Creative</option>
-            <option value="poetic">Poetic</option>
-            <option value="storytelling">Storytelling</option>
+            <option value="default" className="bg-gray-800 text-white">Default</option>
+            <option value="formal" className="bg-gray-800 text-white">Formal</option>
+            <option value="casual" className="bg-gray-800 text-white">Casual</option>
+            <option value="creative" className="bg-gray-800 text-white">Creative</option>
+            <option value="poetic" className="bg-gray-800 text-white">Poetic</option>
+            <option value="storytelling" className="bg-gray-800 text-white">Storytelling</option>
           </select>
 
           {/* Correction type dropdown */}
           <select
             value={correctionType}
             onChange={(e) => setCorrectionType(e.target.value)}
-            className="select select-sm w-40 focus:outline-none"
+            className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 w-40"
           >
-            <option value="grammar">Grammar Correction</option>
-            <option value="word">Word Correction</option>
+            <option value="grammar" className="bg-gray-800 text-white">Grammar Correction</option>
+            <option value="word" className="bg-gray-800 text-white">Word Correction</option>
           </select>
 
           {/* AI suggestion button */}
           <button
-            className="btn btn-sm btn-accent"
+            className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 hover:from-purple-500/30 hover:to-blue-500/30 text-white rounded-lg border border-purple-500/30 hover:border-purple-500/40 transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={generateSuggestion}
             disabled={isLoading}
           >
@@ -154,10 +164,10 @@ const Editor = ({ initialValue, onChange }) => {
 
         {/* Display AI suggestion */}
         {suggestion && (
-          <div className="mt-2 p-3 bg-base-100 rounded">
-            <div dangerouslySetInnerHTML={{ __html: suggestion }} />
+          <div className="mt-4 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+            <div className="text-white/90 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: suggestion }} />
             <button
-              className="btn btn-sm btn-success mt-2"
+              className="mt-3 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg border border-green-500/30 hover:border-green-500/40 transition-all duration-300 font-medium"
               onClick={applySuggestion}
             >
               Apply Suggestion
@@ -166,7 +176,9 @@ const Editor = ({ initialValue, onChange }) => {
         )}
 
         {/* Editor content */}
-        <EditorContent editor={editor} />
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 p-4">
+          <EditorContent editor={editor} />
+        </div>
       </div>
     </div>
   );

@@ -122,14 +122,14 @@ const AdminProjects = () => {
 
   const renderSkeletonCards = () => {
     return Array(6).fill().map((_, index) => (
-      <div key={index} className="card bg-base-200 shadow-xl animate-pulse">
-        <div className="h-48 bg-gray-300 rounded-t-xl"></div>
-        <div className="card-body">
-          <div className="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/2 mb-4"></div>
+      <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 animate-pulse">
+        <div className="h-48 bg-white/20 rounded-xl mb-4"></div>
+        <div className="space-y-3">
+          <div className="h-6 bg-white/20 rounded w-3/4"></div>
+          <div className="h-4 bg-white/20 rounded w-1/2"></div>
           <div className="flex space-x-2">
-            <div className="h-8 bg-gray-300 rounded w-1/4"></div>
-            <div className="h-8 bg-gray-300 rounded w-1/4"></div>
+            <div className="h-8 bg-white/20 rounded w-1/4"></div>
+            <div className="h-8 bg-white/20 rounded w-1/4"></div>
           </div>
         </div>
       </div>
@@ -137,27 +137,27 @@ const AdminProjects = () => {
   };
 
   return (
-    <div className="min-h-screen py-14 bg-base-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-primary">Manage Projects</h1>
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-white mb-6">Manage Projects</h1>
+          <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+            Create, edit, and manage your portfolio projects
+          </p>
           <button
             onClick={() => handleOpenModal()}
-            className="btn btn-primary"
+            className="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-xl border border-white/30 hover:bg-white/30 transition-all duration-300 flex items-center gap-3 mx-auto"
           >
-            <Plus className="w-5 h-5 mr-2" />
+            <Plus className="w-5 h-5" />
             Create New Project
           </button>
         </div>
 
         {error && (
-          <div className="alert alert-error shadow-lg mb-6">
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>{error}</span>
-            </div>
+          <div className="bg-red-500/20 backdrop-blur-sm text-red-400 px-8 py-6 rounded-2xl border border-red-500/30 max-w-md mx-auto mb-8">
+            <h3 className="text-xl font-semibold mb-2">Error Loading Projects</h3>
+            <p>{error}</p>
           </div>
         )}
 
@@ -166,10 +166,17 @@ const AdminProjects = () => {
             {renderSkeletonCards()}
           </div>
         ) : !projects || projects.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-2xl text-gray-500 dark:text-gray-400">
-              No projects found. Add a new project to get started!
-            </p>
+          <div className="text-center">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-12 border border-white/20">
+              <h3 className="text-2xl font-semibold text-white mb-4">No Projects Found</h3>
+              <p className="text-white/70 mb-6">Add a new project to get started!</p>
+              <button
+                onClick={() => handleOpenModal()}
+                className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-xl border border-white/30 hover:bg-white/30 transition-all duration-300"
+              >
+                Create Your First Project
+              </button>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

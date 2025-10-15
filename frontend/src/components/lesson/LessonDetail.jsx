@@ -115,7 +115,7 @@ const LessonDetail = () => {
   const sanitizedDescription = lesson.description ? DOMPurify.sanitize(lesson.description) : '';
 
   return (
-    <div className="card bg-base-100 min-h-screen overflow-hidden">
+    <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 min-h-screen overflow-hidden">
       {lesson.thumbnail && (
         <div className="relative">
           <figure className="relative h-64 md:h-80 w-full">
@@ -128,14 +128,14 @@ const LessonDetail = () => {
                 e.target.src = "/api/placeholder/500/500";
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-base-300/80 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
           </figure>
           <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-md">{lesson.title}</h1>
             {lesson.isAuthor && (
               <button
                 onClick={handleEdit}
-                className="btn btn-primary btn-sm gap-2"
+                className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg border border-white/30 hover:border-white/40 transition-all duration-300 flex items-center gap-2 font-medium"
               >
                 <Edit size={16} />
                 Edit Lesson
@@ -145,26 +145,26 @@ const LessonDetail = () => {
         </div>
       )}
       
-      <div className="card-body relative z-10 -mt-6 bg-base-100 rounded-t-3xl shadow-lg">
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-base-200">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-base-content/70">
+      <div className="relative z-10 -mt-6 bg-white/10 backdrop-blur-sm rounded-t-3xl shadow-lg p-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/20">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-white/70">
             {lesson.duration && (
-              <div className="flex items-center badge badge-outline p-3">
-                <Clock className="w-4 h-4 mr-1" />
+              <div className="flex items-center px-3 py-2 bg-white/10 text-white/80 rounded-full border border-white/20">
+                <Clock className="w-4 h-4 mr-2" />
                 <span>{lesson.duration === "PT30M" ? "30 min" : lesson.duration}</span>
               </div>
             )}
             
             {lesson.category && (
-              <div className="flex items-center badge badge-primary badge-outline p-3">
-                <Tag className="w-4 h-4 mr-1" />
+              <div className="flex items-center px-3 py-2 bg-blue-500/20 text-blue-400 rounded-full border border-blue-500/30">
+                <Tag className="w-4 h-4 mr-2" />
                 <span>{lesson.category}</span>
               </div>
             )}
 
             {lesson.difficulty && (
-              <div className="flex items-center badge badge-secondary badge-outline p-3">
-                <BookOpen className="w-4 h-4 mr-1" />
+              <div className="flex items-center px-3 py-2 bg-purple-500/20 text-purple-400 rounded-full border border-purple-500/30">
+                <BookOpen className="w-4 h-4 mr-2" />
                 <span>{lesson.difficulty}</span>
               </div>
             )}
@@ -173,20 +173,28 @@ const LessonDetail = () => {
           <div className="flex items-center gap-2">
             <button 
               onClick={handleLike}
-              className={`btn btn-sm btn-circle ${isLiked ? 'btn-primary' : 'btn-ghost'}`}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+                isLiked 
+                  ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
+                  : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white'
+              }`}
               aria-label="Like lesson"
             >
               <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
             </button>
             <button 
               onClick={handleBookmark}
-              className={`btn btn-sm btn-circle ${isBookmarked ? 'btn-primary' : 'btn-ghost'}`}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+                isBookmarked 
+                  ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' 
+                  : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white'
+              }`}
               aria-label="Bookmark lesson"
             >
               <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
             </button>
             <button 
-              className="btn btn-sm btn-circle btn-ghost"
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white transition-all duration-300"
               aria-label="Share lesson"
             >
               <Share2 className="w-5 h-5" />
@@ -194,21 +202,33 @@ const LessonDetail = () => {
           </div>
         </div>
         
-        <div className="tabs tabs-bordered my-4">
+        <div className="flex gap-2 my-6">
           <button 
-            className={`tab tab-lg ${activeTab === 'content' ? 'tab-active' : ''}`}
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+              activeTab === 'content' 
+                ? 'bg-white/20 text-white border border-white/40' 
+                : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15 hover:text-white'
+            }`}
             onClick={() => setActiveTab('content')}
           >
             Content
           </button>
           <button 
-            className={`tab tab-lg ${activeTab === 'resources' ? 'tab-active' : ''}`}
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+              activeTab === 'resources' 
+                ? 'bg-white/20 text-white border border-white/40' 
+                : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15 hover:text-white'
+            }`}
             onClick={() => setActiveTab('resources')}
           >
             Resources
           </button>
           <button 
-            className={`tab tab-lg ${activeTab === 'discussion' ? 'tab-active' : ''}`}
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+              activeTab === 'discussion' 
+                ? 'bg-white/20 text-white border border-white/40' 
+                : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15 hover:text-white'
+            }`}
             onClick={() => setActiveTab('discussion')}
           >
             Discussion
@@ -217,13 +237,13 @@ const LessonDetail = () => {
         
         {activeTab === 'content' && (
           <>
-            <div className="bg-base-200 p-4 rounded-lg mb-6">
-              <p className="text-base-content/80 italic">{sanitizedDescription}</p>
+            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 mb-6">
+              <p className="text-white/80 italic text-lg leading-relaxed">{sanitizedDescription}</p>
             </div>
             
             {lesson.content && (
-              <div className="prose prose-lg max-w-none mb-6">
-                <div dangerouslySetInnerHTML={{ __html: processedContent }} />
+              <div className="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/20 mb-6">
+                <div className="prose prose-invert prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: processedContent }} />
               </div>
             )}
           </>

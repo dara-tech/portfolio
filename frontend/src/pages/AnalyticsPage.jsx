@@ -292,9 +292,13 @@ const AnalyticsPage = () => {
   };
 
   if (projectsLoading || videosLoading || roadmapsLoading) {
-    return <div className="flex justify-center items-center h-screen">
-      <div className="loading loading-spinner loading-lg"></div>
-    </div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+          <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        </div>
+      </div>
+    );
   }
 
   const statsCards = [
@@ -322,109 +326,152 @@ const AnalyticsPage = () => {
   ];
 
   return (
-    <div className="py-20 md:py-20 mb-4 px-2 md:px-4 min-h-screen">
-      <div className="flex flex-col gap-4 md:gap-6">
-        <div className="card bg-base-100 border border-primary/10">
-          <div className="card-body p-3 md:p-6">
-            <div className="flex flex-col gap-4">
-              <h1 className="text-2xl md:text-4xl font-bold">Analytics Dashboard</h1>
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-white mb-6">Analytics Dashboard</h1>
+          <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            Track your portfolio performance and engagement metrics
+          </p>
+        </div>
+
+        <div className="space-y-8">
+          {/* Controls Section */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <div className="flex flex-col gap-6">
               
               <div className="flex flex-col md:flex-row gap-4">
-                <div className="tabs tabs-boxed tabs-sm md:tabs-md">
-                  <a 
-                    className={`tab gap-1 md:gap-2 ${periodType === 'fixed' ? 'tab-active' : ''}`}
+                <div className="flex gap-2">
+                  <button 
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                      periodType === 'fixed' 
+                        ? 'bg-white/20 text-white border border-white/30' 
+                        : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                    }`}
                     onClick={() => setPeriodType('fixed')}
                   >
-                    <Calendar className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="text-xs md:text-sm">Fixed Period</span>
-                  </a>
-                  <a 
-                    className={`tab gap-1 md:gap-2 ${periodType === 'relative' ? 'tab-active' : ''}`}
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-sm">Fixed Period</span>
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                      periodType === 'relative' 
+                        ? 'bg-white/20 text-white border border-white/30' 
+                        : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                    }`}
                     onClick={() => setPeriodType('relative')}
                   >
-                    <Clock className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="text-xs md:text-sm">Relative</span>
-                  </a>
+                    <Clock className="w-4 h-4" />
+                    <span className="text-sm">Relative</span>
+                  </button>
                 </div>
 
-                <div className="tabs tabs-boxed tabs-sm md:tabs-md">
-                  <a 
-                    className={`tab gap-1 md:gap-2 ${chartType === 'bar' ? 'tab-active' : ''}`}
+                <div className="flex gap-2">
+                  <button 
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                      chartType === 'bar' 
+                        ? 'bg-white/20 text-white border border-white/30' 
+                        : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                    }`}
                     onClick={() => setChartType('bar')}
                   >
-                    <BarChart2 className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="text-xs md:text-sm">Bar</span>
-                  </a>
-                  <a 
-                    className={`tab gap-1 md:gap-2 ${chartType === 'line' ? 'tab-active' : ''}`}
+                    <BarChart2 className="w-4 h-4" />
+                    <span className="text-sm">Bar</span>
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                      chartType === 'line' 
+                        ? 'bg-white/20 text-white border border-white/30' 
+                        : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                    }`}
                     onClick={() => setChartType('line')}
                   >
-                    <TrendingUp className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="text-xs md:text-sm">Line</span>
-                  </a>
-                  <a 
-                    className={`tab gap-1 md:gap-2 ${chartType === 'doughnut' ? 'tab-active' : ''}`}
+                    <TrendingUp className="w-4 h-4" />
+                    <span className="text-sm">Line</span>
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                      chartType === 'doughnut' 
+                        ? 'bg-white/20 text-white border border-white/30' 
+                        : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                    }`}
                     onClick={() => setChartType('doughnut')}
                   >
-                    <PieChart className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="text-xs md:text-sm">Doughnut</span>
-                  </a>
+                    <PieChart className="w-4 h-4" />
+                    <span className="text-sm">Doughnut</span>
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div className="divider my-2 md:my-4"></div>
+            <div className="border-t border-white/20 my-6"></div>
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="tabs tabs-boxed tabs-sm md:tabs-md w-full md:w-auto">
-                <a 
-                  className={`tab gap-1 md:gap-2 ${viewByContent === 'all' ? 'tab-active' : ''}`}
+              <div className="flex gap-2 flex-wrap">
+                <button 
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                    viewByContent === 'all' 
+                      ? 'bg-white/20 text-white border border-white/30' 
+                      : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                  }`}
                   onClick={() => setViewByContent('all')}
                 >
-                  <Eye className="w-3 h-3 md:w-4 md:h-4" />
-                  <span className="text-xs md:text-sm">All Content</span>
-                </a>
-                <a 
-                  className={`tab gap-1 md:gap-2 ${viewByContent === 'projects' ? 'tab-active' : ''}`}
+                  <Eye className="w-4 h-4" />
+                  <span className="text-sm">All Content</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                    viewByContent === 'projects' 
+                      ? 'bg-white/20 text-white border border-white/30' 
+                      : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                  }`}
                   onClick={() => setViewByContent('projects')}
                 >
-                  <FileText className="w-3 h-3 md:w-4 md:h-4" />
-                  <span className="text-xs md:text-sm">Projects</span>
-                </a>
-                <a 
-                  className={`tab gap-1 md:gap-2 ${viewByContent === 'videos' ? 'tab-active' : ''}`}
+                  <FileText className="w-4 h-4" />
+                  <span className="text-sm">Projects</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                    viewByContent === 'videos' 
+                      ? 'bg-white/20 text-white border border-white/30' 
+                      : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                  }`}
                   onClick={() => setViewByContent('videos')}
                 >
-                  <VideoIcon className="w-3 h-3 md:w-4 md:h-4" />
-                  <span className="text-xs md:text-sm">Videos</span>
-                </a>
-                <a 
-                  className={`tab gap-1 md:gap-2 ${viewByContent === 'roadmaps' ? 'tab-active' : ''}`}
+                  <VideoIcon className="w-4 h-4" />
+                  <span className="text-sm">Videos</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                    viewByContent === 'roadmaps' 
+                      ? 'bg-white/20 text-white border border-white/30' 
+                      : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/15'
+                  }`}
                   onClick={() => setViewByContent('roadmaps')}
                 >
-                  <Map className="w-3 h-3 md:w-4 md:h-4" />
-                  <span className="text-xs md:text-sm">Roadmaps</span>
-                </a>
+                  <Map className="w-4 h-4" />
+                  <span className="text-sm">Roadmaps</span>
+                </button>
               </div>
 
               <div className="w-full md:w-auto">
                 {periodType === 'fixed' ? (
-                  <div className="join bg-base-200 rounded-lg border border-primary/10 p-2 flex flex-col md:flex-row gap-2">
-                    <div className="join-item flex flex-col w-full md:w-auto">
-                      <span className="text-xs text-base-content/70 mb-1">Start Date</span>
+                  <div className="flex flex-col md:flex-row gap-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/20 p-4">
+                    <div className="flex flex-col">
+                      <span className="text-xs text-white/70 mb-2">Start Date</span>
                       <input
                         type="date"
-                        className="input input-sm input-ghost w-full focus:outline-none"
+                        className="px-3 py-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30"
                         value={customRange.start}
                         onChange={(e) => setCustomRange(prev => ({...prev, start: e.target.value}))}
                       />
                     </div>
-                    <div className="divider divider-horizontal hidden md:block"></div>
-                    <div className="join-item flex flex-col w-full md:w-auto">
-                      <span className="text-xs text-base-content/70 mb-1">End Date</span>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-white/70 mb-2">End Date</span>
                       <input
                         type="date"
-                        className="input input-sm input-ghost w-full focus:outline-none"
+                        className="px-3 py-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30"
                         value={customRange.end}
                         onChange={(e) => setCustomRange(prev => ({...prev, end: e.target.value}))}
                       />
@@ -432,89 +479,83 @@ const AnalyticsPage = () => {
                   </div>
                 ) : (
                   <select 
-                    className="select select-bordered select-primary w-full md:w-auto focus:outline-none"
+                    className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30"
                     value={timeFilter}
                     onChange={(e) => setTimeFilter(e.target.value)}
                   >
-                    <option value="day">Last 24 Hours</option>
-                    <option value="week">Last 7 Days</option>
-                    <option value="month">Last 30 Days</option>
-                    <option value="quarter">Last Quarter</option>
-                    <option value="year">Last Year</option>
+                    <option value="day" className="bg-gray-800 text-white">Last 24 Hours</option>
+                    <option value="week" className="bg-gray-800 text-white">Last 7 Days</option>
+                    <option value="month" className="bg-gray-800 text-white">Last 30 Days</option>
+                    <option value="quarter" className="bg-gray-800 text-white">Last Quarter</option>
+                    <option value="year" className="bg-gray-800 text-white">Last Year</option>
                   </select>
                 )}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Stats Cards */}
-        <div className="stats stats-vertical lg:stats-horizontal bg-base-200 border border-primary/10">
-          {statsCards.map((stat, index) => (
-            <div className="stat p-3 md:p-4" key={index}>
-              <div className={`stat-figure text-${stat.color}`}>
-                <div>
-                  <div className={`bg-${stat.color} text-${stat.color}-content rounded-full w-12 h-12 md:w-16 md:h-16 flex items-center justify-center`}>
-                    <stat.icon className="w-6 h-6 md:w-8 md:h-8" />
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {statsCards.map((stat, index) => (
+              <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {stat.growth > 0 ? (
+                      <TrendingUp className="w-4 h-4 text-green-400" />
+                    ) : (
+                      <TrendingDown className="w-4 h-4 text-red-400" />
+                    )}
+                    <span className={`text-sm ${stat.growth > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {Math.abs(stat.growth).toFixed(1)}%
+                    </span>
                   </div>
                 </div>
+                <div className="text-2xl font-bold text-white mb-1">{stat.value.toLocaleString()}</div>
+                <div className="text-white/70 text-sm">{stat.title}</div>
               </div>
-              <div className="stat-title text-sm md:text-base">{stat.title}</div>
-              <div className={`stat-value text-lg md:text-2xl text-${stat.color}`}>
-                {stat.value.toLocaleString()}
-              </div>
-              <div className="stat-desc flex items-center gap-1 text-xs md:text-sm">
-                {stat.growth > 0 ? (
-                  <TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-success" />
-                ) : (
-                  <TrendingDown className="w-3 h-3 md:w-4 md:h-4 text-error" />
-                )}
-                {Math.abs(stat.growth).toFixed(1)}% from previous period
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Content-specific views */}
-        {viewByContent !== 'all' && stats.contentViews.length > 0 && (
-          <div className="card bg-base-200 border border-primary/10">
-            <div className="card-body p-3 md:p-6">
-              <h3 className="card-title text-xl md:text-2xl font-bold">Top {viewByContent}</h3>
+          {/* Content-specific views */}
+          {viewByContent !== 'all' && stats.contentViews.length > 0 && (
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+              <h3 className="text-2xl font-bold text-white mb-6">Top {viewByContent}</h3>
               <div className="overflow-x-auto">
-                <table className="table table-sm md:table-md">
+                <table className="w-full">
                   <thead>
-                    <tr>
-                      <th className="text-sm md:text-base">Title</th>
-                      <th className="text-sm md:text-base">Views</th>
+                    <tr className="border-b border-white/20">
+                      <th className="text-left text-white/70 py-3 px-4">Title</th>
+                      <th className="text-right text-white/70 py-3 px-4">Views</th>
                     </tr>
                   </thead>
                   <tbody>
                     {stats.contentViews.map((item, index) => (
-                      <tr key={index}>
-                        <td className="text-sm md:text-base">{truncateTitle(item.title)}</td>
-                        <td className="text-sm md:text-base">{item.views.toLocaleString()}</td>
+                      <tr key={index} className="border-b border-white/10">
+                        <td className="text-white py-3 px-4">{truncateTitle(item.title)}</td>
+                        <td className="text-white text-right py-3 px-4">{item.views.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-          {[
-            { title: 'Project Views', icon: Eye, data: projectChartData },
-            { title: 'Video Views', icon: VideoIcon, data: videoChartData }
-          ].map((chart, index) => (
-            <div key={index} className="card bg-base-200 border border-primary/10">
-              <div className="card-body p-3 md:p-6">
-                <h3 className="card-title text-xl md:text-2xl font-bold flex items-center gap-2">
-                  <chart.icon className="w-5 h-5 md:w-6 md:h-6" />
+          {/* Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {[
+              { title: 'Project Views', icon: Eye, data: projectChartData },
+              { title: 'Video Views', icon: VideoIcon, data: videoChartData }
+            ].map((chart, index) => (
+              <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                  <chart.icon className="w-6 h-6" />
                   {chart.title}
                 </h3>
-                <div className="h-[300px] md:h-[400px]">
+                <div className="h-[400px]">
                   {chartType === 'bar' ? (
                     <Bar data={chart.data} options={chartOptions} />
                   ) : chartType === 'line' ? (
@@ -524,8 +565,8 @@ const AnalyticsPage = () => {
                   )}
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

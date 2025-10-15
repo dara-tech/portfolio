@@ -1,15 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import VideoCard from '../components/video/VideoCard';
 import useVideo from '../hooks/useVideo';
-import { Search, Filter } from 'lucide-react';
-import { Loading } from '../components/common/Loading';
 
 const VideoPage = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const videosPerPage = 6;
   const { getAllVideos } = useVideo();
@@ -28,46 +24,16 @@ const VideoPage = () => {
     fetchVideos();
   }, [getAllVideos]);
 
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(videos.map(video => video.category || 'Uncategorized'))];
-    return ['all', ...uniqueCategories];
-  }, [videos]);
-
-  const filteredVideos = useMemo(() => {
-    return videos.filter(video => {
-      const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || video.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [videos, searchTerm, selectedCategory]);
-
-  const totalPages = Math.ceil(filteredVideos.length / videosPerPage);
+  const totalPages = Math.ceil(videos.length / videosPerPage);
   const indexOfLastVideo = currentPage * videosPerPage;
   const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
-  const currentVideos = filteredVideos.slice(indexOfFirstVideo, indexOfLastVideo);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedCategory]);
-
-  const renderSkeletonLoaders = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[...Array(6)].map((_, index) => (
-        <div key={index} className="card bg-base-100 shadow-xl animate-pulse">
-          <div className="h-48 bg-base-300 rounded-t-xl"></div>
-          <div className="card-body">
-            <div className="h-4 bg-base-300 rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-base-300 rounded w-1/2"></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  const currentVideos = videos.slice(indexOfFirstVideo, indexOfLastVideo);
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="alert alert-error">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-red-500/[0.15] backdrop-blur-xl text-red-400 px-8 py-6 rounded-3xl border border-red-500/20 max-w-md shadow-2xl">
+          <h3 className="text-xl font-semibold mb-2">Error Loading Videos</h3>
           <p>{error}</p>
         </div>
       </div>
@@ -75,75 +41,74 @@ const VideoPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-24 min-h-screen ">
-      <div className="flex flex-col gap-8">
-        <h1 className="text-4xl font-bold">Videos</h1>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search videos..."
-              className="input input-bordered w-full pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col gap-8">
+          {/* Header Section */}
+          <div className="text-center mb-8 relative z-10">
+            <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">Video Library</h1>
+            <p className="text-xl text-white/70 max-w-3xl mx-auto drop-shadow-sm">
+              Discover tutorials, walkthroughs, and educational content
+            </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Filter className="text-gray-400" />
-            <select
-              className="select select-bordered"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {loading ? renderSkeletonLoaders() : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentVideos.map(video => (
               <VideoCard key={video._id} video={video} />
             ))}
           </div>
-        )}
 
-        {totalPages > 1 && (
-          <div className="flex justify-center gap-2 mb-20">
-            <button
-              className="btn btn-circle btn-sm"
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-            >
-              «
-            </button>
-            
-            {[...Array(totalPages)].map((_, i) => (
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-12">
               <button
-                key={i + 1}
-                className={`btn btn-circle btn-sm ${currentPage === i + 1 ? 'btn-primary' : ''}`}
-                onClick={() => setCurrentPage(i + 1)}
+                className="flex items-center gap-2 px-4 py-2 bg-white/[0.08] backdrop-blur-xl text-white border border-white/[0.12] rounded-2xl hover:bg-white/[0.12] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
               >
-                {i + 1}
+                Previous
               </button>
-            ))}
-            
-            <button
-              className="btn btn-circle btn-sm"
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-            >
-              »
-            </button>
-          </div>
-        )}
+              
+              <div className="flex items-center gap-1">
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`w-10 h-10 rounded-2xl transition-all duration-300 flex items-center justify-center shadow-lg ${
+                      currentPage === i + 1 
+                        ? 'bg-blue-500/20 text-white border border-blue-400/30 shadow-xl backdrop-blur-xl' 
+                        : 'bg-white/[0.08] backdrop-blur-xl text-white border border-white/[0.12] hover:bg-white/[0.12]'
+                    }`}
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+              
+              <button
+                className="flex items-center gap-2 px-4 py-2 bg-white/[0.08] backdrop-blur-xl text-white border border-white/[0.12] rounded-2xl hover:bg-white/[0.12] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
+
+          {/* No Results Message */}
+          {videos.length === 0 && !loading && (
+            <div className="text-center py-16">
+              <div className="bg-white/[0.06] backdrop-blur-2xl rounded-3xl p-12 border border-white/[0.08] max-w-md mx-auto shadow-2xl">
+                <div className="w-16 h-16 bg-white/[0.08] backdrop-blur-xl rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">No videos found</h3>
+                <p className="text-white/60 mb-4">
+                  No videos are available at the moment
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

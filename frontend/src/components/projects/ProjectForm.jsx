@@ -27,69 +27,69 @@ const ProjectForm = ({ formData, onSubmit, onChange, onImageChange, onTechnology
   return (
     <form onSubmit={onSubmit}>
 
-      <div className="flex flex-col gap-2">
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Title</span>
+      <div className="flex flex-col gap-6">
+      <div className="space-y-2">
+        <label className="block text-white/80 text-sm font-medium">
+          Title
         </label>
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={onChange}
-          className="input input-bordered focus:border-primary w-full focus:outline-none"
+          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
           required
           placeholder="Enter project title"
         />
       </div>
       
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Description</span>
+      <div className="space-y-2">
+        <label className="block text-white/80 text-sm font-medium">
+          Description
         </label>
         <textarea
           name="description"
           value={formData.description}
           onChange={onChange}
-          className="textarea textarea-bordered focus:border-primary focus:outline-none w-full h-24"
+          className="w-full px-4 py-3 bg-white/10  border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all h-24 resize-none"
           required
           placeholder="Enter project description"
         ></textarea>
       </div>
 
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Category</span>
+      <div className="space-y-2">
+        <label className="block text-white/80 text-sm font-medium">
+          Category
         </label>
         <input
           type="text"
           name="category"
           value={formData.category}
           onChange={onChange}
-          className="input input-bordered focus:border-primary w-full focus:outline-none"
+          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
           placeholder="Enter project category"
         />
       </div>
 
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Technologies</span>
+      <div className="space-y-2">
+        <label className="block text-white/80 text-sm font-medium">
+          Technologies
         </label>
-        <div className="flex flex-wrap gap-2 mb-2">
+        <div className="flex flex-wrap gap-2 mb-3">
           {formData.technologies.map((tech, index) => (
-            <span key={index} className="badge badge-primary gap-1">
+            <span key={index} className="bg-white/20  text-white px-3 py-1 rounded-lg border border-white/30 flex items-center gap-2 text-sm">
               {tech}
-              <button type="button" onClick={() => onTechnologyRemove(tech)}>
+              <button type="button" onClick={() => onTechnologyRemove(tech)} className="hover:bg-white/20 rounded-full p-1 transition-colors">
                 <X size={14} />
               </button>
             </span>
           ))}
         </div>
-        <div className="input-group">
+        <div className="flex gap-2">
           <input
             type="text"
             placeholder="Add a technology"
-            className="input input-bordered w-full focus:outline-none"
+            className="flex-1 px-4 py-3 bg-white/10  border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
@@ -98,16 +98,15 @@ const ProjectForm = ({ formData, onSubmit, onChange, onImageChange, onTechnology
               }
             }}
           />
-          
         </div>
       </div>
 
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Image</span>
+      <div className="space-y-2">
+        <label className="block text-white/80 text-sm font-medium">
+          Image
         </label>
         <div 
-          className={`border-2 border-dashed hover:border-primary rounded-lg p-4 text-center ${dragActive ? 'border-primary' : 'border-gray-300'}`}
+          className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${dragActive ? 'border-white/50 bg-white/10' : 'border-white/30 hover:border-white/50'} bg-white/5 `}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
@@ -122,54 +121,54 @@ const ProjectForm = ({ formData, onSubmit, onChange, onImageChange, onTechnology
             accept="image/*"
           />
           <label htmlFor="image-upload" className="cursor-pointer">
-            <Upload className="mx-auto h-12 w-12 text-primary" />
-            <p className="mt-2 text-sm text-gray-500">
+            <Upload className="mx-auto h-12 w-12 text-white/70" />
+            <p className="mt-2 text-sm text-white/70">
               Drag and drop an image here, or click to select a file
             </p>
           </label>
         </div>
         {formData.image && (
-          <div className="mt-2">
-            <img src={formData.image} alt="Project" className="w-full h-auto rounded-lg" />
+          <div className="mt-3">
+            <img src={formData.image} alt="Project" className="w-full h-auto rounded-xl border border-white/20" />
           </div>
         )}
       </div>
 
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">GitHub Link</span>
+      <div className="space-y-2">
+        <label className="block text-white/80 text-sm font-medium">
+          GitHub Link
         </label>
-        <div className="input-group">
+        <div className="flex gap-2">
           <input
             type="url"
             name="githubLink"
             value={formData.githubLink}
             onChange={onChange}
-            className="input input-bordered focus:border-primary w-full focus:outline-none"
+            className="w-full px-4 py-3 bg-white/10  border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
             placeholder="https://github.com/username/repo"
           />
         </div>
       </div>
 
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Live Demo Link</span>
+      <div className="space-y-2">
+        <label className="block text-white/80 text-sm font-medium">
+          Live Demo Link
         </label>
-        <div className="input-group">
+        <div className="flex gap-2">
           <input
             type="url"
             name="liveDemoLink"
             value={formData.liveDemoLink}
             onChange={onChange}
-            className="input input-bordered focus:border-primary w-full focus:outline-none"
+            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
             placeholder="https://example.com"
           />
         </div>
       </div>
 
-      <div className="mt-6">
-        <button type="submit" className="btn btn-primary w-full">
-          {formData.id ? 'Update' : 'Create'}
+      <div className="mt-8">
+        <button type="submit" className="w-full py-3 bg-white/20 border border-white/30 rounded-xl text-white font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          {formData.id ? 'Update Project' : 'Create Project'}
         </button>
       </div>
       </div>

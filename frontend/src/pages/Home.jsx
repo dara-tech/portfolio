@@ -19,25 +19,26 @@ const Home = () => {
   });
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative">
+    <div className="min-h-screen bg-transparent">
+      {/* Hero Section - Full presentation layout */}
+      <section className="relative min-h-screen flex items-center justify-center">
         <HeroCard />
       </section>
 
-      {/* Skills Section */}
-      <section className="py-20 bg-base-100">
-        <div className="container mx-auto px-4">
+      {/* Skills Section - Clean presentation style */}
+      <section className=" bg-transparent">
+        <div className="max-w-7xl mx-auto px-4">
+         
           <SkillsSection />
         </div>
       </section>
 
-      {/* Featured Projects Preview */}
-      <section className="py-20 bg-base-200">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-base-content mb-4">Featured Projects</h2>
-            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+      {/* Featured Projects Preview - Clean presentation style */}
+      <section className=" py-20 bg-transparent">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold text-white mb-6">Featured Projects</h2>
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Explore some of my recent work and creative projects
             </p>
           </div>
@@ -45,25 +46,20 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Videos Preview */}
-      <section className="py-20 bg-base-100">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-base-content mb-4">Latest Videos</h2>
-            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
-              Watch my latest tutorials and project walkthroughs
-            </p>
-          </div>
+      {/* Featured Videos Preview - Clean presentation style */}
+      <section className=" bg-transparent">
+        <div className="max-w-7xl mx-auto px-4">
+        
           <VideoPage />
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-20 bg-base-200">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-base-content mb-4">Get In Touch</h2>
-            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+      {/* Contact Section - Clean presentation style */}
+      <section className=" bg-transparent">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold text-white mb-6">Get In Touch</h2>
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Ready to work together? Let's discuss your next project
             </p>
           </div>

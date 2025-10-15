@@ -59,7 +59,7 @@ const ChatMessage = ({
       {message.role === 'assistant' && (
         <div className="chat-image avatar">
           {formData?.profilePic ? (
-            <div className="w-10 h-10 rounded-full overflow-hidden">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg">
               <img
                 src={formData.profilePic}
                 alt="Admin"
@@ -67,7 +67,7 @@ const ChatMessage = ({
               />
             </div>
           ) : (
-            <div className="p-2 rounded-full bg-primary/20 text-primary grid place-items-center">
+            <div className="p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border border-white/20 shadow-lg grid place-items-center">
               <Bot size={20} />
             </div>
           )}
@@ -77,9 +77,9 @@ const ChatMessage = ({
       <div
         className={`chat-bubble ${
           message.role === 'user'
-            ? 'chat-bubble-primary text-primary-content'
-            : 'chat-bubble-secondary text-secondary-content'
-        } shadow-md relative group transition-all duration-200 ${
+            ? 'bg-white/20 backdrop-blur-xl text-white border border-white/30 shadow-xl'
+            : 'bg-white/10 backdrop-blur-xl text-white border border-white/20 shadow-xl'
+        } relative group transition-all duration-200 ${
           animatingMessages.has(index) ? 'origin-left' : ''
         } max-w-[80%] break-words`}
       >
@@ -90,23 +90,23 @@ const ChatMessage = ({
               value={editInput}
               onChange={onEditInputChange}
               onKeyDown={(e) => onKeyDown(e, index)}
-              className="textarea my-2 rounded-lg textarea-bordered w-full min-h-[100px] text-primary resize-none focus:outline-none focus:border-primary"
+              className="textarea my-2 rounded-lg bg-white/10 backdrop-blur-xl border border-white/30 text-white placeholder-white/60 w-full min-h-[100px] resize-none focus:outline-none focus:border-white/50 focus:ring-2 focus:ring-white/20"
               placeholder="Edit your message..."
             />
             <div className="flex justify-between items-center text-xs">
-              <span className="text-base-content/60">
+              <span className="text-white/60">
                 Press Enter to save, Esc to cancel
               </span>
               <div className="flex gap-2">
                 <button
                   onClick={onCancelEdit}
-                  className="btn btn-xs btn-ghost hover:bg-base-200 transition-colors"
+                  className="btn btn-xs bg-white/10 backdrop-blur-xl text-white border border-white/20 hover:bg-white/20 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => onSaveEdit(index)}
-                  className="btn btn-xs btn-primary transition-all hover:scale-105"
+                  className="btn btn-xs bg-white/20 backdrop-blur-xl text-white border border-white/30 hover:bg-white/30 transition-all hover:scale-105"
                   disabled={!editInput.trim()}
                 >
                   Save
@@ -120,28 +120,28 @@ const ChatMessage = ({
               renderMessageContent(message)
             ) : (
               <div
-                className="prose prose-sm max-w-none"
+                className="prose prose-sm max-w-none prose-invert"
                 dangerouslySetInnerHTML={renderMessageContent(message)}
               />
             )}
 
             <div className="absolute -top-2 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0">
-              <div className="flex gap-1 bg-base-100/90 backdrop-blur-sm rounded-full p-1 shadow-lg border border-base-200">
+              <div className="flex gap-1 bg-white/10 backdrop-blur-xl rounded-full p-1 shadow-lg border border-white/20">
                 {message.type === 'image' ? (
                   <button
                     onClick={() => handleDownload(message.content)}
-                    className="btn btn-xs btn-ghost p-1.5 rounded-full hover:bg-base-200 transition-all duration-200 hover:scale-110"
+                    className="btn btn-xs bg-transparent text-white/70 hover:text-white p-1.5 rounded-full hover:bg-white/20 transition-all duration-200 hover:scale-110 border-none"
                     title="Download image"
                   >
-                    <Download size={14} className="text-base-content/70" />
+                    <Download size={14} />
                   </button>
                 ) : (
                   <button
                     onClick={() => onCopy(message.content, index)}
-                    className={`btn btn-xs btn-ghost p-1.5 rounded-full transition-all duration-200 ${
+                    className={`btn btn-xs bg-transparent p-1.5 rounded-full transition-all duration-200 border-none ${
                       copiedMessageId === index
-                        ? 'bg-success/20 text-success hover:bg-success/30'
-                        : 'hover:bg-base-200 hover:scale-110'
+                        ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                        : 'text-white/70 hover:text-white hover:bg-white/20 hover:scale-110'
                     }`}
                     title={copiedMessageId === index ? 'Copied!' : 'Copy message'}
                   >
@@ -154,10 +154,10 @@ const ChatMessage = ({
                 {message.role === 'user' && message.type !== 'image' && (
                   <button
                     onClick={() => onEdit(index, message.content)}
-                    className="btn btn-xs btn-ghost p-1.5 rounded-full hover:bg-base-200 transition-all duration-200 hover:scale-110"
+                    className="btn btn-xs bg-transparent text-white/70 hover:text-white p-1.5 rounded-full hover:bg-white/20 transition-all duration-200 hover:scale-110 border-none"
                     title="Edit message"
                   >
-                    <Edit2 size={14} className="text-base-content/70" />
+                    <Edit2 size={14} />
                   </button>
                 )}
               </div>

@@ -95,12 +95,12 @@ const SkillsSection = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-base-content mb-4">
+          <h2 className="text-5xl font-bold text-white mb-6">
             Skills & Expertise
           </h2>
-          <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto">
             A comprehensive overview of my technical skills and professional expertise
           </p>
         </motion.div>
@@ -109,34 +109,34 @@ const SkillsSection = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {Object.entries(skillCategories).map(([category, config]) => (
             <motion.div
               key={category}
               variants={cardVariants}
-              className="bg-base-200 rounded-lg p-6 border border-base-300 hover:shadow-md transition-shadow duration-300"
+              className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20 hover:bg-white/15 transition-all duration-300"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
-                  <div className="text-primary">
+                  <div className="text-white/80">
                     {config.icon}
                   </div>
-                  <h3 className="text-xl font-semibold text-base-content">{category}</h3>
+                  <h3 className="text-2xl font-semibold text-white">{category}</h3>
                 </div>
                 <button
                   onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                  className="text-base-content/70 hover:text-primary transition-colors"
+                  className="text-white/70 hover:text-white transition-colors"
                 >
                   {selectedCategory === category ? (
-                    <ChevronUp className="w-5 h-5" />
+                    <ChevronUp className="w-6 h-6" />
                   ) : (
-                    <ChevronDown className="w-5 h-5" />
+                    <ChevronDown className="w-6 h-6" />
                   )}
                 </button>
               </div>
 
-              <p className="text-base-content/70 mb-4 text-sm">
+              <p className="text-white/80 mb-6 text-lg">
                 {config.description}
               </p>
 
@@ -153,13 +153,13 @@ const SkillsSection = () => {
                       <motion.div
                         key={skill}
                         variants={skillVariants}
-                        className="flex items-center justify-between p-3 bg-base-100 rounded border border-base-300"
+                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all duration-300"
                       >
-                        <span className="font-medium text-base-content">{skill}</span>
-                        <span className={`text-xs px-2 py-1 rounded ${
+                        <span className="font-medium text-white text-lg">{skill}</span>
+                        <span className={`text-sm px-3 py-1 rounded-full ${
                           getSkillLevel(skill) === "Expert" 
-                            ? "bg-success/20 text-success" 
-                            : "bg-base-300 text-base-content/70"
+                            ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+                            : "bg-white/10 text-white/70 border border-white/20"
                         }`}>
                           {getSkillLevel(skill)}
                         </span>

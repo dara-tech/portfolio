@@ -8,7 +8,7 @@ import AdminRegister from './pages/AdminRegister';
 import AdminDashboard from './pages/AdminDashboard';
 import AnalyticsPage from './pages/AnalyticsPage';
 import AdminProjects from './pages/AdminProjects';
-import Navbar from './components/navbar';
+import MacOSLayout from './components/layout/MacOSLayout';
 import ProtectedRoute from './components/lib/projectdRoute';
 import ProjectDetail from './components/projects/ProjectDetail';
 import Profile from './pages/Profile';
@@ -74,8 +74,7 @@ function App() {
   return (
     <div data-theme={theme}>
       <Router>
-        <Navbar />
-        <main className="pt-16">
+        <MacOSLayout>
           <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
@@ -107,7 +106,7 @@ function App() {
           <Route path="/admin/lessons/new" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
           <Route path="/admin/lessons/edit/:id" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
           </Routes>
-        </main>
+        </MacOSLayout>
       </Router>
     </div>
   );

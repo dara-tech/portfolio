@@ -19,29 +19,29 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="card w-full max-w-md bg-base-100 shadow-2xl"
+        className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl"
       >
-        <div className="card-body p-8">
-          <h2 className="card-title text-3xl font-bold text-center mb-8 text-primary">Admin Login</h2>
+        <div className="p-8">
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">Admin Login</h2>
           {error && (
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              className="alert alert-error mb-6 shadow-lg"
+              className="bg-red-800 border border-red-500/30 rounded-lg p-4 mb-6 flex items-center gap-3"
             >
-              <AlertCircle className="w-6 h-6" />
-              <span>{error}</span>
+              <AlertCircle className="w-6 h-6 text-red-300" />
+              <span className="text-red-100">{error}</span>
             </motion.div>
           )}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-base font-semibold">Username</span>
+            <div className="space-y-2">
+              <label className="block text-white/80 text-sm font-medium">
+                Username
               </label>
               <div className="relative">
                 <input
@@ -49,16 +49,16 @@ const AdminLogin = () => {
                   name="username"
                   value={credentials.username}
                   onChange={handleChange}
-                  className="input input-bordered focus:input-primary focus:outline-none w-full pl-10 pr-4 py-2"
+                  className="w-full pl-10 pr-4 py-3 bg-white/10  border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
                   placeholder="Enter your username"
                   required
                 />
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50 w-5 h-5" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
               </div>
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-base font-semibold">Password</span>
+            <div className="space-y-2">
+              <label className="block text-white/80 text-sm font-medium">
+                Password
               </label>
               <div className="relative">
                 <input
@@ -66,45 +66,42 @@ const AdminLogin = () => {
                   name="password"
                   value={credentials.password}
                   onChange={handleChange}
-                  className="input input-bordered focus:input-primary focus:outline-none w-full pl-10 pr-10 py-2"
+                  className="w-full pl-10 pr-10 py-3 bg-white/10 d border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
                   placeholder="Enter your password"
                   required
                 />
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50 w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/50 hover:text-primary transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
-            <div className="form-control mt-8">
+            <div className="pt-4">
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 type="submit"
-                className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
+                className="w-full py-3 bg-white/20 border border-white/30 rounded-lg text-white font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                 disabled={loading}
               >
                 {loading ? (
-                  "Logging in..."
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Logging in...
+                  </div>
                 ) : (
                   <>
-                    <LogIn className="w-5 h-5 mr-2" />
+                    <LogIn className="w-5 h-5" />
                     Login
                   </>
                 )}
               </motion.button>
             </div>
           </form>
-          {/* <div className="divider my-8">OR</div>
-          <div className="text-center">
-            <a href="/forgot-password" className="link link-primary text-sm hover:underline">
-              Forgot Password?
-            </a>
-          </div> */}
         </div>
       </motion.div>
     </div>

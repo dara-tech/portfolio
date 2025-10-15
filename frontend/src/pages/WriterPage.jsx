@@ -21,18 +21,22 @@ const WriterPage = () => {
   };
 
   return (
-    <WriterLayout content={content} onEditorChange={setContent}>
-      <motion.div className="">
-        {/* <form onSubmit={handleSubmit}>
-          <div className="flex gap-2">
-            <button type="submit" className="btn btn-primary flex items-center gap-2">
-              {isLoading ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
-              {isLoading ? 'Submitting...' : 'Submit'}
-            </button>
-          </div>
-        </form> */}
-      </motion.div>
-    </WriterLayout>
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-6xl mx-auto">
+        <WriterLayout content={content} onEditorChange={setContent}>
+          <motion.div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-8">
+            {/* <form onSubmit={handleSubmit}>
+              <div className="flex gap-2">
+                <button type="submit" className="btn btn-primary flex items-center gap-2">
+                  {isLoading ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
+                  {isLoading ? 'Submitting...' : 'Submit'}
+                </button>
+              </div>
+            </form> */}
+          </motion.div>
+        </WriterLayout>
+      </div>
+    </div>
   );
 };
 

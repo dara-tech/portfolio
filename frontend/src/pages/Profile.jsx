@@ -3,8 +3,10 @@ import AdminProfile from '../components/Profile'
 
 const Profile = () => {
   return (
-    <div className='container mx-auto p-6'>
-      <AdminProfile/>
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-7xl mx-auto">
+        <AdminProfile/>
+      </div>
     </div>
   )
 }

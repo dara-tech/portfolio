@@ -65,15 +65,15 @@ const RoadMapManage = () => {
   };
 
   const renderSkeletonLoader = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {[...Array(6)].map((_, index) => (
-        <div key={index} className="bg-base-200 p-4 rounded flex flex-col h-full animate-pulse">
-          <div className="h-6 bg-base-300 rounded w-3/4 mb-2"></div>
-          <div className="h-4 bg-base-300 rounded w-full mb-2"></div>
-          <div className="h-4 bg-base-300 rounded w-5/6 mb-2"></div>
-          <div className="mt-auto flex justify-between">
-            <div className="h-8 bg-base-300 rounded w-1/4"></div>
-            <div className="h-8 bg-base-300 rounded w-1/4"></div>
+        <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 animate-pulse">
+          <div className="h-6 bg-white/20 rounded w-3/4 mb-3"></div>
+          <div className="h-4 bg-white/20 rounded w-full mb-2"></div>
+          <div className="h-4 bg-white/20 rounded w-5/6 mb-4"></div>
+          <div className="flex justify-between gap-3">
+            <div className="h-10 bg-white/20 rounded-lg flex-1"></div>
+            <div className="h-10 bg-white/20 rounded-lg flex-1"></div>
           </div>
         </div>
       ))}
@@ -82,22 +82,31 @@ const RoadMapManage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-24 min-h-screen">
-        <div className="flex justify-between items-center mb-6">
-          <div className="h-8 bg-base-300 rounded w-1/4"></div>
-          <div className="h-10 bg-base-300 rounded w-1/6"></div>
+      <div className="min-h-screen py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="h-12 bg-white/20 rounded-xl w-1/3 mx-auto mb-4 animate-pulse"></div>
+            <div className="h-6 bg-white/20 rounded w-1/2 mx-auto animate-pulse"></div>
+          </div>
+          <div className="mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="w-full md:w-1/2 h-12 bg-white/20 rounded-xl animate-pulse"></div>
+            <div className="w-full md:w-1/4 h-12 bg-white/20 rounded-xl animate-pulse"></div>
+          </div>
+          {renderSkeletonLoader()}
         </div>
-        <div className="mb-6 flex flex-col md:flex-row justify-between items-center">
-          <div className="w-full md:w-1/2 h-10 bg-base-300 rounded mb-4 md:mb-0"></div>
-          <div className="w-full md:w-1/4 h-10 bg-base-300 rounded"></div>
-        </div>
-        {renderSkeletonLoader()}
       </div>
     );
   }
 
   if (error || deleteError || updateError) {
-    return <div className="text-center text-red-500 font-semibold text-lg">{error || deleteError || updateError}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-red-500/20 backdrop-blur-sm text-red-400 px-8 py-6 rounded-2xl border border-red-500/30 max-w-md">
+          <h3 className="text-xl font-semibold mb-2">Error Loading Roadmaps</h3>
+          <p>{error || deleteError || updateError}</p>
+        </div>
+      </div>
+    );
   }
 
   if (isCreating) {
@@ -107,74 +116,92 @@ const RoadMapManage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-24 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manage Roadmaps</h1>
-        <button onClick={() => setIsCreating(true)} className="btn btn-primary px-4 py-2 rounded flex items-center">
-          <Plus className="mr-2" size={20} />
-          Create New
-        </button>
-      </div>
-      <div className="mb-6 flex flex-col md:flex-row justify-between items-center">
-        <div className="relative w-full md:w-1/2 mb-4 md:mb-0">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-          <input
-            type="text"
-            placeholder="Search roadmaps..."
-            className="w-full pl-10 pr-4 py-2 border border-primary rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className="relative w-full md:w-1/4">
-          <select
-            className="w-full pl-4 pr-10 py-2 border border-primary rounded-md appearance-none focus:outline-none focus:ring-1 focus:ring-primary"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-white mb-6">Manage Roadmaps</h1>
+          <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+            Create, edit, and manage your learning roadmaps
+          </p>
+          <button 
+            onClick={() => setIsCreating(true)} 
+            className="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-xl border border-white/30 hover:bg-white/30 transition-all duration-300 flex items-center gap-3 mx-auto"
           >
-            <option value="title">Sort by Title</option>
-            <option value="createdAt">Sort by Date</option>
-          </select>
+            <Plus className="w-5 h-5" />
+            Create New Roadmap
+          </button>
         </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredRoadMaps.map((roadMap) => (
-          <div
-            key={roadMap._id}
-            className="bg-base-200 p-4 rounded flex flex-col h-full"
-          >
-            {editingRoadmap && editingRoadmap._id === roadMap._id ? (
-              <RoadmapEdit
-                roadmap={editingRoadmap}
-                onSave={handleSave}
-                onCancel={handleCancel}
+
+        {/* Search and Filter */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 mb-8">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60" size={20} />
+              <input
+                type="text"
+                placeholder="Search roadmaps..."
+                className="w-full pl-12 pr-4 py-3 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-            ) : (
-              <>
-                <h3 className="text-xl text-primary font-bold mb-2">{roadMap.title}</h3>
-                <p className="mb-2 flex-grow">{roadMap.description}</p>
-                <div className="flex justify-between mt-4">
-                  <button onClick={() => handleEdit(roadMap)} className="btn-sm btn-primary btn text flex items-center transition-colors">
-                    <Edit className="mr-1" size={16} />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(roadMap._id)}
-                    className="btn-sm btn-danger btn flex items-center transition-colors"
-                    disabled={deleteLoading && deleteId === roadMap._id}
-                  >
-                    {deleteLoading && deleteId === roadMap._id ? (
-                      <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                    ) : (
-                      <Trash2 className="mr-1" size={16} />
-                    )}
-                    Delete
-                  </button>
-                </div>
-              </>
-            )}
+            </div>
+            <div className="relative">
+              <select
+                className="px-4 py-3 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 appearance-none pr-10"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="title" className="bg-gray-800 text-white">Sort by Title</option>
+                <option value="createdAt" className="bg-gray-800 text-white">Sort by Date</option>
+              </select>
+            </div>
           </div>
-        ))}
+        </div>
+
+        {/* Roadmaps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredRoadMaps.map((roadMap) => (
+            <div
+              key={roadMap._id}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300"
+            >
+              {editingRoadmap && editingRoadmap._id === roadMap._id ? (
+                <RoadmapEdit
+                  roadmap={editingRoadmap}
+                  onSave={handleSave}
+                  onCancel={handleCancel}
+                />
+              ) : (
+                <>
+                  <h3 className="text-xl font-bold text-white mb-3">{roadMap.title}</h3>
+                  <p className="text-white/70 mb-4 flex-grow line-clamp-3">{roadMap.description}</p>
+                  <div className="flex justify-between gap-3">
+                    <button 
+                      onClick={() => handleEdit(roadMap)} 
+                      className="flex-1 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg border border-white/30 transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <Edit className="w-4 h-4" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(roadMap._id)}
+                      className="flex-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg border border-red-500/30 transition-all duration-300 flex items-center justify-center gap-2"
+                      disabled={deleteLoading && deleteId === roadMap._id}
+                    >
+                      {deleteLoading && deleteId === roadMap._id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

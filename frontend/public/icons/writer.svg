@@ -1,0 +1,27 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="writerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0891B2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#06B6D4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0E7490;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="writerAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22D3EE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#writerGradient)"/>
+  <rect x="14" y="16" width="36" height="32" rx="6" fill="white" fill-opacity="0.95"/>
+  <rect x="18" y="20" width="28" height="24" rx="4" fill="url(#writerAccent)" fill-opacity="0.1"/>
+  <path d="M20 24H44" stroke="url(#writerGradient)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M20 28H40" stroke="url(#writerGradient)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M20 32H36" stroke="url(#writerGradient)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M20 36H38" stroke="url(#writerGradient)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M20 40H32" stroke="url(#writerGradient)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M20 44H34" stroke="url(#writerGradient)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M24 16L28 20L32 16L36 20L40 16" stroke="url(#writerGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="42" cy="26" r="4" fill="url(#writerGradient)" fill-opacity="0.2"/>
+  <path d="M40 26L42 28L46 24" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="16" y="14" width="6" height="2" rx="1" fill="url(#writerGradient)" fill-opacity="0.3"/>
+  <rect x="42" y="14" width="6" height="2" rx="1" fill="url(#writerGradient)" fill-opacity="0.3"/>
+</svg>

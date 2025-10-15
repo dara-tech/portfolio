@@ -26,18 +26,6 @@ const ContactForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const newErrors = {}
-    if (!formData.name.trim()) newErrors.name = "Name is required"
-    if (!formData.email.trim()) newErrors.email = "Email is required"
-    else if (!validateEmail(formData.email)) newErrors.email = "Please enter a valid email"
-    if (!formData.subject.trim()) newErrors.subject = "Subject is required"
-    if (!formData.message.trim()) newErrors.message = "Message is required"
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
     setLoading(true)
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500))
@@ -51,35 +39,34 @@ const ContactForm = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+    <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-stretch max-w-7xl mx-auto">
         <div className="hidden md:flex justify-center items-center">
-          <div className="relative w-full h-full pb-[100%] rounded-lg overflow-hidden shadow-lg border border-base-300">
+          <div className="relative w-full h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-white/5 backdrop-blur-sm">
             <img 
               src={admin?.profilePic || "/default-profile.jpg"} 
               alt="Admin Profile" 
               className="absolute inset-0 w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-base-content/20 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 p-6 text-base-content">
-              <h3 className="text-2xl font-bold">{admin?.username || "Admin"}</h3>
-              <p className="text-sm opacity-75">{admin?.describe || "Contact me for any inquiries"}</p>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div className="absolute bottom-0 left-0 p-8 text-white">
+              <h3 className="text-3xl font-bold mb-2">{admin?.username || "Admin"}</h3>
+              <p className="text-lg opacity-90">{admin?.describe || "Contact me for any inquiries"}</p>
             </div>
           </div>
         </div>
-        <div className="bg-base-200 rounded-lg p-8 border border-base-300 shadow-sm">
-          <h2 className="text-3xl font-bold text-center mb-8 text-base-content">Contact {admin?.username || "Admin"}</h2>
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-10 border border-white/20 shadow-2xl h-[600px] flex flex-col justify-center">
           {submitted ? (
-            <div className="alert alert-success shadow-sm border border-success/20">
-              <CheckCircle className="stroke-current flex-shrink-0 h-6 w-6" />
-              <span>Thank you! Your message has been sent successfully.</span>
+            <div className="bg-green-500/20 backdrop-blur-sm text-green-400 px-6 py-4 rounded-xl border border-green-500/30 flex items-center space-x-3">
+              <CheckCircle className="w-6 h-6" />
+              <span className="text-lg">Thank you! Your message has been sent successfully.</span>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               {errors.submit && (
-                <div className="alert alert-error shadow-sm border border-error/20">
-                  <AlertCircle className="stroke-current flex-shrink-0 h-6 w-6" />
-                  <span>{errors.submit}</span>
+                <div className="bg-red-500/20 backdrop-blur-sm text-red-400 px-6 py-4 rounded-xl border border-red-500/30 flex items-center space-x-3">
+                  <AlertCircle className="w-6 h-6" />
+                  <span className="text-lg">{errors.submit}</span>
                 </div>
               )}
               <InputField
@@ -88,7 +75,6 @@ const ContactForm = () => {
                 value={formData.name}
                 onChange={handleChange}
                 error={errors.name}
-                icon={<User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50 w-5 h-5" />}
               />
               <InputField
                 label="Email"
@@ -97,7 +83,6 @@ const ContactForm = () => {
                 value={formData.email}
                 onChange={handleChange}
                 error={errors.email}
-                icon={<Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50 w-5 h-5" />}
               />
               <InputField
                 label="Subject"
@@ -112,22 +97,9 @@ const ContactForm = () => {
                 value={formData.message}
                 onChange={handleChange}
                 error={errors.message}
-                icon={<MessageSquare className="absolute left-3 top-3 text-base-content/50 w-5 h-5" />}
+                onSubmit={handleSubmit}
+                loading={loading}
               />
-              <div className="flex justify-end mt-8">
-                <button 
-                  type="submit" 
-                  className={`btn btn-primary ${loading ? "loading" : ""}`} 
-                  disabled={loading}
-                >
-                  {loading ? "Sending..." : (
-                    <>
-                      <Send className="w-5 h-5 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </button>
-              </div>
             </form>
           )}
         </div>
@@ -136,10 +108,10 @@ const ContactForm = () => {
   )
 }
 
-const InputField = ({ label, name, type = "text", value, onChange, error, icon }) => (
-  <div className="form-control">
-    <label className="label">
-      <span className="label-text text-base font-medium text-base-content">{label}</span>
+const InputField = ({ label, name, type = "text", value, onChange, error }) => (
+  <div className="space-y-2">
+    <label className="block">
+      <span className="text-lg font-semibold text-white">{label}</span>
     </label>
     <div className="relative">
       <input
@@ -147,38 +119,44 @@ const InputField = ({ label, name, type = "text", value, onChange, error, icon }
         name={name}
         value={value}
         onChange={onChange}
-        className={`input input-bordered focus:outline-none focus:ring-2 focus:ring-primary/20 w-full ${icon ? "pl-10" : ""} ${error ? "input-error" : ""}`}
+        className={`w-full px-4 py-4 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all duration-300 ${error ? "border-red-500/50 focus:ring-red-500/30" : ""}`}
         placeholder={`Enter your ${label.toLowerCase()}`}
       />
-      {icon}
     </div>
     {error && (
-      <label className="label">
-        <span className="label-text-alt text-error">{error}</span>
-      </label>
+      <p className="text-red-400 text-sm mt-1">{error}</p>
     )}
   </div>
 )
 
-const TextAreaField = ({ label, name, value, onChange, error, icon }) => (
-  <div className="form-control">
-    <label className="label">
-      <span className="label-text text-base font-medium text-base-content">{label}</span>
+const TextAreaField = ({ label, name, value, onChange, error, onSubmit, loading }) => (
+  <div className="space-y-2">
+    <label className="block">
+      <span className="text-lg font-semibold text-white">{label}</span>
     </label>
     <div className="relative">
       <textarea
         name={name}
         value={value}
         onChange={onChange}
-        className={`textarea textarea-bordered focus:outline-none focus:ring-2 focus:ring-primary/20 h-32 w-full ${icon ? "pl-10" : ""} ${error ? "textarea-error" : ""}`}
+        className={`w-full px-4 py-4 pr-14 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all duration-300 h-32 resize-none ${error ? "border-red-500/50 focus:ring-red-500/30" : ""}`}
         placeholder={`Enter your ${label.toLowerCase()}`}
       />
-      {icon}
+      <button 
+        type="button"
+        onClick={onSubmit}
+        className={`absolute top-3 right-3 w-8 h-8 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all duration-300 flex items-center justify-center ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={loading}
+      >
+        {loading ? (
+          <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        ) : (
+          <Send className="w-4 h-4" />
+        )}
+      </button>
     </div>
     {error && (
-      <label className="label">
-        <span className="label-text-alt text-error">{error}</span>
-      </label>
+      <p className="text-red-400 text-sm mt-1">{error}</p>
     )}
   </div>
 )

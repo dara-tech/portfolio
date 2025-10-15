@@ -1,161 +1,34 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
 import useProjects from '../../hooks/useProjects';
 import ErrorBoundary from '../ErrorBoundary';
 import ProjectCard from '../projects/ProjectCard';
-import { Search, Filter, X, ChevronDown, Sliders } from 'lucide-react';
-import { Loading } from '../common/Loading';
+import { X } from 'lucide-react';
 
 const ProjectList = () => {
   const { projects = [], loading, error } = useProjects();
-  const [filters, setFilters] = useState({ category: 'all', technology: 'all' });
-  const [sort, setSort] = useState('newest');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  const categories = useMemo(() => ['all', ...new Set(projects.map(p => p.category).filter(Boolean))], [projects]);
-  const technologies = useMemo(() => ['all', ...new Set(projects.flatMap(p => p.technologies || []).filter(Boolean))], [projects]);
-
-  const filteredProjects = useMemo(() => {
-    if (!Array.isArray(projects)) return [];
-    return projects
-      .filter(p => 
-        (filters.category === 'all' || p.category === filters.category) &&
-        (filters.technology === 'all' || p.technologies?.includes(filters.technology)) &&
-        (!searchQuery || 
-          [p.title, p.description, ...(p.technologies || [])].some(field => 
-            field?.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        )
-      )
-      .sort((a, b) => sort === 'newest' ? new Date(b.createdAt || 0) - new Date(a.createdAt || 0) : new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
-  }, [projects, filters, searchQuery, sort]);
-
-  const handleFilterChange = useCallback((key, value) => setFilters(prev => ({ ...prev, [key]: value })), []);
-  const clearFilters = useCallback(() => {
-    setFilters({ category: 'all', technology: 'all' });
-    setSearchQuery('');
-  }, []);
-
-  const renderSkeletonLoaders = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[...Array(6)].map((_, index) => (
-        <div key={index} className="bg-base-200 p-4 rounded-lg shadow-md animate-pulse">
-          <div className="w-full h-48 bg-base-300 rounded-md mb-4"></div>
-          <div className="h-6 bg-base-300 rounded w-3/4 mb-2"></div>
-          <div className="h-4 bg-base-300 rounded w-1/2 mb-4"></div>
-          <div className="flex space-x-2">
-            <div className="h-8 bg-base-300 rounded w-1/4"></div>
-            <div className="h-8 bg-base-300 rounded w-1/4"></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
 
   if (error) return <div className="alert alert-error max-w-2xl mx-auto mt-8 "><X className="w-6 h-6" /><span>Error loading projects: {error.message}</span></div>;
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-base-content">Projects</h1>
-        <button 
-          onClick={() => setIsFilterOpen(!isFilterOpen)} 
-          className="btn btn-primary btn-outline"
-        >
-          <Sliders className="mr-2 w-4 h-4" /> 
-          {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
-        </button>
+    <div className="w-full">
+      <div className="flex justify-between items-center mb-12">
+        <h1 className="text-5xl font-bold text-white">Projects</h1>
       </div>
 
-      <AnimatePresence>
-        {isFilterOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mb-8 space-y-4 bg-base-200 p-6 rounded-lg border border-base-300 overflow-hidden"
-          >
-            <div className="flex flex-wrap gap-4">
-              <div className="flex-1 min-w-[200px] relative">
-                <input
-                  type="text"
-                  placeholder="Search projects..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="input input-bordered w-full pl-10 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50" size={18} />
-              </div>
-              <select
-                value={filters.category}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="select select-bordered flex-1 min-w-[150px] focus:ring-2 focus:ring-primary/20"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>{category === 'all' ? 'All Categories' : category}</option>
-                ))}
-              </select>
-              <select
-                value={filters.technology}
-                onChange={(e) => handleFilterChange('technology', e.target.value)}
-                className="select select-bordered flex-1 min-w-[150px] focus:ring-2 focus:ring-primary/20"
-              >
-                {technologies.map(tech => (
-                  <option key={tech} value={tech}>{tech === 'all' ? 'All Technologies' : tech}</option>
-                ))}
-              </select>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="select select-bordered flex-1 min-w-[150px] focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
-            </div>
-            {(filters.category !== 'all' || filters.technology !== 'all' || searchQuery) && (
-              <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-base-300">
-                <span className="text-sm font-medium text-base-content/70">Active filters:</span>
-                {filters.category !== 'all' && <span className="badge badge-primary badge-outline">{filters.category}</span>}
-                {filters.technology !== 'all' && <span className="badge badge-secondary badge-outline">{filters.technology}</span>}
-                {searchQuery && <span className="badge badge-accent badge-outline">"{searchQuery}"</span>}
-                <button onClick={clearFilters} className="btn btn-sm btn-ghost text-base-content/70 hover:text-base-content">
-                  <X className="w-3 h-3 mr-1" />
-                  Clear all
-                </button>
-              </div>
-            )}
-          </motion.div>
+      <div>
+        {projects.length === 0 ? (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold mb-2 text-white">No projects found</h3>
+            <p className="text-white/60">Check back later for new projects!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map(project => (
+              <ProjectCard key={project._id} project={project} />
+            ))}
+          </div>
         )}
-      </AnimatePresence>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={filteredProjects.length}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {loading ? (
-            renderSkeletonLoaders()
-          ) : filteredProjects.length === 0 ? (
-            <div className="text-center py-12">
-              <Filter className="mx-auto mb-4 w-12 h-12 text-base-content/30" />
-              <h3 className="text-xl font-semibold mb-2 text-base-content">No projects found</h3>
-              <p className="text-base-content/60">Try adjusting your search or filters</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProjects.map(project => (
-                <ProjectCard key={project._id} project={project} />
-              ))}
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+      </div>
     </div>
   );
 };
