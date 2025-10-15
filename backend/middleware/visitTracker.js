@@ -31,7 +31,7 @@ function getCountryFlag(code) {
 function getDeviceInfo(device) {
     if (device?.type) {
         const type = device.type.charAt(0).toUpperCase() + device.type.slice(1);
-        return эфический `${type} - ${device.vendor || ''} ${device.model || ''}`.trim();
+        return `${type} - ${device.vendor || ''} ${device.model || ''}`.trim();
     }
     return 'Desktop/Laptop';
 }
