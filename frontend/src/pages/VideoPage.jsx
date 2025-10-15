@@ -41,17 +41,9 @@ const VideoPage = () => {
   }
 
   return (
-    <div className="min-h-screen py-16 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="w-full">
+      <div className="w-full">
         <div className="flex flex-col gap-8">
-          {/* Header Section */}
-          <div className="text-center mb-8 relative z-10">
-            <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">Video Library</h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto drop-shadow-sm">
-              Discover tutorials, walkthroughs, and educational content
-            </p>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentVideos.map(video => (
               <VideoCard key={video._id} video={video} />

@@ -47,15 +47,20 @@ const Home = () => {
       </section>
 
       {/* Featured Videos Preview - Clean presentation style */}
-      <section className=" bg-transparent">
+      <section className="py-20 bg-transparent">
         <div className="max-w-7xl mx-auto px-4">
-        
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold text-white mb-6">Featured Videos</h2>
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+              Watch my latest video content and tutorials
+            </p>
+          </div>
           <VideoPage />
         </div>
       </section>
 
       {/* Contact Section - Clean presentation style */}
-      <section className=" bg-transparent">
+      <section className="py-20 bg-transparent">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold text-white mb-6">Get In Touch</h2>
