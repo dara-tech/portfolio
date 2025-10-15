@@ -1,11 +1,22 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MacOSDock = memo(() => {
   const location = useLocation();
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   const dockItems = [
     {
@@ -13,43 +24,48 @@ const MacOSDock = memo(() => {
       path: '/',
       icon: '/icons/home.svg',
       label: 'Home',
-      color: 'from-amber-500 to-orange-600'
-    
+      color: 'from-amber-500 to-orange-600',
+      showOnMobile: true
     },
     {
       id: 'projects',
       path: '/projects',
       icon: '/icons/projects.svg',
       label: 'Projects',
-      color: 'from-emerald-500 to-teal-600'
+      color: 'from-emerald-500 to-teal-600',
+      showOnMobile: true
     },
     {
       id: 'roadmap',
       path: '/roadmap',
       icon: '/icons/roadmap.svg',
       label: 'Roadmap',
-      color: 'from-cyan-500 to-emerald-600'
+      color: 'from-cyan-500 to-emerald-600',
+      showOnMobile: true
     },
     {
       id: 'chat',
       path: '/chat',
       icon: '/icons/chat.svg',
       label: 'Chat',
-      color: 'from-indigo-500 to-violet-600'
+      color: 'from-indigo-500 to-violet-600',
+      showOnMobile: false
     },
     {
       id: 'videos',
       path: '/videos',
       icon: '/icons/videos.svg',
       label: 'Videos',
-      color: 'from-rose-500 to-red-600'
+      color: 'from-rose-500 to-red-600',
+      showOnMobile: true
     },
     {
       id: 'lessons',
       path: '/lessons',
       icon: '/icons/lessons.svg',
       label: 'Lessons',
-      color: 'from-pink-500 to-rose-600'
+      color: 'from-pink-500 to-rose-600',
+      showOnMobile: false
     },
     // Admin items (only show if logged in)
     ...(token ? [
@@ -58,28 +74,32 @@ const MacOSDock = memo(() => {
         path: '/admin/dashboard',
         icon: '/icons/dashboard.svg',
         label: 'Dashboard',
-        color: 'from-slate-500 to-gray-600'
+        color: 'from-slate-500 to-gray-600',
+        showOnMobile: true
       },
       {
         id: 'admin-projects',
         path: '/admin/projects',
         icon: '/icons/projects.svg',
         label: 'Manage Projects',
-        color: 'from-emerald-500 to-teal-600'
+        color: 'from-emerald-500 to-teal-600',
+        showOnMobile: false
       },
       {
         id: 'admin-write',
         path: '/admin/write',
         icon: '/icons/writer.svg',
         label: 'Writer',
-        color: 'from-cyan-500 to-blue-600'
+        color: 'from-cyan-500 to-blue-600',
+        showOnMobile: false
       },
       {
         id: 'admin-profile',
         path: '/admin/profile',
         icon: '/icons/profile.svg',
         label: 'Profile',
-        color: 'from-purple-500 to-violet-600'
+        color: 'from-purple-500 to-violet-600',
+        showOnMobile: true
       }
     ] : [
       {
@@ -87,7 +107,8 @@ const MacOSDock = memo(() => {
         path: '/admin/login',
         icon: '/icons/login.svg',
         label: 'Login',
-        color: 'from-amber-500 to-yellow-600'
+        color: 'from-amber-500 to-yellow-600',
+        showOnMobile: true
       }
     ])
   ];
@@ -99,11 +120,16 @@ const MacOSDock = memo(() => {
     return location.pathname.startsWith(path);
   };
 
+  // Filter items based on screen size
+  const filteredDockItems = dockItems.filter(item => 
+    isMobile ? item.showOnMobile : true
+  );
+
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
       <div className="macos-glass macos-rounded-xl px-4 py-3 macos-shadow-xl">
         <div className="flex items-end space-x-2">
-          {dockItems.map((item) => {
+          {filteredDockItems.map((item) => {
             const active = isActive(item.path);
             const isHovered = hoveredItem === item.id;
             
