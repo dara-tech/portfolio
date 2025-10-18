@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useAdminProfile } from "../hooks/useAdminProfile";
 import { motion, AnimatePresence } from "framer-motion";
+import experienceIcon from "/icons/experience.svg";
+import emailIcon from "/icons/email.svg";
+import locationIcon from "/icons/location.svg";
+import codeIcon from "/icons/code.svg";
 
 // Custom Icon Component for public folder SVGs
 const CustomIcon = ({ src, className, alt = "icon" }) => (
@@ -128,7 +132,7 @@ const HeroCard = () => {
         {/* Header Section */}
         <motion.div variants={itemVariants} className="text-center mb-16">
           <div className="inline-flex items-center space-x-3 bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 mb-8">
-            <CustomIcon src="/icons/home.svg" className="w-5 h-5" alt="code" />
+            <CustomIcon src={codeIcon} className="w-5 h-5" alt="code" />
             <span className="text-sm font-medium text-white/80">Senior Developer</span>
             <div className="w-1 h-1 bg-white/40 rounded-full"></div>
             <span className="text-sm text-white/60">Available for work</span>
@@ -175,7 +179,7 @@ const HeroCard = () => {
               {userData?.email && (
                 <div className="flex items-center space-x-4 p-4 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300">
                   <div className="p-3 bg-blue-500/20 rounded-xl">
-                    <CustomIcon src="/icons/email.svg" className="w-5 h-5" alt="email" />
+                    <CustomIcon src={emailIcon} className="w-5 h-5" alt="email" />
                   </div>
                   <div>
                     <p className="text-sm text-white/60">Email</p>
@@ -187,11 +191,13 @@ const HeroCard = () => {
               {userData?.location && (
                 <div className="flex items-center space-x-4 p-4 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300">
                   <div className="p-3 bg-green-500/20 rounded-xl">
-                    <CustomIcon src="/icons/location.svg" className="w-5 h-5" alt="location" />
+                    <CustomIcon src={locationIcon} className="w-5 h-5" alt="location" />
                   </div>
                   <div>
                     <p className="text-sm text-white/60">Location</p>
-                    <p className="text-white font-medium">{userData.location}</p>
+                    <p className="text-white font-medium">
+                      {Array.isArray(userData.location) ? userData.location.join(', ') : userData.location}
+                    </p>
                   </div>
                 </div>
               )}
@@ -200,7 +206,7 @@ const HeroCard = () => {
             {/* Skills Showcase */}
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
               <div className="flex items-center space-x-3 mb-4">
-                <CustomIcon src="/icons/experience.svg" className="w-5 h-5" alt="experience" />
+                <CustomIcon src={experienceIcon} className="w-5 h-5" alt="experience" />
                 <h3 className="text-lg font-semibold text-white">Expertise</h3>
               </div>
               <div className="relative h-12 overflow-hidden">
@@ -273,7 +279,7 @@ const HeroCard = () => {
       </div>
 
       {/* CSS Animation Keyframes */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;

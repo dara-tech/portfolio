@@ -57,21 +57,26 @@ const fetchAdminProfile = async () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
     setSuccess("");
 
-    const formDataToSend = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value instanceof File) {
-        formDataToSend.append(key, value);
-      } else if (Array.isArray(value)) {
-        formDataToSend.append(key, JSON.stringify(value));
-      } else {
-        formDataToSend.append(key, value);
-      }
-    });
-
     try {
+      const formDataToSend = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value instanceof File) {
+          formDataToSend.append(key, value);
+        } else if (Array.isArray(value)) {
+          formDataToSend.append(key, JSON.stringify(value));
+        } else if (value !== null && value !== undefined) {
+          formDataToSend.append(key, value);
+        }
+      });
+
       const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch(`${API_URL}/api/admin/update`, {
         method: "PUT",
         body: formDataToSend,
@@ -80,13 +85,39 @@ const fetchAdminProfile = async () => {
         },
       });
 
-      if (!response.ok) throw new Error("Failed to update profile");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update profile");
+      }
 
-      const updatedProfile = await response.json();
-      setFormData(updatedProfile);
+      const result = await response.json();
+      
+      // Update formData with the response data
+      if (result.data) {
+        setFormData({
+          username: result.data.username || "",
+          email: result.data.email || "",
+          location: result.data.location || "",
+          describe: result.data.describe || "",
+          exp: result.data.exp || "",
+          profilePic: result.data.profilePic || "",
+          socialLinks: result.data.socialLinks || [],
+          cv: result.data.cv || "",
+          about: result.data.about || "",
+          skills: result.data.skills || []
+        });
+      }
+      
       setSuccess("Profile updated successfully");
+      
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        setSuccess("");
+      }, 5000);
+      
     } catch (err) {
-      setError(err.message);
+      console.error("Update profile error:", err);
+      setError(err.message || "An error occurred while updating profile");
     } finally {
       setIsSubmitting(false);
     }

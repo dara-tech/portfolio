@@ -57,6 +57,7 @@ const SkillsInput = ({ skills, onChange }) => {
       onChange(newSkills);
     }
     setSearchTerm('');
+    setSuggestions([]);
     setShowSuggestions(false);
   };
 
@@ -88,7 +89,7 @@ const SkillsInput = ({ skills, onChange }) => {
   return (
     <div className="form-control w-full">
       <label className="label">
-        <span className="label-text text-lg">Skills</span>
+        <span className="label-text text-lg text-white/90 font-medium">Skills</span>
       </label>
       
       {/* Search Input */}
@@ -98,17 +99,17 @@ const SkillsInput = ({ skills, onChange }) => {
           value={searchTerm}
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
-          className="input input-bordered w-full focus:outline-none input-primary"
+          className="w-full px-4 py-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400/50 transition-all duration-300"
           placeholder="Type to search and add skills..."
         />
         
         {/* Suggestions Dropdown */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute z-10 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+          <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-xl shadow-lg max-h-60 overflow-y-scroll scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
             {suggestions.map((skill, index) => (
               <div
                 key={index}
-                className="px-4 py-2 hover:bg-base-200 cursor-pointer"
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer text-white transition-colors duration-200"
                 onClick={() => addSkill(skill)}
               >
                 {skill}
@@ -122,17 +123,17 @@ const SkillsInput = ({ skills, onChange }) => {
       <div className="mt-4">
         {Object.entries(groupedSkills).map(([category, categorySkills]) => (
           <div key={category} className="mb-4">
-            <h3 className="text-sm font-semibold text-base-content/70 mb-2">{category}</h3>
+            <h3 className="text-sm font-semibold text-white/70 mb-2">{category}</h3>
             <div className="flex flex-wrap gap-2">
               {categorySkills.map((skill, index) => (
                 <div
                   key={index}
-                  className="badge badge-primary badge-lg gap-2"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded-lg text-sm font-medium"
                 >
                   {skill}
                   <button
                     onClick={() => removeSkill(skill)}
-                    className="btn btn-ghost btn-xs btn-circle"
+                    className="w-4 h-4 flex items-center justify-center hover:bg-blue-500/30 rounded-full transition-colors duration-200"
                   >
                     ×
                   </button>
@@ -145,12 +146,12 @@ const SkillsInput = ({ skills, onChange }) => {
 
       {/* Skill Categories */}
       <div className="mt-4">
-        <h3 className="text-sm font-semibold text-base-content/70 mb-2">Suggested Skills</h3>
+        <h3 className="text-sm font-semibold text-white/70 mb-2">Suggested Skills</h3>
         <div className="flex flex-wrap gap-2">
           {Object.entries(skillCategories).map(([category, _]) => (
             <div
               key={category}
-              className="badge badge-outline badge-sm cursor-pointer hover:badge-primary"
+              className="px-3 py-1.5 bg-white/10 text-white/80 border border-white/20 rounded-lg text-sm cursor-pointer hover:bg-white/20 hover:border-white/30 transition-all duration-300"
               onClick={() => setSearchTerm(category + ': ')}
             >
               {category}

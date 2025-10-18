@@ -37,7 +37,7 @@ const Home = () => {
       <section className=" py-20 bg-transparent">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-white mb-6">Featured Projects</h2>
+            <h2 className="text-5xl font-bold text-white mb-6">Featured </h2>
             <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Explore some of my recent work and creative projects
             </p>

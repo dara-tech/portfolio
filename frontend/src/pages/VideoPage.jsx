@@ -41,8 +41,8 @@ const VideoPage = () => {
   }
 
   return (
-    <div className="w-full">
-      <div className="w-full">
+    <div className="min-h-screen py-16 px-4">
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col gap-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentVideos.map(video => (

@@ -48,6 +48,37 @@ export const getAdmin = async (req, res) => {
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
+
+    // Migrate existing socialLinks data to include username field
+    if (admin.socialLinks && admin.socialLinks.length > 0) {
+      const migratedSocialLinks = admin.socialLinks.map(link => {
+        if (!link.username && link.url) {
+          // Extract username from URL
+          const urlParts = link.url.split('/');
+          const username = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2] || '';
+          return { ...link, username };
+        }
+        return link;
+      });
+
+      // Update the admin document if migration was needed
+      const needsSocialLinksMigration = admin.socialLinks.some(link => !link.username);
+      if (needsSocialLinksMigration) {
+        admin.socialLinks = migratedSocialLinks;
+      }
+    }
+
+    // Migrate location from array to string
+    if (Array.isArray(admin.location)) {
+      admin.location = admin.location.join(', ');
+    }
+
+    // Save if any migration was needed
+    const needsMigration = (admin.socialLinks && admin.socialLinks.some(link => !link.username)) || Array.isArray(admin.location);
+    if (needsMigration) {
+      await admin.save();
+    }
+
     res.status(200).json(admin);
   } catch (error) {
     console.error(error);
@@ -57,7 +88,7 @@ export const getAdmin = async (req, res) => {
 
 export const updateAdmin = async (req, res) => {
   try {
-    const { username, email,location, describe, exp, profilePic, cv, password, socialLinks, about, skills } = req.body;
+    const { username, email, location, describe, exp, profilePic, cv, password, socialLinks, about, skills } = req.body;
     const admin = await Admin.findById(req.admin._id);
 
     if (!admin) {
@@ -65,19 +96,55 @@ export const updateAdmin = async (req, res) => {
     }
 
     console.log("Files received:", req.files);  // Log the received files
+    console.log("Body data:", req.body);  // Log the received body data
 
-    Object.assign(admin, {
-      username,
-      email,
-      describe,
-      exp,
-      profilePic,
-      cv,
-      about,
-      location,
-      socialLinks: socialLinks ? JSON.parse(socialLinks) : undefined,
-      skills: skills ? JSON.parse(skills) : undefined
-    });
+    // Parse JSON fields safely
+    let parsedSocialLinks = [];
+    let parsedSkills = [];
+
+    try {
+      if (socialLinks) {
+        parsedSocialLinks = JSON.parse(socialLinks);
+        
+        // Ensure all socialLinks have username field (migrate existing data)
+        parsedSocialLinks = parsedSocialLinks.map(link => {
+          if (!link.username && link.url) {
+            // Extract username from URL for existing data
+            const urlParts = link.url.split('/');
+            const username = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2] || '';
+            return { ...link, username };
+          }
+          return link;
+        });
+      }
+    } catch (error) {
+      console.error("Error parsing socialLinks:", error);
+      return res.status(400).json({ message: "Invalid socialLinks format" });
+    }
+
+    try {
+      if (skills) {
+        parsedSkills = JSON.parse(skills);
+      }
+    } catch (error) {
+      console.error("Error parsing skills:", error);
+      return res.status(400).json({ message: "Invalid skills format" });
+    }
+
+    // Migrate existing data if needed
+    if (Array.isArray(admin.location)) {
+      admin.location = admin.location.join(', ');
+    }
+
+    // Update admin fields
+    if (username) admin.username = username;
+    if (email) admin.email = email;
+    if (location) admin.location = location;
+    if (describe) admin.describe = describe;
+    if (exp) admin.exp = exp;
+    if (about) admin.about = about;
+    if (parsedSocialLinks.length > 0) admin.socialLinks = parsedSocialLinks;
+    if (parsedSkills.length > 0) admin.skills = parsedSkills;
 
     if (req.files) {
       if (req.files.profilePic) {

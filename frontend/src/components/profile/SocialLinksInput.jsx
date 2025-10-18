@@ -104,7 +104,7 @@ const SocialLinksInput = ({ socialLinks, onChange }) => {
   return (
     <div className="form-control w-full">
       <label className="label">
-        <span className="label-text text-lg">Social Links</span>
+        <span className="label-text text-lg text-white/90 font-medium">Social Links</span>
       </label>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,17 +113,16 @@ const SocialLinksInput = ({ socialLinks, onChange }) => {
           const isEditing = editingPlatform === platform;
 
           return (
-            <div key={platform} className="card bg-base-200">
-              <div className="card-body p-4">
-                <div className="flex items-center gap-3">
-                  <div className="text-primary">{info.icon}</div>
-                  <h3 className="card-title text-base">{info.name}</h3>
-                </div>
+            <div key={platform} className="bg-white/10 border border-white/20 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                <div className="text-blue-400">{info.icon}</div>
+                <h3 className="text-base font-semibold text-white">{info.name}</h3>
+              </div>
 
                 {isEditing ? (
                   <div className="mt-2 space-y-2">
-                    <div className="join w-full">
-                      <div className="join-item bg-base-300 px-2 py-1 text-sm">
+                    <div className="flex w-full">
+                      <div className="px-3 py-2 bg-white/10 text-white/70 text-sm border border-white/20 rounded-l-lg">
                         {info.baseUrl}
                       </div>
                       <input
@@ -131,20 +130,20 @@ const SocialLinksInput = ({ socialLinks, onChange }) => {
                         value={newUsername}
                         onChange={(e) => setNewUsername(e.target.value)}
                         placeholder={info.placeholder}
-                        className="input input-bordered input-sm join-item flex-grow"
+                        className="flex-grow px-3 py-2 bg-white/10 text-white placeholder-white/50 border border-white/20 border-l-0 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400/50 transition-all duration-300"
                       />
                     </div>
-                    {error && <p className="text-error text-sm">{error}</p>}
+                    {error && <p className="text-red-400 text-sm">{error}</p>}
                     <div className="flex justify-end gap-2">
                       <button
                         onClick={() => setEditingPlatform(null)}
-                        className="btn btn-ghost btn-sm"
+                        className="px-3 py-1.5 bg-white/10 text-white/80 border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-sm font-medium"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={handleSave}
-                        className="btn btn-primary btn-sm"
+                        className="px-3 py-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded-lg hover:bg-blue-500/30 hover:border-blue-400/50 transition-all duration-300 text-sm font-medium"
                       >
                         Save
                       </button>
@@ -158,20 +157,20 @@ const SocialLinksInput = ({ socialLinks, onChange }) => {
                           href={existingLink.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="link link-primary text-sm truncate"
+                          className="text-blue-400 hover:text-blue-300 text-sm truncate transition-colors duration-200"
                         >
                           {existingLink.url}
                         </a>
                         <div className="flex gap-1">
                           <button
                             onClick={() => handleEdit(platform)}
-                            className="btn btn-ghost btn-xs"
+                            className="px-2 py-1 bg-white/10 text-white/80 border border-white/20 rounded hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-xs"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleRemove(platform)}
-                            className="btn btn-ghost btn-xs text-error"
+                            className="px-2 py-1 bg-red-500/20 text-red-400 border border-red-400/30 rounded hover:bg-red-500/30 hover:border-red-400/50 transition-all duration-300 text-xs"
                           >
                             Remove
                           </button>
@@ -180,7 +179,7 @@ const SocialLinksInput = ({ socialLinks, onChange }) => {
                     ) : (
                       <button
                         onClick={() => handleEdit(platform)}
-                        className="btn btn-ghost btn-sm btn-block"
+                        className="w-full px-3 py-2 bg-white/10 text-white/80 border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-sm font-medium"
                       >
                         Add {info.name}
                       </button>
@@ -188,7 +187,7 @@ const SocialLinksInput = ({ socialLinks, onChange }) => {
                   </div>
                 )}
               </div>
-            </div>
+        
           );
         })}
       </div>

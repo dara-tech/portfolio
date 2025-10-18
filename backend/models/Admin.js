@@ -41,6 +41,11 @@ const adminSchema = new mongoose.Schema({
       enum: ['github', 'linkedin', 'twitter', 'facebook', 'instagram', 'youtube', 'portfolio', 'other'],
       required: true
     },
+    username: {
+      type: String,
+      required: false,
+      trim: true
+    },
     url: {
       type: String,
       required: true,
@@ -60,10 +65,10 @@ const adminSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
-  location: [{
+  location: {
     type: String,
     trim: true
-  }],
+  },
   createdAt: {
     type: Date,
     default: Date.now

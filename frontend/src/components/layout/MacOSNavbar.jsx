@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { memo, useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAdminProfile } from '../../hooks/useAdminProfile';
 
 // Custom SVG Icons
@@ -61,10 +61,25 @@ const UserCircleIcon = ({ className }) => (
   </svg>
 );
 
+const LogoutIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"/>
+  </svg>
+);
+
+const SettingsIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+  </svg>
+);
+
 const MacOSNavbar = memo(() => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { formData: userData } = useAdminProfile();
   const token = localStorage.getItem('token');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   const getPageTitle = () => {
     const path = location.pathname;
@@ -85,6 +100,43 @@ const MacOSNavbar = memo(() => {
       hour12: false 
     });
   };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.MODE === "development" ? "http://localhost:5001" : "https://daracheol-6adc.onrender.com"}/api/admin/logout`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        localStorage.removeItem('token');
+        navigate('/');
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout even if API call fails
+      localStorage.removeItem('token');
+      navigate('/');
+      window.location.reload();
+    }
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 h-8 macos-glass border-b border-white/10 macos-shadow-sm">
@@ -122,17 +174,63 @@ const MacOSNavbar = memo(() => {
 
           {/* User profile */}
           {token && (
-            <div className="flex items-center space-x-1 bg-white/5 px-2 py-1 macos-rounded border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer">
-              {userData?.profilePic ? (
-                <img
-                  src={userData.profilePic}
-                  alt="Profile"
-                  className="w-5 h-5 object-cover "
-                />
-              ) : (
-                <UserCircleIcon className="w-5 h-5 text-white/70" />
+            <div className="relative" ref={dropdownRef}>
+              <div 
+                className="flex items-center space-x-1 bg-white/5 px-2 py-1 macos-rounded border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {userData?.profilePic ? (
+                  <img
+                    src={userData.profilePic}
+                    alt="Profile"
+                    className="w-5 h-5 object-cover rounded-full"
+                  />
+                ) : (
+                  <UserCircleIcon className="w-5 h-5 text-white/70" />
+                )}
+                <ChevronDownIcon className={`w-3 h-3 text-white/50 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`} />
+              </div>
+
+              {/* Dropdown Menu */}
+              {showDropdown && (
+                <div className="absolute right-0 top-full mt-1 w-48 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg py-1 z-50">
+                  <div className="px-3 py-2 text-xs text-white/70 border-b border-white/10">
+                    {userData?.username || 'Admin'}
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      navigate('/admin');
+                      setShowDropdown(false);
+                    }}
+                    className="w-full flex items-center space-x-2 px-3 py-2 text-xs text-white/80 hover:bg-white/10 transition-colors duration-200"
+                  >
+                    <SettingsIcon className="w-4 h-4" />
+                    <span>Admin Dashboard</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      navigate('/admin/profile');
+                      setShowDropdown(false);
+                    }}
+                    className="w-full flex items-center space-x-2 px-3 py-2 text-xs text-white/80 hover:bg-white/10 transition-colors duration-200"
+                  >
+                    <UserCircleIcon className="w-4 h-4" />
+                    <span>Profile Settings</span>
+                  </button>
+
+                  <div className="border-t border-white/10 my-1"></div>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center space-x-2 px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 transition-colors duration-200"
+                  >
+                    <LogoutIcon className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
               )}
-              <ChevronDownIcon className="w-3 h-3 text-white/50" />
             </div>
           )}
         </div>

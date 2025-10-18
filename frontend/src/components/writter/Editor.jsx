@@ -69,8 +69,8 @@ const Editor = ({ initialValue, onChange }) => {
     }`;
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden">
-      <div className="bg-white/5 backdrop-blur-sm min-h-screen p-6">
+    <div className="bg-white/10  rounded-2xl border border-white/20 overflow-hidden">
+      <div className="bg-white/5  min-h-screen p-6">
         <div className="flex flex-wrap gap-3 mb-6">
           {/* Editor control buttons */}
           <button
@@ -129,28 +129,42 @@ const Editor = ({ initialValue, onChange }) => {
           </button>
 
           {/* Tone selection */}
-          <select
-            value={tone}
-            onChange={(e) => setTone(e.target.value)}
-            className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 w-40"
-          >
-            <option value="default" className="bg-gray-800 text-white">Default</option>
-            <option value="formal" className="bg-gray-800 text-white">Formal</option>
-            <option value="casual" className="bg-gray-800 text-white">Casual</option>
-            <option value="creative" className="bg-gray-800 text-white">Creative</option>
-            <option value="poetic" className="bg-gray-800 text-white">Poetic</option>
-            <option value="storytelling" className="bg-gray-800 text-white">Storytelling</option>
-          </select>
+          <div className="relative">
+            <select
+              value={tone}
+              onChange={(e) => setTone(e.target.value)}
+              className="px-4 py-2.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400/50 transition-all duration-300 w-40 appearance-none cursor-pointer"
+            >
+              <option value="default" className="bg-gray-800 text-white">Default</option>
+              <option value="formal" className="bg-gray-800 text-white">Formal</option>
+              <option value="casual" className="bg-gray-800 text-white">Casual</option>
+              <option value="creative" className="bg-gray-800 text-white">Creative</option>
+              <option value="poetic" className="bg-gray-800 text-white">Poetic</option>
+              <option value="storytelling" className="bg-gray-800 text-white">Storytelling</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
 
           {/* Correction type dropdown */}
-          <select
-            value={correctionType}
-            onChange={(e) => setCorrectionType(e.target.value)}
-            className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 w-40"
-          >
-            <option value="grammar" className="bg-gray-800 text-white">Grammar Correction</option>
-            <option value="word" className="bg-gray-800 text-white">Word Correction</option>
-          </select>
+          <div className="relative">
+            <select
+              value={correctionType}
+              onChange={(e) => setCorrectionType(e.target.value)}
+              className="px-4 py-2.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400/50 transition-all duration-300 w-40 appearance-none cursor-pointer"
+            >
+              <option value="grammar" className="bg-gray-800 text-white">Grammar Correction</option>
+              <option value="word" className="bg-gray-800 text-white">Word Correction</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
 
           {/* AI suggestion button */}
           <button
@@ -164,7 +178,7 @@ const Editor = ({ initialValue, onChange }) => {
 
         {/* Display AI suggestion */}
         {suggestion && (
-          <div className="mt-4 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+          <div className="mt-4 p-4 bg-white/10 rounded-xl border border-white/20">
             <div className="text-white/90 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: suggestion }} />
             <button
               className="mt-3 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg border border-green-500/30 hover:border-green-500/40 transition-all duration-300 font-medium"
@@ -176,7 +190,7 @@ const Editor = ({ initialValue, onChange }) => {
         )}
 
         {/* Editor content */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 p-4">
+        <div className="bg-white/5 rounded-xl border border-white/20 p-4">
           <EditorContent editor={editor} />
         </div>
       </div>

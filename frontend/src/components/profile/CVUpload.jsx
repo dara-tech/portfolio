@@ -90,13 +90,13 @@ const CVUpload = ({ cvFile, handleCvChange, currentCV, setFormData, formData }) 
   return (
     <div className="form-control w-full">
       <label className="label">
-        <span className="label-text text-lg">CV / Resume</span>
+        <span className="label-text text-lg text-white/90 font-medium">CV / Resume</span>
       </label>
 
       {/* Drag & Drop Zone */}
       <div
-        className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors
-          ${isDragging ? 'border-primary bg-primary/5' : 'border-base-300 hover:border-primary'}
+        className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-300 bg-white/5
+          ${isDragging ? 'border-blue-400 bg-blue-500/10' : 'border-white/20 hover:border-blue-400/50 hover:bg-white/10'}
         `}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
@@ -116,80 +116,79 @@ const CVUpload = ({ cvFile, handleCvChange, currentCV, setFormData, formData }) 
           {uploadProgress > 0 ? (
             <div className="w-full max-w-xs">
               <div className="flex justify-between mb-1">
-                <span className="text-sm">Uploading...</span>
-                <span className="text-sm">{uploadProgress}%</span>
+                <span className="text-sm text-white/80">Uploading...</span>
+                <span className="text-sm text-white/80">{uploadProgress}%</span>
               </div>
-              <progress 
-                className="progress progress-primary w-full" 
-                value={uploadProgress} 
-                max="100"
-              ></progress>
+              <div className="w-full bg-white/10 rounded-full h-2">
+                <div 
+                  className="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+              </div>
             </div>
           ) : cvFile || currentCV ? (
             <div className="w-full">
-              <div className="card bg-base-200">
-                <div className="card-body p-4">
-                  <div className="flex items-start gap-4">
-                    <div className="text-primary">
-                      {getFileIcon()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-semibold truncate">
-                        {cvFile?.name || 'Current CV'}
-                      </h3>
-                      {cvFile && (
-                        <p className="text-sm text-base-content/70">
-                          {formatFileSize(cvFile.size)}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex gap-2 ">
-                      {currentCV && (
-                        <>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setShowPreview(true);
+              <div className="bg-white/10 border border-white/20 rounded-xl p-4">
+                <div className="flex items-start gap-4">
+                  <div className="text-blue-400">
+                    {getFileIcon()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold truncate text-white">
+                      {cvFile?.name || 'Current CV'}
+                    </h3>
+                    {cvFile && (
+                      <p className="text-sm text-white/70">
+                        {formatFileSize(cvFile.size)}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex gap-2 ">
+                    {currentCV && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowPreview(true);
                             }}
-                            className="btn btn-ghost btn-sm"
-                          >
-                            Preview
-                          </button>
-                          <a
-                            href={currentCV}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-ghost btn-sm"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Download
-                          </a>
-                        </>
-                      )}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemove();
-                        }}
-                        className="btn btn-ghost btn-sm text-error"
-                      >
-                        X
-                      </button>
-                    </div>
+                            className="px-3 py-1.5 bg-white/10 text-white/80 border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-sm"
+                        >
+                          Preview
+                        </button>
+                        <a
+                          href={currentCV}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1.5 bg-white/10 text-white/80 border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-sm"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Download
+                        </a>
+                      </>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemove();
+                      }}
+                      className="px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-400/30 rounded-lg hover:bg-red-500/30 hover:border-red-400/50 transition-all duration-300 text-sm"
+                    >
+                      X
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           ) : (
             <>
-              <div className="text-primary">
+              <div className="text-blue-400">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold">Drop your CV here</h3>
-                <p className="text-sm text-base-content/70">
+                <h3 className="text-lg font-semibold text-white">Drop your CV here</h3>
+                <p className="text-sm text-white/70">
                   or click to browse (PDF only, max 5MB)
                 </p>
               </div>
@@ -200,28 +199,28 @@ const CVUpload = ({ cvFile, handleCvChange, currentCV, setFormData, formData }) 
 
       {/* Preview Modal */}
       {showPreview && currentCV && (
-        <div className="modal modal-open">
-          <div className="modal-box w-11/12 max-w-5xl h-5/6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg">CV Preview</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="bg-white/10 border border-white/20 rounded-2xl w-11/12 max-w-5xl h-5/6">
+            <div className="flex justify-between items-center mb-4 p-6 border-b border-white/20">
+              <h3 className="font-bold text-lg text-white">CV Preview</h3>
               <div className="flex gap-2">
                 <a
                   href={currentCV}
                   download
-                  className="btn btn-primary btn-sm"
+                  className="px-4 py-2 bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded-lg hover:bg-blue-500/30 hover:border-blue-400/50 transition-all duration-300 text-sm font-medium"
                   onClick={(e) => e.stopPropagation()}
                 >
                   Download
                 </a>
                 <button
-                  className="btn btn-ghost btn-sm"
+                  className="px-4 py-2 bg-white/10 text-white/80 border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-sm font-medium"
                   onClick={() => setShowPreview(false)}
                 >
                   Close
                 </button>
               </div>
             </div>
-            <div className="bg-base-200 rounded-lg p-4 h-[calc(100%-4rem)]">
+            <div className="bg-white/5 rounded-lg p-4 h-[calc(100%-4rem)] mx-6 mb-6">
               <iframe
                 src={currentCV}
                 className="w-full h-full rounded-lg"
@@ -229,7 +228,7 @@ const CVUpload = ({ cvFile, handleCvChange, currentCV, setFormData, formData }) 
               />
             </div>
           </div>
-          <div className="modal-backdrop" onClick={() => setShowPreview(false)}></div>
+          <div className="fixed inset-0 bg-black/50" onClick={() => setShowPreview(false)}></div>
         </div>
       )}
     </div>
