@@ -28,6 +28,7 @@ import LessonPage from './pages/LessonPage';
 import LessonDetail from './components/lesson/LessonDetail';
 import LessonManage from './components/lesson/LessonManage';
 import LessonForm from './components/lesson/LessonForm';
+import { ModalProvider } from './contexts/ModalContext';
 
 
 function App() {
@@ -74,7 +75,8 @@ function App() {
   return (
     <div data-theme={theme}>
       <Router>
-        <MacOSLayout>
+        <ModalProvider>
+          <MacOSLayout>
           <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
@@ -106,7 +108,8 @@ function App() {
           <Route path="/admin/lessons/new" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
           <Route path="/admin/lessons/edit/:id" element={<ProtectedRoute><LessonForm /></ProtectedRoute>} />
           </Routes>
-        </MacOSLayout>
+          </MacOSLayout>
+        </ModalProvider>
       </Router>
     </div>
   );

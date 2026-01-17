@@ -1,11 +1,13 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useModal } from '../../contexts/ModalContext';
 
 const MacOSDock = memo(() => {
   const location = useLocation();
   const [hoveredItem, setHoveredItem] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const { isModalOpen } = useModal();
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -126,8 +128,15 @@ const MacOSDock = memo(() => {
   );
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="macos-glass macos-rounded-xl px-4 py-3 macos-shadow-xl">
+    <AnimatePresence>
+      {!isModalOpen && (
+        <motion.div
+          initial={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.2 }}
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50"
+        >
+          <div className="macos-glass macos-rounded-xl px-4 py-3 macos-shadow-xl">
         <div className="flex items-end space-x-2">
           {filteredDockItems.map((item) => {
             const active = isActive(item.path);
@@ -198,8 +207,10 @@ const MacOSDock = memo(() => {
             );
           })}
         </div>
-      </div>
-    </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
 

@@ -6,10 +6,13 @@ import ProjectCard from '../components/projects/ProjectCardAdmin';
 import ProjectForm from '../components/projects/ProjectForm';
 import ProjectModal from '../components/projects/ProjectModal';
 import { Loading } from '../components/common/Loading';
+import { useModal } from '../contexts/ModalContext';
 
 const AdminProjects = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, openModal, closeModal } = useModal();
   const [selectedProject, setSelectedProject] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -36,6 +39,7 @@ const AdminProjects = () => {
         ...project,
         technologies: project.technologies || [],
       });
+      setImagePreview(project.image || null);
     } else {
       setFormData({
         title: '',
@@ -46,14 +50,21 @@ const AdminProjects = () => {
         githubLink: '',
         liveDemoLink: '',
       });
+      setImagePreview(null);
     }
     setSelectedProject(project);
-    setIsModalOpen(true);
+    openModal();
   };
 
   const handleCloseModal = () => {
+    // Clean up blob URL if it exists
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      URL.revokeObjectURL(imagePreview);
+    }
     setSelectedProject(null);
-    setIsModalOpen(false);
+    setImagePreview(null);
+    setIsSubmitting(false);
+    closeModal();
   };
 
   const handleChange = (e) => {
@@ -62,8 +73,17 @@ const AdminProjects = () => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormData(prev => ({ ...prev, image: file }));
+    const file = e.target.files?.[0];
+    if (file) {
+      // Revoke previous blob URL if it exists
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      // Create preview URL for the new file
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      setFormData(prev => ({ ...prev, image: file }));
+    }
   };
 
   const handleTechnologyAdd = (tech) => {
@@ -79,8 +99,46 @@ const AdminProjects = () => {
     }));
   };
 
+  const handleAiGenerate = async (generatedData) => {
+    // Update form data with AI-generated content
+    const updatedFormData = {
+      title: generatedData.title || formData.title,
+      description: generatedData.description || formData.description,
+      category: generatedData.category || formData.category,
+      technologies: Array.isArray(generatedData.technologies) 
+        ? generatedData.technologies 
+        : formData.technologies,
+      githubLink: generatedData.githubLink || formData.githubLink,
+      liveDemoLink: generatedData.liveDemoLink || formData.liveDemoLink,
+      image: formData.image,
+    };
+
+    // Handle AI-generated image (base64 data URL)
+    if (generatedData.image) {
+      try {
+        // Convert base64 data URL to blob, then to file
+        const response = await fetch(generatedData.image);
+        const blob = await response.blob();
+        const file = new File([blob], `ai-generated-${Date.now()}.png`, { type: 'image/png' });
+        
+        // Set preview
+        setImagePreview(generatedData.image);
+        
+        // Set file in form data
+        updatedFormData.image = file;
+      } catch (error) {
+        console.error('Error processing AI-generated image:', error);
+        // Still set preview even if file conversion fails
+        setImagePreview(generatedData.image);
+      }
+    }
+
+    setFormData(updatedFormData);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const projectData = new FormData();
       for (const key in formData) {
@@ -102,6 +160,8 @@ const AdminProjects = () => {
       fetchProjects();
     } catch (error) {
       console.error('Error submitting project:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -119,6 +179,15 @@ const AdminProjects = () => {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
+
+  // Cleanup blob URLs on unmount
+  useEffect(() => {
+    return () => {
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
 
   const renderSkeletonCards = () => {
     return Array(6).fill().map((_, index) => (
@@ -200,11 +269,14 @@ const AdminProjects = () => {
         >
           <ProjectForm
             formData={formData}
+            imagePreview={imagePreview}
             onSubmit={handleSubmit}
             onChange={handleChange}
             onImageChange={handleImageChange}
             onTechnologyAdd={handleTechnologyAdd}
             onTechnologyRemove={handleTechnologyRemove}
+            onAiGenerate={handleAiGenerate}
+            isSubmitting={isSubmitting}
           />
         </ProjectModal>
       </AnimatePresence>

@@ -7,7 +7,7 @@ const ProjectCard = ({ project }) => {
 
   return (
     <motion.div 
-      className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-500 overflow-hidden"
+      className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-500 overflow-hidden flex flex-col h-full"
       whileHover={{ y: -8, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       initial={{ opacity: 0, y: 20 }}
@@ -15,7 +15,7 @@ const ProjectCard = ({ project }) => {
       transition={{ duration: 0.5 }}
     >
       {/* Image Container */}
-      <div className="relative h-56 overflow-hidden">
+      <div className="relative h-56 overflow-hidden flex-shrink-0">
         <img 
           src={image} 
           alt={title} 
@@ -55,7 +55,7 @@ const ProjectCard = ({ project }) => {
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-grow">
         <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-white/90 transition-colors">
           {title}
         </h2>
@@ -80,13 +80,15 @@ const ProjectCard = ({ project }) => {
           )}
         </div>
 
-        {/* Action Button */}
-        <Link 
-          to={`/projects/${_id}`} 
-          className="block w-full bg-white/10 hover:bg-white/20 text-white text-center py-3 rounded-lg border border-white/20 transition-all duration-300 font-medium"
-        >
-          View Details
-        </Link>
+        {/* Action Button - Pushed to bottom */}
+        <div className="mt-auto">
+          <Link 
+            to={`/projects/${_id}`} 
+            className="block w-full bg-white/10 hover:bg-white/20 text-white text-center py-3 rounded-lg border border-white/20 transition-all duration-300 font-medium"
+          >
+            View Details
+          </Link>
+        </div>
       </div>
     </motion.div>
   );
